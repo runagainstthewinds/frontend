@@ -6,7 +6,6 @@ on:
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
-  environment: production
   build:
     runs-on: ubuntu-latest
     steps:
@@ -29,7 +28,8 @@ jobs:
           path: dist/
 
   terraform-deploy:
-    needs: wait-for-approval
+    needs: build
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
