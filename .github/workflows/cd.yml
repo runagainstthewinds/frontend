@@ -28,12 +28,12 @@ jobs:
           path: dist/
 
     wait-for-approval:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Approval gate passed
-        run: echo "Deployment approved"
+      needs: build
+      runs-on: ubuntu-latest
+      environment: production
+      steps:
+        - name: Approval gate passed
+          run: echo "Deployment approved"
 
   terraform-deploy:
     needs: wait-for-approval
