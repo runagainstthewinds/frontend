@@ -28,7 +28,7 @@ jobs:
           path: dist/
 
   terraform-deploy:
-    needs: wait-for-approval
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
