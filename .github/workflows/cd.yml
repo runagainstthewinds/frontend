@@ -6,6 +6,7 @@ on:
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
+  environment: production
   build:
     runs-on: ubuntu-latest
     steps:
@@ -17,7 +18,7 @@ jobs:
           node-version: "18"
           cache: "npm"
       - name: Install dependencies
-        run: npm install
+        run: npm install --ignore-scripts
       # Add run test step here in the future
       - name: Build Application
         run: npm run build
@@ -26,14 +27,6 @@ jobs:
         with:
           name: build
           path: dist/
-
-  wait-for-approval:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: production # This creates an approval gate
-    steps:
-      - name: Approval gate passed
-        run: echo "Deployment approved"
 
   terraform-deploy:
     needs: wait-for-approval
