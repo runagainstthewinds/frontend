@@ -1,5 +1,4 @@
 name: Deploy to PRD
-
 on:
   push:
     branches:
@@ -12,36 +11,39 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: "npm"
-
       - name: Install dependencies
         run: npm install
-
       # Add run test step here in the future
-
       - name: Build Application
         run: npm run build
-
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build
           path: dist/
 
-  terraform-deploy:
+  wait-for-approval:
     needs: build
+    runs-on: ubuntu-latest
+    environment: production # This creates an approval gate
+    steps:
+      - name: Approval gate passed
+        run: echo "Deployment approved"
+
+  terraform-deploy:
+    needs: wait-for-approval
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: build-files
+          name: build
           path: dist
+      # Your terraform deployment steps would continue here
