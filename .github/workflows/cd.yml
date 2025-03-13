@@ -29,6 +29,7 @@ jobs:
 
   terraform-deploy:
     needs: build
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
