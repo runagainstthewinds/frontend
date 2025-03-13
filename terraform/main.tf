@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
 provider "aws" {
   region = var.aws_region
 }
@@ -79,7 +88,7 @@ resource "aws_cloudfront_distribution" "website_distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
-  price_class         = "PriceClass_100"  # Use only North America and Europe edge locations
+  price_class         = "PriceClass_100" 
   
   aliases = var.domain_name != "" ? [var.domain_name] : []
 
