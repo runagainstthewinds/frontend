@@ -74,9 +74,11 @@ jobs:
       # Deploy to S3
       - name: Deploy to S3
         run: |
+          echo "Deploying build files to S3 bucket"
           aws s3 sync dist/ s3://studytgt-s3-cdn-live --delete
       
       # Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
         run: |
+          echo "Invalidating CloudFront cache"
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
