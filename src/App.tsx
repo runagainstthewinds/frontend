@@ -1,12 +1,12 @@
 import "./App.css";
+import Navbar from "./components/ui/navbar";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
     <>
-      <h1 className="text-4xl text-center text-blue-500">Hello from Vite</h1>
-      <h1 className="text-4xl text-center text-blue-500">Hello from Vite</h1>
-      <h1 className="text-4xl text-center text-blue-500">Hello from Vite</h1>
-      <h1 className="text-4xl text-center text-blue-500">Hello from Vite</h1>
+      <Navbar />
+      <LandingPage />
     </>
   );
 }
