@@ -1,7 +1,3 @@
-"use client";
-
-import { Sun, Calendar, BarChart3, FootprintsIcon as Shoe } from "lucide-react";
-
 function LandingPage() {
   return (
     <div className="relative min-h-screen w-full">
