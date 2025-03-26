@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 // env vars
 const API_KEY = import.meta.env.VITE_APP_VITE_APP_GOOGLE_API_KEY; // setup env after
 const CLIENT_ID = import.meta.env.VITE_APP_GOOGLE_CLIENT_ID_URL;
-const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 interface GoogleCalendarEvent {
   id: string;
@@ -34,47 +34,52 @@ const GoogleCalendarConnect: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-
-    const gapiScript = document.createElement('script');
-    gapiScript.src = 'https://apis.google.com/js/api.js';
+    const gapiScript = document.createElement("script");
+    gapiScript.src = "https://apis.google.com/js/api.js";
     gapiScript.async = true;
     gapiScript.defer = true;
     gapiScript.onload = initializeGapiClient;
     document.body.appendChild(gapiScript);
 
-    const gisScript = document.createElement('script');
-    gisScript.src = 'https://accounts.google.com/gsi/client';
+    const gisScript = document.createElement("script");
+    gisScript.src = "https://accounts.google.com/gsi/client";
     gisScript.async = true;
     gisScript.defer = true;
     gisScript.onload = initializeGisClient;
     document.body.appendChild(gisScript);
 
     return () => {
-
-      document.body.querySelectorAll('script[src="https://apis.google.com/js/api.js"], script[src="https://accounts.google.com/gsi/client"]')
-        .forEach(script => document.body.removeChild(script));
+      document.body
+        .querySelectorAll(
+          'script[src="https://apis.google.com/js/api.js"], script[src="https://accounts.google.com/gsi/client"]',
+        )
+        .forEach((script) => document.body.removeChild(script));
     };
   }, []);
 
   const initializeGapiClient = async () => {
     try {
       await new Promise<void>((resolve, reject) => {
-        window.gapi.load('client', {
+        window.gapi.load("client", {
           callback: resolve,
           onerror: reject,
         });
       });
-      
+
       await window.gapi.client.init({
         apiKey: API_KEY,
-        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+        discoveryDocs: [
+          "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+        ],
       });
-      
+
       setGapiInited(true);
-      console.log('GAPI client initialized');
+      console.log("GAPI client initialized");
     } catch (err: any) {
-      setError(`Error initializing GAPI client: ${err.message || 'Unknown error'}`);
-      console.error('Error initializing GAPI client:', err);
+      setError(
+        `Error initializing GAPI client: ${err.message || "Unknown error"}`,
+      );
+      console.error("Error initializing GAPI client:", err);
     }
   };
 
@@ -86,27 +91,31 @@ const GoogleCalendarConnect: React.FC = () => {
         callback: (tokenResponse: any) => {
           if (tokenResponse && tokenResponse.access_token) {
             setIsSignedIn(true);
-            console.log('Successfully signed in');
+            console.log("Successfully signed in");
           }
         },
         error_callback: (err: any) => {
-          setError(`Error getting OAuth token: ${err.message || err.type || 'Unknown error'}`);
-          console.error('Error getting OAuth token:', err);
-        }
+          setError(
+            `Error getting OAuth token: ${err.message || err.type || "Unknown error"}`,
+          );
+          console.error("Error getting OAuth token:", err);
+        },
       });
-      
+
       setTokenClient(client);
       setGisInited(true);
-      console.log('GIS client initialized');
+      console.log("GIS client initialized");
     } catch (err: any) {
-      setError(`Error initializing GIS client: ${err.message || 'Unknown error'}`);
-      console.error('Error initializing GIS client:', err);
+      setError(
+        `Error initializing GIS client: ${err.message || "Unknown error"}`,
+      );
+      console.error("Error initializing GIS client:", err);
     }
   };
 
   const handleConnectCalendar = () => {
     if (!gapiInited || !gisInited) {
-      setError('Google API not initialized yet. Please wait and try again.');
+      setError("Google API not initialized yet. Please wait and try again.");
       return;
     }
 
@@ -124,13 +133,13 @@ const GoogleCalendarConnect: React.FC = () => {
       window.gapi.client.setToken(null);
       setIsSignedIn(false);
       setEvents([]);
-      console.log('Signed out from Google');
+      console.log("Signed out from Google");
     }
   };
 
   const fetchCalendarEvents = async () => {
     if (!isSignedIn) {
-      setError('Please connect to Google Calendar first');
+      setError("Please connect to Google Calendar first");
       return;
     }
 
@@ -139,20 +148,22 @@ const GoogleCalendarConnect: React.FC = () => {
 
     try {
       const response = await window.gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': (new Date()).toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime',
+        calendarId: "primary",
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: "startTime",
       });
 
       const events = response.result.items;
       setEvents(events);
-      console.log('Google Calendar Events:', events);
+      console.log("Google Calendar Events:", events);
     } catch (err: any) {
-      setError(`Error fetching calendar events: ${err.message || err.details || 'Unknown error'}`);
-      console.error('Error fetching calendar events:', err);
+      setError(
+        `Error fetching calendar events: ${err.message || err.details || "Unknown error"}`,
+      );
+      console.error("Error fetching calendar events:", err);
     } finally {
       setIsLoading(false);
     }
@@ -161,15 +172,15 @@ const GoogleCalendarConnect: React.FC = () => {
   return (
     <div className="google-calendar-container">
       <h2>Google Calendar Integration</h2>
-      
+
       {error && <div className="error-message">{error}</div>}
-      
+
       {isLoading ? (
         <div className="loading">Loading...</div>
       ) : (
         <>
           {!isSignedIn ? (
-            <button 
+            <button
               onClick={handleConnectCalendar}
               disabled={!gapiInited || !gisInited || isLoading}
               className="connect-button"
@@ -178,7 +189,9 @@ const GoogleCalendarConnect: React.FC = () => {
             </button>
           ) : (
             <div className="connected-container">
-              <div className="success-message">Connected to Google Calendar!</div>
+              <div className="success-message">
+                Connected to Google Calendar!
+              </div>
               <div className="button-group">
                 <button onClick={fetchCalendarEvents} className="fetch-button">
                   Fetch Calendar Events
@@ -189,14 +202,15 @@ const GoogleCalendarConnect: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {events.length > 0 && (
             <div className="events-container">
               <h3>Upcoming Events ({events.length})</h3>
               <ul>
                 {events.map((event) => (
                   <li key={event.id}>
-                    {event.summary} - {new Date(event.start.dateTime).toLocaleString()}
+                    {event.summary} -{" "}
+                    {new Date(event.start.dateTime).toLocaleString()}
                   </li>
                 ))}
               </ul>
@@ -216,8 +230,8 @@ declare global {
         oauth2: {
           initTokenClient: (params: any) => any;
           revoke: (token: string, callback?: () => void) => void;
-        }
-      }
+        };
+      };
     };
   }
 }
