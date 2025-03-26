@@ -1,25 +1,39 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { AlertTriangle, Cloud, MapPin, Timer, TrendingUp, User, Wind } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { motion } from "framer-motion"
-import { UserSidebar } from "@/components/user-sidebar"
+import { useState, useEffect } from "react";
+import {
+  AlertTriangle,
+  Cloud,
+  MapPin,
+  Timer,
+  TrendingUp,
+  User,
+  Wind,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { motion } from "framer-motion";
+import { UserSidebar } from "@/components/user-sidebar";
 
 export default function RunningSessionPage() {
-  const [activeTab, setActiveTab] = useState("upcoming")
-  const [progress, setProgress] = useState(0)
+  const [activeTab, setActiveTab] = useState("upcoming");
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setProgress(62.5)
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [])
+      setProgress(62.5);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -29,7 +43,7 @@ export default function RunningSessionPage() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -41,7 +55,7 @@ export default function RunningSessionPage() {
         stiffness: 120,
       },
     },
-  }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-slate-50">
@@ -59,11 +73,19 @@ export default function RunningSessionPage() {
       >
         <div className="mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Running Dashboard</h1>
-            <Button className="bg-teal-600 hover:bg-teal-700">New Session</Button>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+              Running Dashboard
+            </h1>
+            <Button className="bg-teal-600 hover:bg-teal-700">
+              New Session
+            </Button>
           </div>
 
-          <Tabs defaultValue="upcoming" onValueChange={setActiveTab} className="space-y-4">
+          <Tabs
+            defaultValue="upcoming"
+            onValueChange={setActiveTab}
+            className="space-y-4"
+          >
             <TabsList className="grid w-full h-full grid-cols-2 mb-4 bg-white shadow-sm border p-1 rounded-lg">
               <TabsTrigger
                 value="upcoming"
@@ -80,13 +102,20 @@ export default function RunningSessionPage() {
             </TabsList>
 
             <TabsContent value="upcoming" className="space-y-4">
-              <motion.div variants={containerVariants} initial="hidden" animate="visible">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 <motion.div variants={itemVariants}>
                   <Alert className="border-amber-200 bg-amber-50 shadow-sm mb-4">
                     <AlertTriangle className="h-5 w-5 text-amber-600" />
-                    <AlertTitle className="text-amber-800 font-medium">Weather Notice</AlertTitle>
+                    <AlertTitle className="text-amber-800 font-medium">
+                      Weather Notice
+                    </AlertTitle>
                     <AlertDescription className="text-amber-700">
-                      Light rain expected tomorrow morning. Consider waterproof gear.
+                      Light rain expected tomorrow morning. Consider waterproof
+                      gear.
                     </AlertDescription>
                   </Alert>
                 </motion.div>
@@ -96,21 +125,33 @@ export default function RunningSessionPage() {
                     <CardHeader className="border-b py-6">
                       <div className="flex justify-between items-center">
                         <div>
-                          <CardTitle className="text-slate-900 text-xl">Endurance Training</CardTitle>
+                          <CardTitle className="text-slate-900 text-xl">
+                            Endurance Training
+                          </CardTitle>
                           <CardDescription className="text-slate-600 mt-1">
                             Tomorrow, 7:00 AM • Central Park Loop
                           </CardDescription>
                         </div>
-                        <Badge className="bg-teal-600 hover:bg-teal-700 py-1.5">Scheduled</Badge>
+                        <Badge className="bg-teal-600 hover:bg-teal-700 py-1.5">
+                          Scheduled
+                        </Badge>
                       </div>
                     </CardHeader>
                     <CardContent className="pt-4 pb-4 space-y-4">
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         {[
                           { icon: MapPin, title: "Route", value: "Trail" },
-                          { icon: Cloud, title: "Weather", value: "18°C Cloudy" },
+                          {
+                            icon: Cloud,
+                            title: "Weather",
+                            value: "18°C Cloudy",
+                          },
                           { icon: Wind, title: "Wind", value: "5 km/h NE" },
-                          { icon: TrendingUp, title: "Distance", value: "12 km" },
+                          {
+                            icon: TrendingUp,
+                            title: "Distance",
+                            value: "12 km",
+                          },
                           { icon: Timer, title: "Pace", value: "5:30 min/km" },
                           { icon: User, title: "Partner", value: "Solo" },
                         ].map((item, index) => (
@@ -122,24 +163,36 @@ export default function RunningSessionPage() {
                               <item.icon className="h-4 w-4 text-teal-600" />
                             </div>
                             <div>
-                              <p className="text-xs text-slate-500 font-medium">{item.title}</p>
-                              <p className="font-medium text-slate-900">{item.value}</p>
+                              <p className="text-xs text-slate-500 font-medium">
+                                {item.title}
+                              </p>
+                              <p className="font-medium text-slate-900">
+                                {item.value}
+                              </p>
                             </div>
                           </div>
                         ))}
                       </div>
 
                       <div className="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                        <h3 className="text-sm font-medium text-slate-900">Training Notes</h3>
+                        <h3 className="text-sm font-medium text-slate-900">
+                          Training Notes
+                        </h3>
                         <p className="text-sm text-slate-600 leading-relaxed">
-                          Focus on maintaining consistent pace. Hydrate well and monitor heart rate zones. Allow for
-                          5-minute warm-up and cool-down periods.
+                          Focus on maintaining consistent pace. Hydrate well and
+                          monitor heart rate zones. Allow for 5-minute warm-up
+                          and cool-down periods.
                         </p>
                       </div>
 
                       <div className="flex gap-3 pt-1">
-                        <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium">Begin Session</Button>
-                        <Button variant="outline" className="text-teal-600 border-teal-600 hover:bg-teal-50 px-4 py-2">
+                        <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium">
+                          Begin Session
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="text-teal-600 border-teal-600 hover:bg-teal-50 px-4 py-2"
+                        >
                           Adjust Plan
                         </Button>
                       </div>
@@ -150,7 +203,9 @@ export default function RunningSessionPage() {
                 <motion.div variants={itemVariants}>
                   <Card className="shadow-lg overflow-hidden">
                     <CardHeader className="border-b py-5">
-                      <CardTitle className="text-slate-900">Training Schedule</CardTitle>
+                      <CardTitle className="text-slate-900">
+                        Training Schedule
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="">
                       {[
@@ -184,10 +239,16 @@ export default function RunningSessionPage() {
                           className="flex justify-between items-center py-3 border-b border-slate-100 last:border-0"
                         >
                           <div>
-                            <p className="font-medium text-slate-900">{item.day}</p>
-                            <p className="text-sm text-slate-600 mt-0.5">{item.detail}</p>
+                            <p className="font-medium text-slate-900">
+                              {item.day}
+                            </p>
+                            <p className="text-sm text-slate-600 mt-0.5">
+                              {item.detail}
+                            </p>
                           </div>
-                          <Badge className={`${item.badge} px-3 py-1`}>{item.type}</Badge>
+                          <Badge className={`${item.badge} px-3 py-1`}>
+                            {item.type}
+                          </Badge>
                         </div>
                       ))}
                     </CardContent>
@@ -197,19 +258,28 @@ export default function RunningSessionPage() {
             </TabsContent>
 
             <TabsContent value="current" className="space-y-8">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
                 <Card className="shadow-lg overflow-hidden">
                   <CardHeader className="border-b py-5">
-                    <CardTitle className="text-slate-900">Past Activities</CardTitle>
+                    <CardTitle className="text-slate-900">
+                      Past Activities
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="py-10 flex flex-col items-center justify-center space-y-6">
                     <div className="text-center space-y-4">
                       <div className="h-20 w-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto border-4 border-teal-100">
                         <TrendingUp className="h-10 w-10 text-teal-600" />
                       </div>
-                      <h3 className="text-2xl font-medium text-slate-900">No Past Sessions</h3>
+                      <h3 className="text-2xl font-medium text-slate-900">
+                        No Past Sessions
+                      </h3>
                       <p className="text-slate-600 max-w-md mx-auto">
-                        Ready to start your next run? Begin your scheduled session or create a new custom workout.
+                        Ready to start your next run? Begin your scheduled
+                        session or create a new custom workout.
                       </p>
                     </div>
                   </CardContent>
@@ -220,5 +290,5 @@ export default function RunningSessionPage() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
