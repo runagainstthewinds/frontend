@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 // env vars
 const API_KEY = import.meta.env.VITE_APP_VITE_APP_GOOGLE_API_KEY; // setup env after
 const CLIENT_ID = import.meta.env.VITE_APP_GOOGLE_CLIENT_ID_URL;
 const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+
+// Backend API endpoint
+const BACKEND_API_URL = "http://localhost:8080/api/calendar/events";
 
 interface GoogleCalendarEvent {
   id: string;
@@ -32,6 +36,7 @@ const GoogleCalendarConnect: React.FC = () => {
   const [events, setEvents] = useState<GoogleCalendarEvent[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [backendResponse, setBackendResponse] = useState<string | null>(null);
 
   useEffect(() => {
     const gapiScript = document.createElement("script");
@@ -133,6 +138,7 @@ const GoogleCalendarConnect: React.FC = () => {
       window.gapi.client.setToken(null);
       setIsSignedIn(false);
       setEvents([]);
+      setBackendResponse(null);
       console.log("Signed out from Google");
     }
   };
@@ -145,8 +151,10 @@ const GoogleCalendarConnect: React.FC = () => {
 
     setIsLoading(true);
     setError(null);
+    setBackendResponse(null);
 
     try {
+      // Fetch events from Google Calendar
       const response = await window.gapi.client.calendar.events.list({
         calendarId: "primary",
         timeMin: new Date().toISOString(),
@@ -156,9 +164,12 @@ const GoogleCalendarConnect: React.FC = () => {
         orderBy: "startTime",
       });
 
-      const events = response.result.items;
-      setEvents(events);
-      console.log("Google Calendar Events:", events);
+      const calendarEvents = response.result.items;
+      setEvents(calendarEvents);
+      console.log("Google Calendar Events:", calendarEvents);
+
+      // Send events to backend
+      await sendEventsToBackend(calendarEvents);
     } catch (err: any) {
       setError(
         `Error fetching calendar events: ${err.message || err.details || "Unknown error"}`,
@@ -169,11 +180,43 @@ const GoogleCalendarConnect: React.FC = () => {
     }
   };
 
+  const sendEventsToBackend = async (events: GoogleCalendarEvent[]) => {
+    try {
+      // Create a payload object containing the events
+      const payload = {
+        events: events,
+        userId: "currentUser", // You can add user identification if needed
+        timestamp: new Date().toISOString(),
+      };
+
+      // Send the payload to the backend
+      const response = await axios.post(BACKEND_API_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhhbiIsImlhdCI6MTc0MzAxNTE2NCwiZXhwIjoxNzQzMTIzMTY0fQ.bGrY-LxjLmc53V62tz_BWYZkdmv79syDARj9oMe6IN4`,
+        },
+      });
+
+      console.log("Backend response:", response.data);
+      setBackendResponse(
+        response.data.message || "Events sent to backend successfully",
+      );
+    } catch (err: any) {
+      setError(
+        `Error sending events to backend: ${err.response?.data?.message || err.message || "Unknown error"}`,
+      );
+      console.error("Error sending events to backend:", err);
+    }
+  };
+
   return (
     <div className="google-calendar-container">
       <h2>Google Calendar Integration</h2>
 
       {error && <div className="error-message">{error}</div>}
+      {backendResponse && (
+        <div className="success-message">{backendResponse}</div>
+      )}
 
       {isLoading ? (
         <div className="loading">Loading...</div>
@@ -194,7 +237,7 @@ const GoogleCalendarConnect: React.FC = () => {
               </div>
               <div className="button-group">
                 <button onClick={fetchCalendarEvents} className="fetch-button">
-                  Fetch Calendar Events
+                  Fetch Calendar Events & Send to Backend
                 </button>
                 <button onClick={handleSignOut} className="sign-out-button">
                   Sign Out
