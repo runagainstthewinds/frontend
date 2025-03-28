@@ -1,6 +1,4 @@
-"use client";
-
-import * as React from "react";
+import { useState } from "react";
 import { Calendar, Home, TrendingUp } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,11 +19,12 @@ import {
 } from "@/components/ui/sidebar";
 
 export function UserSidebar() {
-  const [progress, setProgress] = React.useState(62);
+  const [progress, setProgress] = useState(22);
+  const [shoeUsage, setShoeUsage] = useState(75);
 
   return (
     <SidebarProvider>
-      <Sidebar className="border-r w-64 shrink-0 md:h-screen overflow-y-auto">
+      <Sidebar className="border-r w-64 shrink-0 overflow-y-auto">
         <SidebarHeader className="pb-0">
           <div className="flex flex-col items-center space-y-4 pt-4">
             <Avatar className="h-24 w-24 ring-2 ring-teal-600 ring-offset-4 ring-offset-teal-50/10 shadow-lg">
@@ -40,10 +39,10 @@ export function UserSidebar() {
             <div className="text-center">
               <h2 className="text-xl font-bold">John Doe</h2>
               <a
-                href="/achievements"
-                className="text-teal-600 text-sm font-medium hover:underline"
+                href="/profile"
+                className="text-teal-600 text-sm font-medium underline"
               >
-                View Achievements
+                View Profile
               </a>
             </div>
           </div>
@@ -121,6 +120,22 @@ export function UserSidebar() {
                   <span>{progress}% of weekly goal</span>
                   <span className="text-teal-600 font-medium">
                     15 km remaining
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm my-3">
+                  <span className="font-medium text-slate-700">Shoe Usage</span>
+                  <span className="font-semibold text-teal-800">
+                    <span>{shoeUsage}% used</span>
+                  </span>
+                </div>
+                <Progress value={shoeUsage} className="h-2 bg-slate-100" />
+                <div className="mt-3 text-xs text-slate-500 flex items-center justify-between">
+                  <span>
+                    Using
+                    <span className="font-medium text-teal-600 underline">
+                      {" "}
+                      Nike Air Zoom Pegasus 38
+                    </span>
                   </span>
                 </div>
               </div>
