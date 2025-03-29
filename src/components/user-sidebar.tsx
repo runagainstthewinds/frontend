@@ -20,6 +20,9 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 
+import GoogleCalendarConnect from "./ui/GoogleCalendarConnect";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 export function UserSidebar() {
   const [progress, setProgress] = React.useState(62);
 
@@ -85,7 +88,9 @@ export function UserSidebar() {
                     <span className="text-sm font-medium">Google Calendar</span>
                   </div>
                   <Badge className="bg-teal-100 text-teal-800 hover:bg-teal-100">
-                    Connected
+                  <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}>
+                    <GoogleCalendarConnect />
+                  </GoogleOAuthProvider>
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-background p-3 shadow-sm border">

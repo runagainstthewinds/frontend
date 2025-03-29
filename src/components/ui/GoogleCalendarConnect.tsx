@@ -167,9 +167,6 @@ const GoogleCalendarConnect: React.FC = () => {
       const calendarEvents = response.result.items;
       setEvents(calendarEvents);
       console.log("Google Calendar Events:", calendarEvents);
-
-      // Send events to backend
-      await sendEventsToBackend(calendarEvents);
     } catch (err: any) {
       setError(
         `Error fetching calendar events: ${err.message || err.details || "Unknown error"}`,
@@ -180,43 +177,10 @@ const GoogleCalendarConnect: React.FC = () => {
     }
   };
 
-  const sendEventsToBackend = async (events: GoogleCalendarEvent[]) => {
-    try {
-      // Create a payload object containing the events
-      const payload = {
-        events: events,
-        userId: "currentUser", // You can add user identification if needed
-        timestamp: new Date().toISOString(),
-      };
-
-      // Send the payload to the backend
-      const response = await axios.post(BACKEND_API_URL, payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhhbiIsImlhdCI6MTc0MzAxNTE2NCwiZXhwIjoxNzQzMTIzMTY0fQ.bGrY-LxjLmc53V62tz_BWYZkdmv79syDARj9oMe6IN4`,
-        },
-      });
-
-      console.log("Backend response:", response.data);
-      setBackendResponse(
-        response.data.message || "Events sent to backend successfully",
-      );
-    } catch (err: any) {
-      setError(
-        `Error sending events to backend: ${err.response?.data?.message || err.message || "Unknown error"}`,
-      );
-      console.error("Error sending events to backend:", err);
-    }
-  };
-
   return (
-    <div className="google-calendar-container">
-      <h2>Google Calendar Integration</h2>
+    <div className="google-calendar-container top-10">
 
       {error && <div className="error-message">{error}</div>}
-      {backendResponse && (
-        <div className="success-message">{backendResponse}</div>
-      )}
 
       {isLoading ? (
         <div className="loading">Loading...</div>
@@ -228,24 +192,27 @@ const GoogleCalendarConnect: React.FC = () => {
               disabled={!gapiInited || !gisInited || isLoading}
               className="connect-button"
             >
-              Connect Google Calendar
+              Connect
             </button>
           ) : (
             <div className="connected-container">
-              <div className="success-message">
-                Connected to Google Calendar!
-              </div>
+              {/* <div className="success-message">
+                Connected
+              </div> */}
               <div className="button-group">
                 <button onClick={fetchCalendarEvents} className="fetch-button">
-                  Fetch Calendar Events & Send to Backend
+                  Fetch events
                 </button>
+                
+              </div>
+              {/* <div>
                 <button onClick={handleSignOut} className="sign-out-button">
                   Sign Out
                 </button>
-              </div>
+              </div> */}
             </div>
           )}
-
+{/* 
           {events.length > 0 && (
             <div className="events-container">
               <h3>Upcoming Events ({events.length})</h3>
@@ -258,7 +225,7 @@ const GoogleCalendarConnect: React.FC = () => {
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
         </>
       )}
     </div>
