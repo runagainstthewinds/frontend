@@ -18,6 +18,10 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 
+import GoogleCalendarConnect from "./ui/GoogleCalendarConnect";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import WeatherAlert from "./ui/weatherAlert";
+
 export function UserSidebar() {
   const [progress, setProgress] = useState(22);
   const [shoeUsage, setShoeUsage] = useState(75);
@@ -139,10 +143,13 @@ export function UserSidebar() {
                   </span>
                 </div>
               </div>
+              <WeatherAlert/>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
+      
     </SidebarProvider>
+    
   );
 }
