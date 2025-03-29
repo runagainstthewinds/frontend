@@ -6,7 +6,6 @@ import SessionPage from "./pages/SessionPage";
 function App() {
   return (
     <>
-      
       <Navbar />
       <LandingPage />
       {/* <Navbar /> */}

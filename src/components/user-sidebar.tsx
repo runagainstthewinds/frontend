@@ -88,9 +88,11 @@ export function UserSidebar() {
                     <span className="text-sm font-medium">Google Calendar</span>
                   </div>
                   <Badge className="bg-teal-100 text-teal-800 hover:bg-teal-100">
-                  <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}>
-                    <GoogleCalendarConnect />
-                  </GoogleOAuthProvider>
+                    <GoogleOAuthProvider
+                      clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}
+                    >
+                      <GoogleCalendarConnect />
+                    </GoogleOAuthProvider>
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-background p-3 shadow-sm border">

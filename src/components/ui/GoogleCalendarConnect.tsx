@@ -179,7 +179,6 @@ const GoogleCalendarConnect: React.FC = () => {
 
   return (
     <div className="google-calendar-container top-10">
-
       {error && <div className="error-message">{error}</div>}
 
       {isLoading ? (
@@ -203,7 +202,6 @@ const GoogleCalendarConnect: React.FC = () => {
                 <button onClick={fetchCalendarEvents} className="fetch-button">
                   Fetch events
                 </button>
-                
               </div>
               {/* <div>
                 <button onClick={handleSignOut} className="sign-out-button">
@@ -212,7 +210,7 @@ const GoogleCalendarConnect: React.FC = () => {
               </div> */}
             </div>
           )}
-{/* 
+          {/* 
           {events.length > 0 && (
             <div className="events-container">
               <h3>Upcoming Events ({events.length})</h3>
