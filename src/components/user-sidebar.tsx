@@ -18,8 +18,6 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 
-import GoogleCalendarConnect from "./ui/GoogleCalendarConnect";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import WeatherAlert from "./ui/weatherAlert";
 
 export function UserSidebar() {
@@ -143,13 +141,17 @@ export function UserSidebar() {
                   </span>
                 </div>
               </div>
-              <WeatherAlert/>
             </SidebarGroupContent>
           </SidebarGroup>
+          <SidebarSeparator />
+          <SidebarGroup>
+            <SidebarGroupLabel>Weather Alert</SidebarGroupLabel>
+            <WeatherAlert />
+          </SidebarGroup>
+          <SidebarGroup></SidebarGroup>
+          <SidebarGroup></SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      
     </SidebarProvider>
-    
   );
 }
