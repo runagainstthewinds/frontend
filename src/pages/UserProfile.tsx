@@ -151,7 +151,7 @@ function StatisticsCard() {
             <p className="text-2xl font-bold">1,248 km</p>
           </div>
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Time Spent Running</p>
+            <p className="text-sm text-muted-foreground">Total Running Time</p>
             <p className="text-2xl font-bold">21 hours</p>
           </div>
           <div className="space-y-1">
@@ -184,6 +184,26 @@ function IntegrationsCard() {
         <CardDescription>Connect your accounts to sync data</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+      <div className="flex items-center justify-between p-3 rounded-lg border">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
+              <Calendar className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <p className="font-medium">Google Calendar</p>
+              <p className="text-sm text-muted-foreground">
+                Schedule your runs
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800"
+          >
+            <Check className="h-4 w-4 mr-2" />
+            Connected
+          </Button>
+        </div>
         <div className="flex items-center justify-between p-3 rounded-lg border">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-orange-100">
@@ -202,27 +222,6 @@ function IntegrationsCard() {
           >
             <ExternalLink className="h-4 w-4 mr-2" />
             Connect
-          </Button>
-        </div>
-
-        <div className="flex items-center justify-between p-3 rounded-lg border">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
-              <Calendar className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="font-medium">Google Calendar</p>
-              <p className="text-sm text-muted-foreground">
-                Schedule your runs
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="outline"
-            className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800"
-          >
-            <Check className="h-4 w-4 mr-2" />
-            Connected
           </Button>
         </div>
       </CardContent>
