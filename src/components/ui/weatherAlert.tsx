@@ -12,8 +12,8 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
-// setup env one day
-const API_KEY = "0d5b681139c945bc9a6172302252903";
+// setup'd env
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const LOCATION = "Montreal";
 
 interface WeatherForecast {
