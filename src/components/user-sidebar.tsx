@@ -143,13 +143,6 @@ export function UserSidebar() {
               </div>
             </SidebarGroupContent>
           </SidebarGroup>
-          <SidebarSeparator />
-          <SidebarGroup>
-            <SidebarGroupLabel>Weather Alert</SidebarGroupLabel>
-            <WeatherAlert />
-          </SidebarGroup>
-          <SidebarGroup></SidebarGroup>
-          <SidebarGroup></SidebarGroup>
         </SidebarContent>
       </Sidebar>
     </SidebarProvider>

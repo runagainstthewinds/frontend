@@ -20,7 +20,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import { UserSidebar } from "@/components/user-sidebar";
 import {
@@ -28,6 +27,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
+import WeatherAlert from "@/components/ui/weatherAlert";
 
 export default function RunningSessionPage() {
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -116,16 +117,7 @@ export default function RunningSessionPage() {
                     animate="visible"
                   >
                     <motion.div variants={itemVariants}>
-                      <Alert className="border-amber-200 bg-amber-50 shadow-sm mb-4">
-                        <AlertTriangle className="h-5 w-5 text-amber-600" />
-                        <AlertTitle className="text-amber-800 font-medium">
-                          Weather Notice
-                        </AlertTitle>
-                        <AlertDescription className="text-amber-700">
-                          Light rain expected tomorrow morning. Consider
-                          waterproof gear.
-                        </AlertDescription>
-                      </Alert>
+                      <WeatherAlert />
                     </motion.div>
 
                     <motion.div variants={itemVariants} className="mb-4">

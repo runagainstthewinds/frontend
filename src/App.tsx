@@ -8,9 +8,9 @@ function App() {
   return (
     <>
       {/* <Navbar /> */}
-      <UserProfile />
+      {/* <UserProfile /> */}
       {/* <LandingPage /> */}
-      {/* <SessionPage /> */}
+      <SessionPage />
     </>
   );
 }
