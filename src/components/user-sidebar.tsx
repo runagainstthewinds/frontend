@@ -18,6 +18,8 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 
+import WeatherAlert from "./ui/weatherAlert";
+
 export function UserSidebar() {
   const [progress, setProgress] = useState(22);
   const [shoeUsage, setShoeUsage] = useState(75);
