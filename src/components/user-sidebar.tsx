@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Calendar, Home, TrendingUp } from "lucide-react";
+import {
+  Calendar,
+  TrendingUp,
+  History,
+  ClipboardList,
+  UserRound,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -40,12 +46,6 @@ export function UserSidebar() {
             </Avatar>
             <div className="text-center">
               <h2 className="text-xl font-bold">John Doe</h2>
-              <a
-                href="/profile"
-                className="text-teal-600 text-sm font-medium underline"
-              >
-                View Profile
-              </a>
             </div>
           </div>
         </SidebarHeader>
@@ -56,17 +56,25 @@ export function UserSidebar() {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <a href="/home">
-                      <Home className="h-4 w-4" />
-                      <span>Home</span>
+                    <a href="/profile">
+                      <UserRound className="h-4 w-4" />
+                      <span>Profile</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <a href="/statistics">
-                      <TrendingUp className="h-4 w-4" />
-                      <span>View Statistics</span>
+                    <a href="/dashboard">
+                      <ClipboardList className="h-4 w-4" />
+                      <span>Running Dashboard</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <a href="/history">
+                      <History className="h-4 w-4" />
+                      <span>History</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

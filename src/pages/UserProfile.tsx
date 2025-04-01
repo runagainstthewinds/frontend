@@ -44,16 +44,16 @@ export default function UserProfile() {
           <main className="flex-1 p-6">
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="mb-6">
-                <TabsTrigger value="overview" className="text-teal-800">
+                <TabsTrigger value="overview" className="text-gray-800">
                   Overview
                 </TabsTrigger>
-                <TabsTrigger value="shoes" className="text-teal-800">
+                <TabsTrigger value="shoes" className="text-gray-800">
                   Shoes
                 </TabsTrigger>
-                <TabsTrigger value="achievements" className="text-teal-800">
+                <TabsTrigger value="achievements" className="text-gray-800">
                   Achievements
                 </TabsTrigger>
-                <TabsTrigger value="settings" className="text-teal-800">
+                <TabsTrigger value="settings" className="text-gray-800">
                   Settings
                 </TabsTrigger>
               </TabsList>
@@ -100,10 +100,6 @@ function UserOverview() {
           <div className="flex-1 space-y-2">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">John Doe</h2>
-              <Button variant="outline" size="sm" className="h-8">
-                <Edit className="h-3.5 w-3.5 mr-2" />
-                Edit Profile
-              </Button>
             </div>
             <p className="text-muted-foreground">john.doe@example.com</p>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -163,7 +159,7 @@ function StatisticsCard() {
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="font-medium">Weekly Goal</span>
-            <span className="font-semibold text-teal-800">25/40 km</span>
+            <span className="font-semibold text-gray-800">25/40 km</span>
           </div>
           <Progress value={62.5} className="h-2 bg-slate-100" />
           <div className="text-xs text-slate-500 flex items-center justify-between">

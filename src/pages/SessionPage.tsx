@@ -9,6 +9,7 @@ import {
   TrendingUp,
   User,
   Wind,
+  RotateCcw,
 } from "lucide-react";
 import {
   Card,
@@ -65,7 +66,7 @@ export default function RunningSessionPage() {
 
   return (
     <SidebarProvider>
-      <div className="flex flex-col md:flex-row min-h-screen min-w-screen bg-slate-50">
+      <div className="flex min-h-screen min-w-screen bg-gray-50">
         <div className="md:w-64 md:shrink-0 md:sticky md:top-0 md:h-screen bg-white">
           <UserSidebar />
         </div>
@@ -79,13 +80,14 @@ export default function RunningSessionPage() {
           >
             <div className="">
               <div className="flex items-center mb-6">
-                <header className="sticky top-0 z-10 flex h-16 w-full justify-between items-center gap-4 border-b bg-background px-6">
-                  <div className="flex items-center gap-4">
+                <header className="sticky top-0 z-10 flex h-16 w-full items-center justify-between gap-x-4 border-b bg-background px-6">
+                  <div className="flex items-center gap-x-4">
                     <SidebarTrigger />
                     <h1 className="text-xl font-semibold">Running Dashboard</h1>
                   </div>
-                  <Button className="bg-teal-600 hover:bg-teal-700">
-                    New Session
+                  <Button className="flex items-center bg-teal-600 hover:bg-teal-700 transition group">
+                    Latest from Strava
+                    <RotateCcw className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:-rotate-90" />
                   </Button>
                 </header>
               </div>
@@ -191,13 +193,13 @@ export default function RunningSessionPage() {
 
                           <div className="flex gap-3 pt-1">
                             <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium">
-                              Begin Session
+                              Complete Session
                             </Button>
                             <Button
                               variant="outline"
-                              className="text-teal-600 border-teal-600 hover:bg-teal-50 px-4 py-2"
+                              className="text-red-400 border-red-300 hover:bg-red-50 px-4 py-2"
                             >
-                              Adjust Plan
+                              Cancel Session
                             </Button>
                           </div>
                         </CardContent>
