@@ -122,12 +122,6 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button variant="outline" size="sm" className="w-full text-teal-800">
-          <Shoe className="h-4 w-4 mr-2" />
-          {isNearReplacement ? "Replace Soon" : "View Details"}
-        </Button>
-      </CardFooter>
     </Card>
   );
 }
