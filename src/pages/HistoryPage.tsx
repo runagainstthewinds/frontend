@@ -1,18 +1,46 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Calendar, Filter, Search, ArrowUpDown } from "lucide-react"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { UserSidebar } from "@/components/user-sidebar"
-import { MonthlyMileageChart } from "@/components/monthly-mileage-chart"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import IntensityBadge from "@/components/IntensityBadge"
+import { useState } from "react";
+import { Calendar, Filter, Search, ArrowUpDown } from "lucide-react";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { UserSidebar } from "@/components/user-sidebar";
+import { MonthlyMileageChart } from "@/components/monthly-mileage-chart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import IntensityBadge from "@/components/IntensityBadge";
 
 const pastRuns = [
   {
@@ -106,12 +134,12 @@ const pastRuns = [
     elevation: 85,
     heartRate: 142,
   },
-]
+];
 
 function HistoryPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedIntensity, setSelectedIntensity] = useState("")
-  const [selectedShoe, setSelectedShoe] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedIntensity, setSelectedIntensity] = useState("");
+  const [selectedShoe, setSelectedShoe] = useState("");
 
   // Filter runs based on search term and filters
   const filteredRuns = pastRuns.filter((run) => {
@@ -119,16 +147,17 @@ function HistoryPage() {
       searchTerm === "" ||
       run.trainingPlan.toLowerCase().includes(searchTerm.toLowerCase()) ||
       run.notes.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      run.shoe.toLowerCase().includes(searchTerm.toLowerCase())
+      run.shoe.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesIntensity = selectedIntensity === "" || run.intensity === selectedIntensity
+    const matchesIntensity =
+      selectedIntensity === "" || run.intensity === selectedIntensity;
 
-    const matchesShoe = selectedShoe === "" || run.shoe === selectedShoe
+    const matchesShoe = selectedShoe === "" || run.shoe === selectedShoe;
 
-    return matchesSearch && matchesIntensity && matchesShoe
-  })
+    return matchesSearch && matchesIntensity && matchesShoe;
+  });
 
-  const uniqueShoes = [...new Set(pastRuns.map((run) => run.shoe))]
+  const uniqueShoes = [...new Set(pastRuns.map((run) => run.shoe))];
 
   return (
     <SidebarProvider>
@@ -172,7 +201,9 @@ function HistoryPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Run History</CardTitle>
-                    <CardDescription>View and filter your past runs</CardDescription>
+                    <CardDescription>
+                      View and filter your past runs
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -187,7 +218,10 @@ function HistoryPage() {
                         />
                       </div>
                       <div className="flex gap-2">
-                        <Select value={selectedIntensity} onValueChange={setSelectedIntensity}>
+                        <Select
+                          value={selectedIntensity}
+                          onValueChange={setSelectedIntensity}
+                        >
                           <SelectTrigger className="w-[140px]">
                             <SelectValue placeholder="Intensity" />
                           </SelectTrigger>
@@ -198,7 +232,10 @@ function HistoryPage() {
                             <SelectItem value="High">High</SelectItem>
                           </SelectContent>
                         </Select>
-                        <Select value={selectedShoe} onValueChange={setSelectedShoe}>
+                        <Select
+                          value={selectedShoe}
+                          onValueChange={setSelectedShoe}
+                        >
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Shoe" />
                           </SelectTrigger>
@@ -220,18 +257,29 @@ function HistoryPage() {
                           <TableRow>
                             <TableHead>Date</TableHead>
                             <TableHead>Distance</TableHead>
-                            <TableHead className="hidden md:table-cell">Duration</TableHead>
+                            <TableHead className="hidden md:table-cell">
+                              Duration
+                            </TableHead>
                             <TableHead>Pace</TableHead>
-                            <TableHead className="hidden md:table-cell">Training Plan</TableHead>
-                            <TableHead className="hidden lg:table-cell">Shoe</TableHead>
+                            <TableHead className="hidden md:table-cell">
+                              Training Plan
+                            </TableHead>
+                            <TableHead className="hidden lg:table-cell">
+                              Shoe
+                            </TableHead>
                             <TableHead>Intensity</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
+                            <TableHead className="text-right">
+                              Actions
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {filteredRuns.length === 0 ? (
                             <TableRow>
-                              <TableCell colSpan={8} className="text-center py-6 text-muted-foreground">
+                              <TableCell
+                                colSpan={8}
+                                className="text-center py-6 text-muted-foreground"
+                              >
                                 No runs found matching your filters
                               </TableCell>
                             </TableRow>
@@ -239,32 +287,53 @@ function HistoryPage() {
                             filteredRuns.map((run) => (
                               <TableRow key={run.id}>
                                 <TableCell>
-                                  {new Date(run.date).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                  })}
+                                  {new Date(run.date).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    },
+                                  )}
                                 </TableCell>
                                 <TableCell>{run.distance} km</TableCell>
-                                <TableCell className="hidden md:table-cell">{run.duration}</TableCell>
+                                <TableCell className="hidden md:table-cell">
+                                  {run.duration}
+                                </TableCell>
                                 <TableCell>{run.pace} min/km</TableCell>
-                                <TableCell className="hidden md:table-cell">{run.trainingPlan}</TableCell>
-                                <TableCell className="hidden lg:table-cell">{run.shoe}</TableCell>
+                                <TableCell className="hidden md:table-cell">
+                                  {run.trainingPlan}
+                                </TableCell>
+                                <TableCell className="hidden lg:table-cell">
+                                  {run.shoe}
+                                </TableCell>
                                 <TableCell>
-                                  <IntensityBadge intensity={run.intensity as "Low" | "Medium" | "High"} />
+                                  <IntensityBadge
+                                    intensity={
+                                      run.intensity as "Low" | "Medium" | "High"
+                                    }
+                                  />
                                 </TableCell>
                                 <TableCell className="text-right">
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                       <Button variant="ghost" size="sm">
-                                        <span className="sr-only">Open menu</span>
+                                        <span className="sr-only">
+                                          Open menu
+                                        </span>
                                         <Filter className="h-4 w-4" />
                                       </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
-                                      <DropdownMenuItem>View Details</DropdownMenuItem>
-                                      <DropdownMenuItem>Edit Run</DropdownMenuItem>
-                                      <DropdownMenuItem>Delete Run</DropdownMenuItem>
+                                      <DropdownMenuItem>
+                                        View Details
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem>
+                                        Edit Run
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem>
+                                        Delete Run
+                                      </DropdownMenuItem>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
                                 </TableCell>
@@ -286,7 +355,7 @@ function HistoryPage() {
         </SidebarInset>
       </div>
     </SidebarProvider>
-  )
+  );
 }
 
 function MonthlyMileageCard() {
@@ -302,11 +371,13 @@ function MonthlyMileageCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function RecentRunsCard() {
-  const recentRuns = [...pastRuns].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5)
+  const recentRuns = [...pastRuns]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5);
 
   return (
     <Card>
@@ -316,7 +387,10 @@ function RecentRunsCard() {
       </CardHeader>
       <CardContent className="space-y-6">
         {recentRuns.map((run) => (
-          <div key={run.id} className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
+          <div
+            key={run.id}
+            className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg"
+          >
             <div className="sm:w-1/4">
               <div className="text-lg font-semibold">
                 {new Date(run.date).toLocaleDateString("en-US", {
@@ -351,7 +425,9 @@ function RecentRunsCard() {
               <div className="text-sm text-muted-foreground">Shoe</div>
               <div className="font-medium">{run.shoe}</div>
               <div className="mt-2">
-                <IntensityBadge intensity={run.intensity as "Low" | "Medium" | "High"} />
+                <IntensityBadge
+                  intensity={run.intensity as "Low" | "Medium" | "High"}
+                />
               </div>
             </div>
             <div className="sm:w-1/4">
@@ -365,14 +441,16 @@ function RecentRunsCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function RunningStatsCard() {
-  const totalDistance: any = pastRuns.reduce((sum, run) => sum + run.distance, 0).toFixed(1)
-  const totalRuns = pastRuns.length
-  const avgDistance = (totalDistance / totalRuns).toFixed(1)
-  const totalTime = 32
+  const totalDistance: any = pastRuns
+    .reduce((sum, run) => sum + run.distance, 0)
+    .toFixed(1);
+  const totalRuns = pastRuns.length;
+  const avgDistance = (totalDistance / totalRuns).toFixed(1);
+  const totalTime = 32;
 
   return (
     <Card>
@@ -404,8 +482,10 @@ function RunningStatsCard() {
           <h3 className="font-medium mb-2">Intensity Distribution</h3>
           <div className="flex gap-2">
             {["Low", "Medium", "High"].map((intensity) => {
-              const count = pastRuns.filter((run) => run.intensity === intensity).length
-              const percentage = Math.round((count / totalRuns) * 100)
+              const count = pastRuns.filter(
+                (run) => run.intensity === intensity,
+              ).length;
+              const percentage = Math.round((count / totalRuns) * 100);
 
               return (
                 <div key={intensity} className="flex-1">
@@ -416,19 +496,22 @@ function RunningStatsCard() {
                   <div className="h-2 rounded-full bg-slate-100">
                     <div
                       className={`h-full rounded-full ${
-                        intensity === "Low" ? "bg-blue-500" : intensity === "Medium" ? "bg-amber-500" : "bg-red-500"
+                        intensity === "Low"
+                          ? "bg-blue-500"
+                          : intensity === "Medium"
+                            ? "bg-amber-500"
+                            : "bg-red-500"
                       }`}
                       style={{ width: `${percentage}%` }}
                     ></div>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-export default HistoryPage
-
+export default HistoryPage;
