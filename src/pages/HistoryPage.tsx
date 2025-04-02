@@ -148,8 +148,7 @@ function HistoryPage() {
       run.notes.toLowerCase().includes(searchTerm.toLowerCase()) ||
       run.shoe.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchestype =
-      selectedtype === "" || run.type === selectedtype;
+    const matchestype = selectedtype === "" || run.type === selectedtype;
 
     const matchesShoe = selectedShoe === "" || run.shoe === selectedShoe;
 
@@ -309,7 +308,10 @@ function HistoryPage() {
                                 <TableCell>
                                   <RunType
                                     type={
-                                      run.type as "Recovery" | "Interval" | "Long Run"
+                                      run.type as
+                                        | "Recovery"
+                                        | "Interval"
+                                        | "Long Run"
                                     }
                                   />
                                 </TableCell>
@@ -481,9 +483,7 @@ function RunningStatsCard() {
           <h3 className="font-Interval mb-2">type Distribution</h3>
           <div className="flex gap-2">
             {["Recovery", "Interval", "Long Run"].map((type) => {
-              const count = pastRuns.filter(
-                (run) => run.type === type,
-              ).length;
+              const count = pastRuns.filter((run) => run.type === type).length;
               const percentage = Math.round((count / totalRuns) * 100);
 
               return (
