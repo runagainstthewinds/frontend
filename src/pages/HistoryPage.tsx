@@ -40,7 +40,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import IntensityBadge from "@/components/IntensityBadge";
+import RunType from "@/components/runtype";
 
 const pastRuns = [
   {
@@ -51,7 +51,7 @@ const pastRuns = [
     pace: "5:00",
     trainingPlan: "Marathon Prep",
     shoe: "Nike Pegasus 39",
-    intensity: "Medium",
+    type: "Interval",
     notes: "Felt good throughout the run",
     elevation: 120,
     heartRate: 152,
@@ -64,7 +64,7 @@ const pastRuns = [
     pace: "4:51",
     trainingPlan: "Marathon Prep",
     shoe: "Nike Pegasus 39",
-    intensity: "High",
+    type: "Long Run",
     notes: "Speed work session",
     elevation: 45,
     heartRate: 168,
@@ -77,7 +77,7 @@ const pastRuns = [
     pace: "5:23",
     trainingPlan: "Marathon Prep",
     shoe: "Hoka Clifton 8",
-    intensity: "Medium",
+    type: "Interval",
     notes: "Long run, slight discomfort in left knee after 12km",
     elevation: 210,
     heartRate: 145,
@@ -90,7 +90,7 @@ const pastRuns = [
     pace: "5:06",
     trainingPlan: "Marathon Prep",
     shoe: "Hoka Clifton 8",
-    intensity: "Low",
+    type: "Recovery",
     notes: "Recovery run",
     elevation: 65,
     heartRate: 138,
@@ -103,7 +103,7 @@ const pastRuns = [
     pace: "5:06",
     trainingPlan: "Marathon Prep",
     shoe: "Nike Pegasus 39",
-    intensity: "Medium",
+    type: "Interval",
     notes: "Tempo run",
     elevation: 150,
     heartRate: 162,
@@ -116,7 +116,7 @@ const pastRuns = [
     pace: "5:29",
     trainingPlan: "Marathon Prep",
     shoe: "Hoka Clifton 8",
-    intensity: "Medium",
+    type: "Interval",
     notes: "Long run, felt strong",
     elevation: 245,
     heartRate: 148,
@@ -129,7 +129,7 @@ const pastRuns = [
     pace: "5:02",
     trainingPlan: "Marathon Prep",
     shoe: "Nike Pegasus 39",
-    intensity: "Medium",
+    type: "Interval",
     notes: "Easy run",
     elevation: 85,
     heartRate: 142,
@@ -138,10 +138,9 @@ const pastRuns = [
 
 function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedIntensity, setSelectedIntensity] = useState("");
+  const [selectedtype, setSelectedtype] = useState("");
   const [selectedShoe, setSelectedShoe] = useState("");
 
-  // Filter runs based on search term and filters
   const filteredRuns = pastRuns.filter((run) => {
     const matchesSearch =
       searchTerm === "" ||
@@ -149,12 +148,12 @@ function HistoryPage() {
       run.notes.toLowerCase().includes(searchTerm.toLowerCase()) ||
       run.shoe.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesIntensity =
-      selectedIntensity === "" || run.intensity === selectedIntensity;
+    const matchestype =
+      selectedtype === "" || run.type === selectedtype;
 
     const matchesShoe = selectedShoe === "" || run.shoe === selectedShoe;
 
-    return matchesSearch && matchesIntensity && matchesShoe;
+    return matchesSearch && matchestype && matchesShoe;
   });
 
   const uniqueShoes = [...new Set(pastRuns.map((run) => run.shoe))];
@@ -219,17 +218,17 @@ function HistoryPage() {
                       </div>
                       <div className="flex gap-2">
                         <Select
-                          value={selectedIntensity}
-                          onValueChange={setSelectedIntensity}
+                          value={selectedtype}
+                          onValueChange={setSelectedtype}
                         >
                           <SelectTrigger className="w-[140px]">
-                            <SelectValue placeholder="Intensity" />
+                            <SelectValue placeholder="Type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="all">All Intensities</SelectItem>
-                            <SelectItem value="Low">Low</SelectItem>
-                            <SelectItem value="Medium">Medium</SelectItem>
-                            <SelectItem value="High">High</SelectItem>
+                            <SelectItem value="all">All Types</SelectItem>
+                            <SelectItem value="Recovery">Recovery</SelectItem>
+                            <SelectItem value="Interval">Interval</SelectItem>
+                            <SelectItem value="Long Run">Long Run</SelectItem>
                           </SelectContent>
                         </Select>
                         <Select
@@ -267,7 +266,7 @@ function HistoryPage() {
                             <TableHead className="hidden lg:table-cell">
                               Shoe
                             </TableHead>
-                            <TableHead>Intensity</TableHead>
+                            <TableHead>Run Type</TableHead>
                             <TableHead className="text-right">
                               Actions
                             </TableHead>
@@ -308,9 +307,9 @@ function HistoryPage() {
                                   {run.shoe}
                                 </TableCell>
                                 <TableCell>
-                                  <IntensityBadge
-                                    intensity={
-                                      run.intensity as "Low" | "Medium" | "High"
+                                  <RunType
+                                    type={
+                                      run.type as "Recovery" | "Interval" | "Long Run"
                                     }
                                   />
                                 </TableCell>
@@ -405,28 +404,28 @@ function RecentRunsCard() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <div className="text-sm text-muted-foreground">Distance</div>
-                  <div className="font-medium">{run.distance} km</div>
+                  <div className="font-Interval">{run.distance} km</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Duration</div>
-                  <div className="font-medium">{run.duration}</div>
+                  <div className="font-Interval">{run.duration}</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Pace</div>
-                  <div className="font-medium">{run.pace} min/km</div>
+                  <div className="font-Interval">{run.pace} min/km</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Elevation</div>
-                  <div className="font-medium">{run.elevation} m</div>
+                  <div className="font-Interval">{run.elevation} m</div>
                 </div>
               </div>
             </div>
             <div className="sm:w-1/4">
               <div className="text-sm text-muted-foreground">Shoe</div>
-              <div className="font-medium">{run.shoe}</div>
+              <div className="font-Interval">{run.shoe}</div>
               <div className="mt-2">
-                <IntensityBadge
-                  intensity={run.intensity as "Low" | "Medium" | "High"}
+                <RunType
+                  type={run.type as "Recovery" | "Interval" | "Long Run"}
                 />
               </div>
             </div>
@@ -479,26 +478,26 @@ function RunningStatsCard() {
         </div>
 
         <div className="mt-6 pt-6 border-t">
-          <h3 className="font-medium mb-2">Intensity Distribution</h3>
+          <h3 className="font-Interval mb-2">type Distribution</h3>
           <div className="flex gap-2">
-            {["Low", "Medium", "High"].map((intensity) => {
+            {["Recovery", "Interval", "Long Run"].map((type) => {
               const count = pastRuns.filter(
-                (run) => run.intensity === intensity,
+                (run) => run.type === type,
               ).length;
               const percentage = Math.round((count / totalRuns) * 100);
 
               return (
-                <div key={intensity} className="flex-1">
+                <div key={type} className="flex-1">
                   <div className="flex justify-between text-sm mb-1">
-                    <span>{intensity}</span>
+                    <span>{type}</span>
                     <span>{percentage}%</span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-100">
                     <div
                       className={`h-full rounded-full ${
-                        intensity === "Low"
+                        type === "Recovery"
                           ? "bg-blue-500"
-                          : intensity === "Medium"
+                          : type === "Interval"
                             ? "bg-amber-500"
                             : "bg-red-500"
                       }`}
