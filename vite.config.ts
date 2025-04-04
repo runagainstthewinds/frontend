@@ -12,7 +12,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // proxy requests to backend
+      // proxy requests to backend (change it for prod one day)
       "/api": {
         target: "http://localhost:8080",
         changeOrigin: true,
