@@ -37,7 +37,7 @@ export function UserSidebar() {
 
   const handleSignOut = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   const getInitials = () => {
@@ -49,7 +49,6 @@ export function UserSidebar() {
     <SidebarProvider>
       <Sidebar className="border-r w-64 shrink-0 overflow-y-auto">
         <SidebarHeader className="pb-0">
-          
           <div className="flex flex-col items-center space-y-4 pt-4">
             <Avatar className="h-24 w-24 ring-2 ring-teal-600 ring-offset-4 ring-offset-teal-50/10 shadow-lg">
               <AvatarImage
@@ -62,9 +61,9 @@ export function UserSidebar() {
             </Avatar>
             <div className="text-center space-y-1">
               <h2 className="text-xl font-bold">{user?.username || "User"}</h2>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleSignOut}
                 className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
               >

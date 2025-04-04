@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import AuthModal from '../auth/authModal';
+import React, { useState } from "react";
+import AuthModal from "../auth/authModal";
 
 const Navbar = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -16,15 +16,15 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-              <span className="text-gray-200 text-xl font-bold">
+                <span className="text-gray-200 text-xl font-bold">
                   Run Against The Wind
-              </span>
+                </span>
               </div>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-center space-x-8">
-                <button 
-                  onClick={() => setIsAuthModalOpen(true)} 
+                <button
+                  onClick={() => setIsAuthModalOpen(true)}
                   className="bg-teal-600 hover:bg-teal-500 text-gray-200 font-medium px-4 py-2 rounded-full text-sm shadow-md transition-all"
                 >
                   Sign In
@@ -32,7 +32,7 @@ const Navbar = () => {
               </div>
             </div>
             <div className="md:hidden">
-              <button 
+              <button
                 onClick={toggleMobileMenu}
                 className="text-gray-200 hover:text-white"
                 aria-label="Menu"
@@ -72,7 +72,10 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </>
   );
 };

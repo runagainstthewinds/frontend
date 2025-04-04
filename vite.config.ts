@@ -7,25 +7,24 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
     proxy: {
-
       // proxy requests to backend
-      '/api': {
-        target: 'http://localhost:8080',
+      "/api": {
+        target: "http://localhost:8080",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
 
-      '/auth': {
-        target: 'http://localhost:8080',
+      "/auth": {
+        target: "http://localhost:8080",
         changeOrigin: true,
       },
-      '/example': {
-        target: 'http://localhost:8080',
+      "/example": {
+        target: "http://localhost:8080",
         changeOrigin: true,
       },
     },

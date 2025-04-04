@@ -10,19 +10,19 @@ import ProtectedRoute from "./components/protectedRoute";
 function App() {
   return (
     <AuthProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        
-        {/* protected */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/dashboard" element={<SessionPage />} />
-          <Route path="/history" element={<History />} />
-        </Route>
-      </Routes>
-    </Router>
-  </AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+
+          {/* protected */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/dashboard" element={<SessionPage />} />
+            <Route path="/history" element={<History />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
