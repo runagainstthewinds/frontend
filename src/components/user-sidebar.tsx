@@ -5,7 +5,10 @@ import {
   History,
   ClipboardList,
   UserRound,
+  LogOut,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -23,12 +26,24 @@ import {
   SidebarProvider,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-
-import WeatherAlert from "./ui/weatherAlert";
+import { Button } from "@/components/ui/button";
+import JWTAuthTest from "./auth/jwtAuthTest";
 
 export function UserSidebar() {
   const [progress, setProgress] = useState(22);
   const [shoeUsage, setShoeUsage] = useState(75);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/");
+  };
+
+  const getInitials = () => {
+    if (!user || !user.username) return "?";
+    return user.username.substring(0, 2).toUpperCase();
+  };
 
   return (
     <SidebarProvider>
@@ -41,11 +56,20 @@ export function UserSidebar() {
                 alt="User"
               />
               <AvatarFallback className="bg-teal-600 text-white text-xl font-medium">
-                JD
+                {getInitials()}
               </AvatarFallback>
             </Avatar>
-            <div className="text-center">
-              <h2 className="text-xl font-bold">John Doe</h2>
+            <div className="text-center space-y-1">
+              <h2 className="text-xl font-bold">{user?.username || "User"}</h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSignOut}
+                className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Sign Out</span>
+              </Button>
             </div>
           </div>
         </SidebarHeader>
@@ -150,6 +174,8 @@ export function UserSidebar() {
                 </div>
               </div>
             </SidebarGroupContent>
+
+            <JWTAuthTest />
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
