@@ -13,7 +13,6 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-
           {/* protected */}
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<UserProfile />} />
