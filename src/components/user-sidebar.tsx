@@ -9,7 +9,12 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { getUserName, getUserInitials } from "@/helper/getUserDetails";
+import {
+  getUserName,
+  getUserInitials,
+  hasGoogleCalendarToken,
+  hasStravaToken,
+} from "@/helper/getUserDetails";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -108,30 +113,49 @@ export function UserSidebar() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between rounded-lg bg-background p-3 shadow-sm border">
                   <div className="flex items-center space-x-3">
-                    <div className="p-1.5 bg-teal-50 rounded-md">
-                      <Calendar className="h-4 w-4 text-teal-600" />
+                    <div className="p-1.5 bg-muted rounded-md">
+                      {hasGoogleCalendarToken() ? (
+                        <Calendar className="h-4 w-4 text-teal-600" />
+                      ) : (
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                      )}
                     </div>
-                    <span className="text-sm font-medium">Google Calendar</span>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Google Calendar
+                    </span>
                   </div>
-                  <Badge className="bg-teal-100 text-teal-800 hover:bg-teal-100">
-                    Connected
-                  </Badge>
+                  {hasGoogleCalendarToken() ? (
+                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                      Connected
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100">
+                      Unconnected
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-background p-3 shadow-sm border">
                   <div className="flex items-center space-x-3">
                     <div className="p-1.5 bg-muted rounded-md">
-                      <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                      {hasStravaToken() ? (
+                        <Calendar className="h-4 w-4 text-teal-600" />
+                      ) : (
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                      )}
                     </div>
                     <span className="text-sm font-medium text-muted-foreground">
                       Strava
                     </span>
                   </div>
-                  <Badge
-                    variant="outline"
-                    className="border-muted-foreground/30 text-muted-foreground"
-                  >
-                    Not Connected
-                  </Badge>
+                  {hasStravaToken() ? (
+                    <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">
+                      Connected
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100">
+                      Unconnected
+                    </Badge>
+                  )}
                 </div>
               </div>
             </SidebarGroupContent>
