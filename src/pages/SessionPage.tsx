@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { UserSidebar } from "@/components/user-sidebar";
 import {
@@ -92,27 +91,6 @@ export default function RunningSessionPage() {
                 </header>
               </div>
 
-              <Tabs
-                defaultValue="upcoming"
-                onValueChange={setActiveTab}
-                className="space-y-4"
-              >
-                <TabsList className="grid w-full h-full grid-cols-2 mb-4 bg-white shadow-sm border p-1 rounded-lg">
-                  <TabsTrigger
-                    value="upcoming"
-                    className="data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-md py-3 font-bold"
-                  >
-                    Upcoming Sessions
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="past"
-                    className="data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-md py-3 font-bold"
-                  >
-                    Past Sessions
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="upcoming" className="space-y-4">
                   <motion.div
                     variants={containerVariants}
                     initial="hidden"
@@ -261,38 +239,6 @@ export default function RunningSessionPage() {
                       </Card>
                     </motion.div>
                   </motion.div>
-                </TabsContent>
-
-                <TabsContent value="past" className="space-y-8">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <Card className="shadow-lg overflow-hidden">
-                      <CardHeader className="border-b py-5">
-                        <CardTitle className="text-slate-900">
-                          Past Activities
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="py-10 flex flex-col items-center justify-center space-y-6">
-                        <div className="text-center space-y-4">
-                          <div className="h-20 w-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto border-4 border-teal-100">
-                            <TrendingUp className="h-10 w-10 text-teal-600" />
-                          </div>
-                          <h3 className="text-2xl font-medium text-slate-900">
-                            No Past Sessions
-                          </h3>
-                          <p className="text-slate-600 max-w-md mx-auto">
-                            Ready to start your next run? Begin your scheduled
-                            session or create a new custom workout.
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
-              </Tabs>
             </div>
           </motion.div>
         </SidebarInset>

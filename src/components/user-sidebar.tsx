@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { getUserName, getUserInitials } from "@/helper/getUserDetails";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -32,17 +33,12 @@ import JWTAuthTest from "./auth/jwtAuthTest";
 export function UserSidebar() {
   const [progress, setProgress] = useState(22);
   const [shoeUsage, setShoeUsage] = useState(75);
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = () => {
     logout();
     navigate("/");
-  };
-
-  const getInitials = () => {
-    if (!user || !user.username) return "?";
-    return user.username.substring(0, 2).toUpperCase();
   };
 
   return (
@@ -56,11 +52,11 @@ export function UserSidebar() {
                 alt="User"
               />
               <AvatarFallback className="bg-teal-600 text-white text-xl font-medium">
-                {getInitials()}
+                {getUserInitials()}
               </AvatarFallback>
             </Avatar>
             <div className="text-center space-y-1">
-              <h2 className="text-xl font-bold">{user?.username || "User"}</h2>
+              <h2 className="text-xl font-bold">{getUserName()}</h2>
               <Button
                 variant="outline"
                 size="sm"
