@@ -20,7 +20,6 @@ import {
   hasGoogleCalendarToken,
   hasStravaToken,
 } from "@/helper/getUserDetails";
-import { h } from "node_modules/framer-motion/dist/types.d-B50aGbjN";
 
 function UserOverview() {
   return (
