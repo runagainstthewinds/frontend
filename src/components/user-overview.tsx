@@ -12,8 +12,14 @@ import {
   Calendar,
   Check,
   ExternalLink,
-  PlusIcon,
 } from "lucide-react";
+import {
+  getUserEmail,
+  getUserInitials,
+  getUserName,
+  hasGoogleCalendarToken,
+  hasStravaToken,
+} from "@/helper/getUserDetails";
 
 function UserOverview() {
   return (
@@ -26,17 +32,17 @@ function UserOverview() {
           <Avatar className="h-24 w-24 border-4 border-white shadow-lg absolute top-0 transform -translate-y-1/2 md:relative md:transform-none">
             <AvatarImage
               src="/placeholder.svg?height=96&width=96"
-              alt="John Doe"
+              alt="Avatar Image"
             />
             <AvatarFallback className="bg-teal-600 text-white text-xl font-medium">
-              JD
+              {getUserInitials()}
             </AvatarFallback>
           </Avatar>
 
           {/* User info with proper spacing on mobile */}
           <div className="flex-1 space-y-2 mt-16 md:mt-0 w-full">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <h2 className="text-2xl font-bold">John Doe</h2>
+              <h2 className="text-2xl font-bold">{getUserName()}</h2>
               <Button size="sm" variant="outline" className="self-start">
                 <PencilIcon className="h-4 w-4 mr-1" />
                 Edit Profile
@@ -44,7 +50,7 @@ function UserOverview() {
             </div>
             <p className="text-muted-foreground flex items-center">
               <MailIcon className="h-4 w-4 mr-1.5 text-muted-foreground/70" />
-              john.doe@example.com
+              {getUserEmail()}
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               <Badge
@@ -88,14 +94,25 @@ function UserOverview() {
                 </p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-green-200 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800"
-            >
-              <Check className="h-4 w-4 mr-2" />
-              Connected
-            </Button>
+            {hasGoogleCalendarToken() ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
+              >
+                <Check className="h-4 w-4 mr-2" />
+                Connected
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Connect
+              </Button>
+            )}
           </div>
 
           <div className="flex items-center justify-between p-4 rounded-lg border hover:border-orange-300 hover:bg-orange-50/30 transition-colors">
@@ -110,14 +127,25 @@ function UserOverview() {
                 </p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Connect
-            </Button>
+            {hasStravaToken() ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800"
+              >
+                <Check className="h-4 w-4 mr-2" />
+                Connected
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Connect
+              </Button>
+            )}
           </div>
         </div>
       </div>
