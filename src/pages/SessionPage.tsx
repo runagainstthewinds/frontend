@@ -91,154 +91,154 @@ export default function RunningSessionPage() {
                 </header>
               </div>
 
-                  <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                  >
-                    <motion.div variants={itemVariants}>
-                      <WeatherAlert />
-                    </motion.div>
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.div variants={itemVariants}>
+                  <WeatherAlert />
+                </motion.div>
 
-                    <motion.div variants={itemVariants} className="mb-4">
-                      <Card className="shadow-lg">
-                        <CardHeader className="border-b py-6">
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <CardTitle className="text-slate-900 text-xl">
-                                Endurance Training
-                              </CardTitle>
-                              <CardDescription className="text-slate-600 mt-1">
-                                Tomorrow, 7:00 AM • Central Park Loop
-                              </CardDescription>
+                <motion.div variants={itemVariants} className="mb-4">
+                  <Card className="shadow-lg">
+                    <CardHeader className="border-b py-6">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <CardTitle className="text-slate-900 text-xl">
+                            Endurance Training
+                          </CardTitle>
+                          <CardDescription className="text-slate-600 mt-1">
+                            Tomorrow, 7:00 AM • Central Park Loop
+                          </CardDescription>
+                        </div>
+                        <Badge className="bg-teal-600 hover:bg-teal-700 py-1.5">
+                          Scheduled
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-4 pb-4 space-y-4">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {[
+                          { icon: MapPin, title: "Route", value: "Trail" },
+                          {
+                            icon: Cloud,
+                            title: "Weather",
+                            value: "18°C Cloudy",
+                          },
+                          { icon: Wind, title: "Wind", value: "5 km/h NE" },
+                          {
+                            icon: TrendingUp,
+                            title: "Distance",
+                            value: "12 km",
+                          },
+                          {
+                            icon: Timer,
+                            title: "Pace",
+                            value: "5:30 min/km",
+                          },
+                          { icon: User, title: "Partner", value: "Solo" },
+                        ].map((item, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center space-x-2 p-3 bg-slate-50 rounded-lg border border-slate-100"
+                          >
+                            <div className="p-1.5 bg-white rounded-md shadow-sm">
+                              <item.icon className="h-4 w-4 text-teal-600" />
                             </div>
-                            <Badge className="bg-teal-600 hover:bg-teal-700 py-1.5">
-                              Scheduled
-                            </Badge>
+                            <div>
+                              <p className="text-xs text-slate-500 font-medium">
+                                {item.title}
+                              </p>
+                              <p className="font-medium text-slate-900">
+                                {item.value}
+                              </p>
+                            </div>
                           </div>
-                        </CardHeader>
-                        <CardContent className="pt-4 pb-4 space-y-4">
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                            {[
-                              { icon: MapPin, title: "Route", value: "Trail" },
-                              {
-                                icon: Cloud,
-                                title: "Weather",
-                                value: "18°C Cloudy",
-                              },
-                              { icon: Wind, title: "Wind", value: "5 km/h NE" },
-                              {
-                                icon: TrendingUp,
-                                title: "Distance",
-                                value: "12 km",
-                              },
-                              {
-                                icon: Timer,
-                                title: "Pace",
-                                value: "5:30 min/km",
-                              },
-                              { icon: User, title: "Partner", value: "Solo" },
-                            ].map((item, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center space-x-2 p-3 bg-slate-50 rounded-lg border border-slate-100"
-                              >
-                                <div className="p-1.5 bg-white rounded-md shadow-sm">
-                                  <item.icon className="h-4 w-4 text-teal-600" />
-                                </div>
-                                <div>
-                                  <p className="text-xs text-slate-500 font-medium">
-                                    {item.title}
-                                  </p>
-                                  <p className="font-medium text-slate-900">
-                                    {item.value}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                        ))}
+                      </div>
 
-                          <div className="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                            <h3 className="text-sm font-medium text-slate-900">
-                              Training Notes
-                            </h3>
-                            <p className="text-sm text-slate-600 leading-relaxed">
-                              Focus on maintaining consistent pace. Hydrate well
-                              and monitor heart rate zones. Allow for 5-minute
-                              warm-up and cool-down periods.
+                      <div className="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <h3 className="text-sm font-medium text-slate-900">
+                          Training Notes
+                        </h3>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          Focus on maintaining consistent pace. Hydrate well and
+                          monitor heart rate zones. Allow for 5-minute warm-up
+                          and cool-down periods.
+                        </p>
+                      </div>
+
+                      <div className="flex gap-3 pt-1">
+                        <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium">
+                          Complete Session
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="text-red-400 border-red-300 hover:bg-red-50 px-4 py-2"
+                        >
+                          Cancel Session
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <Card className="shadow-lg overflow-hidden">
+                    <CardHeader className="border-b py-5">
+                      <CardTitle className="text-slate-900">
+                        Training Schedule
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="">
+                      {[
+                        {
+                          day: "Monday",
+                          type: "Rest",
+                          detail: "Active recovery",
+                          badge: "bg-purple-100 text-purple-800",
+                        },
+                        {
+                          day: "Tuesday",
+                          type: "Intervals",
+                          detail: "5 km speed work",
+                          badge: "bg-teal-100 text-teal-800",
+                        },
+                        {
+                          day: "Wednesday",
+                          type: "Easy Run",
+                          detail: "6 km recovery",
+                          badge: "bg-green-100 text-green-800",
+                        },
+                        {
+                          day: "Saturday",
+                          type: "Long Run",
+                          detail: "12 km endurance",
+                          badge: "bg-blue-100 text-blue-800",
+                        },
+                      ].map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex justify-between items-center py-3 border-b border-slate-100 last:border-0"
+                        >
+                          <div>
+                            <p className="font-medium text-slate-900">
+                              {item.day}
+                            </p>
+                            <p className="text-sm text-slate-600 mt-0.5">
+                              {item.detail}
                             </p>
                           </div>
-
-                          <div className="flex gap-3 pt-1">
-                            <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium">
-                              Complete Session
-                            </Button>
-                            <Button
-                              variant="outline"
-                              className="text-red-400 border-red-300 hover:bg-red-50 px-4 py-2"
-                            >
-                              Cancel Session
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-
-                    <motion.div variants={itemVariants}>
-                      <Card className="shadow-lg overflow-hidden">
-                        <CardHeader className="border-b py-5">
-                          <CardTitle className="text-slate-900">
-                            Training Schedule
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="">
-                          {[
-                            {
-                              day: "Monday",
-                              type: "Rest",
-                              detail: "Active recovery",
-                              badge: "bg-purple-100 text-purple-800",
-                            },
-                            {
-                              day: "Tuesday",
-                              type: "Intervals",
-                              detail: "5 km speed work",
-                              badge: "bg-teal-100 text-teal-800",
-                            },
-                            {
-                              day: "Wednesday",
-                              type: "Easy Run",
-                              detail: "6 km recovery",
-                              badge: "bg-green-100 text-green-800",
-                            },
-                            {
-                              day: "Saturday",
-                              type: "Long Run",
-                              detail: "12 km endurance",
-                              badge: "bg-blue-100 text-blue-800",
-                            },
-                          ].map((item, index) => (
-                            <div
-                              key={index}
-                              className="flex justify-between items-center py-3 border-b border-slate-100 last:border-0"
-                            >
-                              <div>
-                                <p className="font-medium text-slate-900">
-                                  {item.day}
-                                </p>
-                                <p className="text-sm text-slate-600 mt-0.5">
-                                  {item.detail}
-                                </p>
-                              </div>
-                              <Badge className={`${item.badge} px-3 py-1`}>
-                                {item.type}
-                              </Badge>
-                            </div>
-                          ))}
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </motion.div>
+                          <Badge className={`${item.badge} px-3 py-1`}>
+                            {item.type}
+                          </Badge>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </motion.div>
             </div>
           </motion.div>
         </SidebarInset>

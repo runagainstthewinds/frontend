@@ -13,7 +13,13 @@ import {
   Check,
   ExternalLink,
 } from "lucide-react";
-import { getUserEmail, getUserInitials, getUserName, hasGoogleCalendarToken, hasStravaToken } from "@/helper/getUserDetails";
+import {
+  getUserEmail,
+  getUserInitials,
+  getUserName,
+  hasGoogleCalendarToken,
+  hasStravaToken,
+} from "@/helper/getUserDetails";
 import { h } from "node_modules/framer-motion/dist/types.d-B50aGbjN";
 
 function UserOverview() {
