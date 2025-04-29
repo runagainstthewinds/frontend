@@ -292,6 +292,7 @@ function MonthlyMileageCard() {
 }
 
 function RunCardItem({ run }: { run: TrainingSession }) {
+  const roundedPaceTwoDecimals = run.achievedPace.toFixed(2);
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
       <div className="sm:w-1/4">
@@ -303,9 +304,9 @@ function RunCardItem({ run }: { run: TrainingSession }) {
 
       <div className="sm:w-1/4 grid grid-cols-2 gap-2">
         {[
-          ["Distance", `${run.distance} km`],
-          ["Duration", run.duration],
-          ["Pace", `${run.achievedPace} min/km`],
+          ["Distance", `${run.achievedDistance} km`],
+          ["Duration", `${run.achievedDuration} min`],
+          ["Pace", `${roundedPaceTwoDecimals} min/km`],
           ["Type", run.trainingType],
         ].map(([label, value]) => (
           <div key={label}>
