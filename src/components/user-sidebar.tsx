@@ -10,11 +10,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import {
-  getUserName,
-  getUserInitials,
-  hasGoogleCalendarToken,
-  hasStravaToken,
-} from "@/helper/getUserDetails";
+  useUserName,
+  useUserInitials,
+  useHasStravaToken,
+  useUserEmail,
+  useHasGoogleCalendarToken,
+} from "@/hooks/useUserInfo";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -57,11 +58,11 @@ export function UserSidebar() {
                 alt="User"
               />
               <AvatarFallback className="bg-teal-600 text-white text-xl font-medium">
-                {getUserInitials()}
+                {useUserInitials()}
               </AvatarFallback>
             </Avatar>
             <div className="text-center space-y-1">
-              <h2 className="text-xl font-bold">{getUserName()}</h2>
+              <h2 className="text-xl font-bold">{useUserName()}</h2>
               <Button
                 variant="outline"
                 size="sm"
@@ -114,7 +115,7 @@ export function UserSidebar() {
                 <div className="flex items-center justify-between rounded-lg bg-background p-3 shadow-sm border">
                   <div className="flex items-center space-x-3">
                     <div className="p-1.5 bg-muted rounded-md">
-                      {hasGoogleCalendarToken() ? (
+                      {useHasGoogleCalendarToken() ? (
                         <Calendar className="h-4 w-4 text-teal-600" />
                       ) : (
                         <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -124,7 +125,7 @@ export function UserSidebar() {
                       Google Calendar
                     </span>
                   </div>
-                  {hasGoogleCalendarToken() ? (
+                  {useHasGoogleCalendarToken() ? (
                     <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
                       Connected
                     </Badge>
@@ -137,7 +138,7 @@ export function UserSidebar() {
                 <div className="flex items-center justify-between rounded-lg bg-background p-3 shadow-sm border">
                   <div className="flex items-center space-x-3">
                     <div className="p-1.5 bg-muted rounded-md">
-                      {hasStravaToken() ? (
+                      {useHasStravaToken() ? (
                         <Calendar className="h-4 w-4 text-teal-600" />
                       ) : (
                         <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -147,7 +148,7 @@ export function UserSidebar() {
                       Strava
                     </span>
                   </div>
-                  {hasStravaToken() ? (
+                  {useHasStravaToken() ? (
                     <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">
                       Connected
                     </Badge>

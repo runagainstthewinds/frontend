@@ -13,6 +13,7 @@ import {
 } from "../api/auth";
 import { LoginCredentials, RegisterCredentials } from "../types/auth";
 import { jwtDecode } from "jwt-decode";
+import getUserByUsername from "@/api/user";
 
 interface AuthContextType {
   user: User | null;
@@ -112,13 +113,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const decoded = jwtDecode<JwtPayload>(token);
       const username = decoded.sub;
 
+      const currentUser = await getUserByUsername(username);
+
       const userInfo = {
-        userId: "",
+        userId: currentUser.userId,
         username: username,
-        email: null,
+        email: currentUser.email,
         password: "",
-        googleCalendarToken: null,
-        stravaToken: null,
+        googleCalendarToken: currentUser.googleCalendarToken,
+        stravaToken: currentUser.stravaToken,
         userDetails: null,
         trainingPlan: null,
         trainingSessions: null,

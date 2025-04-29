@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Calendar, Filter, Search, ArrowUpDown } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Calendar, Filter, Search, ArrowUpDown, Loader } from "lucide-react";
+import { format } from "date-fns";
 import {
   SidebarInset,
   SidebarProvider,
@@ -41,100 +42,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import RunType from "@/components/runtype";
+import pastRuns from "@/helper/data/fakeRun";
+import { TrainingSession } from "@/types/models";
+import { useAuth } from "@/context/AuthContext";
+import { getTrainingSessions } from "../api/trainingSession";
+import mapTrainingTypeToRunType from "@/helper/mapTrainingType";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const pastRuns = [
-  {
-    id: 1,
-    date: "2023-04-15",
-    distance: 10.5,
-    duration: "52:30",
-    pace: "5:00",
-    trainingPlan: "Marathon Prep",
-    shoe: "Nike Pegasus 39",
-    type: "Interval",
-    notes: "Felt good throughout the run",
-    elevation: 120,
-    heartRate: 152,
-  },
-  {
-    id: 2,
-    date: "2023-04-12",
-    distance: 5.2,
-    duration: "25:15",
-    pace: "4:51",
-    trainingPlan: "Marathon Prep",
-    shoe: "Nike Pegasus 39",
-    type: "Long Run",
-    notes: "Speed work session",
-    elevation: 45,
-    heartRate: 168,
-  },
-  {
-    id: 3,
-    date: "2023-04-10",
-    distance: 15.0,
-    duration: "1:20:45",
-    pace: "5:23",
-    trainingPlan: "Marathon Prep",
-    shoe: "Hoka Clifton 8",
-    type: "Interval",
-    notes: "Long run, slight discomfort in left knee after 12km",
-    elevation: 210,
-    heartRate: 145,
-  },
-  {
-    id: 4,
-    date: "2023-04-08",
-    distance: 8.3,
-    duration: "42:20",
-    pace: "5:06",
-    trainingPlan: "Marathon Prep",
-    shoe: "Hoka Clifton 8",
-    type: "Recovery",
-    notes: "Recovery run",
-    elevation: 65,
-    heartRate: 138,
-  },
-  {
-    id: 5,
-    date: "2023-04-05",
-    distance: 12.1,
-    duration: "1:01:42",
-    pace: "5:06",
-    trainingPlan: "Marathon Prep",
-    shoe: "Nike Pegasus 39",
-    type: "Interval",
-    notes: "Tempo run",
-    elevation: 150,
-    heartRate: 162,
-  },
-  {
-    id: 6,
-    date: "2023-04-02",
-    distance: 18.5,
-    duration: "1:41:23",
-    pace: "5:29",
-    trainingPlan: "Marathon Prep",
-    shoe: "Hoka Clifton 8",
-    type: "Interval",
-    notes: "Long run, felt strong",
-    elevation: 245,
-    heartRate: 148,
-  },
-  {
-    id: 7,
-    date: "2023-03-30",
-    distance: 6.4,
-    duration: "32:10",
-    pace: "5:02",
-    trainingPlan: "Marathon Prep",
-    shoe: "Nike Pegasus 39",
-    type: "Interval",
-    notes: "Easy run",
-    elevation: 85,
-    heartRate: 142,
-  },
-];
+const ITEMS_PER_PAGE = 5;
 
 function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -312,6 +227,7 @@ function HistoryPage() {
                                         | "Recovery"
                                         | "Interval"
                                         | "Long Run"
+                                        | "Final Run"
                                     }
                                   />
                                 </TableCell>
@@ -375,10 +291,72 @@ function MonthlyMileageCard() {
   );
 }
 
-function RecentRunsCard() {
-  const recentRuns = [...pastRuns]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 5);
+function RunCardItem({ run }: { run: TrainingSession }) {
+  return (
+    <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
+      <div className="sm:w-1/4">
+        <div className="text-lg font-semibold">
+          {format(new Date(run.date), "MMM d, yyyy")}
+        </div>
+        <div className="text-muted-foreground">{run.trainingPlanId ?? "—"}</div>
+      </div>
+
+      <div className="sm:w-1/4 grid grid-cols-2 gap-2">
+        {[
+          ["Distance", `${run.distance} km`],
+          ["Duration", run.duration],
+          ["Pace", `${run.achievedPace} min/km`],
+          ["Type", run.trainingType],
+        ].map(([label, value]) => (
+          <div key={label}>
+            <div className="text-sm text-muted-foreground">{label}</div>
+            <div className="font-Interval">{value}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="sm:w-1/4">
+        <div className="text-sm text-muted-foreground">Shoe</div>
+        <div className="font-Interval">{run.shoeId ?? "—"}</div>
+        <div className="mt-2">
+          <RunType type={mapTrainingTypeToRunType(run.trainingType)} />
+        </div>
+      </div>
+
+      <div className="sm:w-1/4">
+        <div className="text-sm text-muted-foreground">Notes</div>
+        <div className="text-sm">{run.notes ?? "No notes"}</div>
+      </div>
+    </div>
+  );
+}
+
+export function RecentRunsCard() {
+  const { user } = useAuth();
+  const [pastRuns, setPastRuns] = useState<TrainingSession[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    if (!user.userId) return;
+    console.log("Fetching runs for user:", user.userId);
+    setLoading(true);
+    setError(null);
+
+    getTrainingSessions(user.userId)
+      .then((data) => setPastRuns(data))
+      .catch((err) => setError(err.message ?? "Failed to load runs"))
+      .finally(() => setLoading(false));
+  }, [user]);
+
+  const recentRuns = useMemo(() => {
+    return [...pastRuns]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, ITEMS_PER_PAGE);
+  }, [pastRuns]);
+
+  console.log("User Id is ", user?.userId);
 
   return (
     <Card>
@@ -386,60 +364,33 @@ function RecentRunsCard() {
         <CardTitle>Recent Runs</CardTitle>
         <CardDescription>Your latest running activities</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {recentRuns.map((run) => (
-          <div
-            key={run.id}
-            className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg"
-          >
-            <div className="sm:w-1/4">
-              <div className="text-lg font-semibold">
-                {new Date(run.date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </div>
-              <div className="text-muted-foreground">{run.trainingPlan}</div>
-            </div>
-            <div className="sm:w-1/4">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <div className="text-sm text-muted-foreground">Distance</div>
-                  <div className="font-Interval">{run.distance} km</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">Duration</div>
-                  <div className="font-Interval">{run.duration}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">Pace</div>
-                  <div className="font-Interval">{run.pace} min/km</div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground">Elevation</div>
-                  <div className="font-Interval">{run.elevation} m</div>
-                </div>
-              </div>
-            </div>
-            <div className="sm:w-1/4">
-              <div className="text-sm text-muted-foreground">Shoe</div>
-              <div className="font-Interval">{run.shoe}</div>
-              <div className="mt-2">
-                <RunType
-                  type={run.type as "Recovery" | "Interval" | "Long Run"}
-                />
-              </div>
-            </div>
-            <div className="sm:w-1/4">
-              <div className="text-sm text-muted-foreground">Notes</div>
-              <div className="text-sm">{run.notes}</div>
-            </div>
+
+      <CardContent className="space-y-4">
+        {loading && (
+          <div className="flex justify-center py-8">
+            <Loader className="h-6 w-6 animate-spin" />
           </div>
-        ))}
-        <div className="flex justify-center">
-          <Button variant="outline">View All Runs</Button>
-        </div>
+        )}
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertTitle>Something went wrong</AlertTitle>
+          </Alert>
+        )}
+
+        {!loading && !error && recentRuns.length === 0 && (
+          <div className="text-center text-muted-foreground py-6">
+            No runs to show yet.
+          </div>
+        )}
+
+        {!loading &&
+          !error &&
+          recentRuns.map((run) => (
+            <RunCardItem key={run.trainingSessionId} run={run} />
+          ))}
+
+        {/* TODO: Add pagination controls here when pastRuns.length > ITEMS_PER_PAGE */}
       </CardContent>
     </Card>
   );
