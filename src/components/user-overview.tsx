@@ -138,7 +138,7 @@ function UserOverview() {
                 Connected
               </Button>
             ) : (
-              <StravaConnectButton username={getUserName()}/>
+              <StravaConnectButton username={getUserName()} />
             )}
           </div>
         </div>
