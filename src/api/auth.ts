@@ -1,3 +1,4 @@
+import api from "./client";
 import axios from "axios";
 import {
   RegisterResponse,
@@ -5,24 +6,15 @@ import {
   RegisterCredentials,
 } from "../types/auth";
 
-const api = axios.create({
-  baseURL: "/",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
-});
-
 export const login = async (credentials: LoginCredentials): Promise<string> => {
   try {
     const response = await api.post<string>(`/auth/login`, credentials);
-
-    if (response.data) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${response.data}`;
+    const token = response.data;
+    if (token) {
+      localStorage.setItem("token", token);
     }
 
-    return response.data;
+    return token;
   } catch (error) {
     console.error("Login error:", error);
     if (axios.isAxiosError(error)) {
@@ -61,7 +53,7 @@ export const register = async (
 
 export const logout = async (): Promise<void> => {
   try {
-    delete api.defaults.headers.common["Authorization"];
+    localStorage.removeItem("token");
   } catch (error) {
     console.error("Logout error:", error);
   }
