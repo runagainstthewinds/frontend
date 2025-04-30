@@ -29,8 +29,10 @@ import {
 } from "@/components/ui/sidebar";
 
 import WeatherAlert from "@/components/ui/weatherAlert";
+import { AddRunSessionModal } from "@/components/running-session-modal";
 
 export default function RunningSessionPage() {
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("upcoming");
   const [progress, setProgress] = useState(0);
 
@@ -170,12 +172,18 @@ export default function RunningSessionPage() {
                       </div>
 
                       <div className="flex gap-3 pt-1">
-                        <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium">
-                          Complete Session
-                        </Button>
+                        <AddRunSessionModal
+                          open={isCompleteModalOpen}
+                          onOpenChange={setIsCompleteModalOpen}
+                          trigger={
+                            <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium cursor-pointer">
+                              Complete Session
+                            </Button>
+                          }
+                        />
                         <Button
                           variant="outline"
-                          className="text-red-400 border-red-300 hover:bg-red-50 px-4 py-2"
+                          className="text-red-400 border-red-300 hover:bg-red-50 px-4 py-2 cursor-pointer"
                         >
                           Cancel Session
                         </Button>

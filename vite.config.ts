@@ -12,6 +12,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      "/achievements": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
       "/users": {
         target: "http://localhost:8080",
         changeOrigin: true,

@@ -13,7 +13,7 @@ import {
 } from "../api/auth";
 import { LoginCredentials, RegisterCredentials } from "../types/auth";
 import { jwtDecode } from "jwt-decode";
-import getUserByUsername from "@/api/user";
+import { getUserByUsername } from "@/api/user";
 
 interface AuthContextType {
   user: User | null;
@@ -114,24 +114,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const username = decoded.sub;
 
       const currentUser = await getUserByUsername(username);
-
-      const userInfo = {
-        userId: currentUser.userId,
-        username: username,
-        email: currentUser.email,
-        password: "",
-        googleCalendarToken: currentUser.googleCalendarToken,
-        stravaToken: currentUser.stravaToken,
-        userDetails: null,
-        trainingPlan: null,
-        trainingSessions: null,
-        shoes: null,
-      };
-
-      localStorage.setItem("user", JSON.stringify(userInfo));
+      localStorage.setItem("user", JSON.stringify(currentUser));
 
       setToken(token);
-      setUser(userInfo);
+      setUser(currentUser);
       console.log("User logged in:", username);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");

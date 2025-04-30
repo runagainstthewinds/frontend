@@ -51,4 +51,27 @@ interface TrainingSession {
   trainingPlanId: number | null;
 }
 
-export type { Shoe, StravaRun, SessionRunFormData, TrainingSession };
+interface UserAchievement {
+  achievementId: number;
+  description: string;
+  name: string;
+}
+
+interface AchievementBadge {
+  id: number;
+  name: string;
+  description: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  date: string | null;
+  color: string;
+  earned: boolean;
+}
+
+export type {
+  Shoe,
+  StravaRun,
+  SessionRunFormData,
+  TrainingSession,
+  UserAchievement,
+  AchievementBadge,
+};
