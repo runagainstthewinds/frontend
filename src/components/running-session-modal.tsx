@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Timer,
@@ -6,7 +6,6 @@ import {
   Clock,
   RotateCcw,
   ChevronRight,
-  Footprints,
 } from "lucide-react";
 import {
   Dialog,
@@ -25,9 +24,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
-import { Shoe, StravaRun, SessionRunFormData } from "@/types/types";
+import { Shoe, StravaRun, SessionRunFormData } from "@/types/models";
 
-// --- Mock Data ---
 const mockShoes: Shoe[] = [
   {
     id: 1,
@@ -101,7 +99,6 @@ const mockStravaRuns: StravaRun[] = [
   },
 ];
 
-// --- Component Props Interfaces ---
 interface ManualEntryTabProps {
   SessionRunFormData: SessionRunFormData;
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -122,7 +119,12 @@ interface ShoeSelectionProps {
   handleSelectShoe: (id: number) => void;
 }
 
-// Manual Entry Form Component
+interface AddRunSessionModalProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  trigger?: ReactNode;
+}
+
 const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
   SessionRunFormData,
   handleInputChange,
@@ -221,7 +223,6 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
   );
 };
 
-// Strava Import Component
 const StravaImportTab: React.FC<StravaImportTabProps> = ({
   runs,
   selectedRun,
@@ -367,9 +368,16 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
 };
 
 // --- Main Modal Component ---
-export const AddRunSessionModal: React.FC = () => {
+export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
+  open: controlledOpen,
+  onOpenChange: controlledSetOpen,
+  trigger,
+}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = controlledSetOpen ?? setInternalOpen;
+
   const [activeTab, setActiveTab] = useState<"manual" | "strava">("manual");
-  const [open, setOpen] = useState<boolean>(false);
   const [intensity, setIntensity] = useState<number[]>([3]);
   const [selectedRun, setSelectedRun] = useState<number | null>(null);
   const [selectedShoe, setSelectedShoe] = useState<number | null>(null);
@@ -379,7 +387,7 @@ export const AddRunSessionModal: React.FC = () => {
       distance: "",
       pace: "",
       duration: "",
-      intensity: 3,
+      intensity: 0,
       shoeId: null,
     });
 
@@ -412,7 +420,6 @@ export const AddRunSessionModal: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    // Gather data based on active tab
     const dataToSubmit =
       activeTab === "manual"
         ? { ...SessionRunFormData, shoeId: selectedShoe }
@@ -424,7 +431,6 @@ export const AddRunSessionModal: React.FC = () => {
     console.log("Submitting run session:", dataToSubmit);
     setOpen(false);
 
-    // Reset form state
     setSessionRunFormData({
       distance: "",
       pace: "",
@@ -440,9 +446,11 @@ export const AddRunSessionModal: React.FC = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-teal-600 hover:bg-teal-700 transition">
-          Add Run Session
-        </Button>
+        {trigger ?? (
+          <Button className="bg-teal-600 hover:bg-teal-700 transition">
+            Add Run Session
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden">
         <DialogHeader className="p-6 pb-2">
@@ -503,7 +511,10 @@ export const AddRunSessionModal: React.FC = () => {
           </Button>
           <Button
             className="bg-teal-600 hover:bg-teal-700 ml-2"
-            onClick={handleSubmit}
+            onClick={() => {
+              handleSubmit();
+              setOpen(false);
+            }}
             disabled={
               (activeTab === "manual"
                 ? !SessionRunFormData.distance ||

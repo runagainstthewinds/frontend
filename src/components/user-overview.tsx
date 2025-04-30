@@ -13,13 +13,14 @@ import {
   Check,
   ExternalLink,
 } from "lucide-react";
+
 import {
-  getUserEmail,
-  getUserInitials,
-  getUserName,
-  hasGoogleCalendarToken,
-  hasStravaToken,
-} from "@/helper/getUserDetails";
+  useUserName,
+  useUserInitials,
+  useHasStravaToken,
+  useUserEmail,
+  useHasGoogleCalendarToken,
+} from "@/hooks/useUserInfo";
 import StravaConnectButton from "./ui/StravaConnectButton";
 
 function UserOverview() {
@@ -36,14 +37,14 @@ function UserOverview() {
               alt="Avatar Image"
             />
             <AvatarFallback className="bg-teal-600 text-white text-xl font-medium">
-              {getUserInitials()}
+              {useUserInitials()}
             </AvatarFallback>
           </Avatar>
 
           {/* User info with proper spacing on mobile */}
           <div className="flex-1 space-y-2 mt-16 md:mt-0 w-full">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <h2 className="text-2xl font-bold">{getUserName()}</h2>
+              <h2 className="text-2xl font-bold">{useUserName()}</h2>
               <Button size="sm" variant="outline" className="self-start">
                 <PencilIcon className="h-4 w-4 mr-1" />
                 Edit Profile
@@ -51,7 +52,7 @@ function UserOverview() {
             </div>
             <p className="text-muted-foreground flex items-center">
               <MailIcon className="h-4 w-4 mr-1.5 text-muted-foreground/70" />
-              {getUserEmail()}
+              {useUserEmail()}
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               <Badge
@@ -95,7 +96,7 @@ function UserOverview() {
                 </p>
               </div>
             </div>
-            {hasGoogleCalendarToken() ? (
+            {useHasGoogleCalendarToken() ? (
               <Button
                 variant="outline"
                 size="sm"
@@ -128,7 +129,7 @@ function UserOverview() {
                 </p>
               </div>
             </div>
-            {hasStravaToken() ? (
+            {useHasStravaToken() ? (
               <Button
                 variant="outline"
                 size="sm"
@@ -138,7 +139,7 @@ function UserOverview() {
                 Connected
               </Button>
             ) : (
-              <StravaConnectButton username={getUserName()} />
+              <StravaConnectButton username={useUserName()} />
             )}
           </div>
         </div>

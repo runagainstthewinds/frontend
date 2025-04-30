@@ -1,107 +1,46 @@
-"use client";
-
-import {
-  Award,
-  Calendar,
-  Cloud,
-  FlameIcon as Fire,
-  Flag,
-  MapPin,
-  Mountain,
-  Sunrise,
-  Zap,
-} from "lucide-react";
-
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const achievements = [
-  {
-    id: 1,
-    name: "First Run",
-    description: "Completed your first run",
-    icon: Flag,
-    date: "2023-01-15",
-    color: "bg-teal-100 text-teal-700",
-    earned: true,
-  },
-  {
-    id: 2,
-    name: "Early Bird",
-    description: "Completed a run before 6 AM",
-    icon: Sunrise,
-    date: "2023-02-22",
-    color: "bg-orange-100 text-orange-700",
-    earned: true,
-  },
-  {
-    id: 3,
-    name: "Rain Runner",
-    description: "Completed a run in the rain",
-    icon: Cloud,
-    date: "2023-03-10",
-    color: "bg-blue-100 text-blue-700",
-    earned: true,
-  },
-  {
-    id: 4,
-    name: "Marathon Finisher",
-    description: "Completed a full marathon",
-    icon: Award,
-    date: null,
-    color: "bg-purple-100 text-purple-700",
-    earned: false,
-  },
-  {
-    id: 5,
-    name: "Streak Master",
-    description: "Run for 7 consecutive days",
-    icon: Fire,
-    date: "2023-05-28",
-    color: "bg-red-100 text-red-700",
-    earned: true,
-  },
-  {
-    id: 6,
-    name: "Trail Explorer",
-    description: "Completed a trail run",
-    icon: Mountain,
-    date: "2023-06-15",
-    color: "bg-green-100 text-green-700",
-    earned: true,
-  },
-  {
-    id: 7,
-    name: "Speed Demon",
-    description: "Ran 5K under 20 minutes",
-    icon: Zap,
-    date: null,
-    color: "bg-yellow-100 text-yellow-700",
-    earned: false,
-  },
-  {
-    id: 8,
-    name: "Globe Trotter",
-    description: "Run in 5 different cities",
-    icon: MapPin,
-    date: null,
-    color: "bg-indigo-100 text-indigo-700",
-    earned: false,
-  },
-  {
-    id: 9,
-    name: "Consistency King",
-    description: "Run 20 times in a month",
-    icon: Calendar,
-    date: null,
-    color: "bg-cyan-100 text-cyan-700",
-    earned: false,
-  },
-];
+import AllAchievements from "@/helper/data/allAchievements";
+import { useMemo, useState, useEffect } from "react";
+import { getUserAchievements } from "@/api/user";
+import { Loader } from "lucide-react";
+import { AchievementCard } from "./AchievementCard";
+import { useUserId } from "@/hooks/useUserInfo";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { UserAchievement } from "@/types/models";
 
 export function AchievementBadges() {
-  const earnedAchievements = achievements.filter((a) => a.earned);
-  const lockedAchievements = achievements.filter((a) => !a.earned);
+  const userId = useUserId();
+  const [userAchievements, setUserAchievements] = useState<UserAchievement[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    console.log("Fetching user achievements... for userId:", userId);
+    getUserAchievements(userId)
+      .then((response) => {
+        console.log("Fetched user achievements:", response);
+        setUserAchievements(response);
+      })
+      .catch((err) => setError(err.message || "Failed to fetch achievements"))
+      .finally(() => setLoading(false));
+  }, [userId]);
+
+  const displayAchievements = useMemo(() => {
+    return AllAchievements.map((a) => {
+      const earnedRecord = userAchievements.find(
+        (ua) => ua.achievementId === a.id,
+      );
+      return {
+        ...a,
+        earned: Boolean(earnedRecord),
+      };
+    });
+  }, [userAchievements]);
+
+  const earnedAchievements = displayAchievements.filter((a) => a.earned);
+  const lockedAchievements = displayAchievements.filter((a) => !a.earned);
 
   return (
     <div className="space-y-6">
@@ -118,61 +57,45 @@ export function AchievementBadges() {
         </TabsList>
 
         <TabsContent value="earned" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {earnedAchievements.map((achievement) => (
-              <AchievementCard key={achievement.id} achievement={achievement} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader className="animate-spin h-6 w-6" />
+            </div>
+          ) : error ? (
+            <div className="text-red-500 text-center py-8">{error}</div>
+          ) : earnedAchievements.length === 0 ? (
+            <div className="text-gray-500 text-center py-8">
+              No achievements earned yet.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {earnedAchievements.map((a) => (
+                <AchievementCard key={a.id} achievement={a} />
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="locked" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {lockedAchievements.map((achievement) => (
-              <AchievementCard key={achievement.id} achievement={achievement} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <Loader className="animate-spin h-6 w-6" />
+            </div>
+          ) : error ? (
+            <div className="text-red-500 text-center py-8">{error}</div>
+          ) : lockedAchievements.length === 0 ? (
+            <div className="text-gray-500 text-center py-8">
+              All achievements unlocked!
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {lockedAchievements.map((a) => (
+                <AchievementCard key={a.id} achievement={a} />
+              ))}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
-  );
-}
-
-interface Achievement {
-  id: number;
-  name: string;
-  description: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  date: string | null;
-  color: string;
-  earned: boolean;
-}
-
-function AchievementCard({ achievement }: { achievement: Achievement }) {
-  const { name, description, icon: Icon, date, color, earned } = achievement;
-
-  return (
-    <Card className={earned ? "" : "opacity-60"}>
-      <CardContent className="pt-6">
-        <div className="flex flex-col items-center text-center space-y-3">
-          <div className={`p-3 rounded-full ${color}`}>
-            <Icon className="h-6 w-6" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="font-semibold">{name}</h3>
-            <p className="text-sm text-muted-foreground">{description}</p>
-          </div>
-          {earned && date && (
-            <p className="text-xs text-muted-foreground">
-              Earned on {new Date(date).toLocaleDateString()}
-            </p>
-          )}
-          {!earned && (
-            <p className="text-xs text-muted-foreground italic">
-              Keep running to unlock this achievement
-            </p>
-          )}
-        </div>
-      </CardContent>
-    </Card>
   );
 }

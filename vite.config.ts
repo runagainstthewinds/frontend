@@ -12,6 +12,18 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      "/achievements": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/users": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/trainingsessions": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
       // proxy requests to backend (change it for prod one day)
       "/api/strava/auth-url": {
         target: "http://localhost:8080",
