@@ -12,6 +12,14 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      "/users": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/trainingsessions": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
       // proxy requests to backend (change it for prod one day)
       "/api": {
         target: "http://localhost:8080",
