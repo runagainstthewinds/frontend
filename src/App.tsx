@@ -20,7 +20,14 @@ function App() {
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<SessionPage />} />
             <Route path="/history" element={<History />} />
-            <Route path="/strava/callback" element={<StravaRouteGuard><StravaCallback /></StravaRouteGuard>} />
+            <Route
+              path="/strava/callback"
+              element={
+                <StravaRouteGuard>
+                  <StravaCallback />
+                </StravaRouteGuard>
+              }
+            />
           </Route>
         </Routes>
       </Router>
