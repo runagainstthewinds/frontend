@@ -6,6 +6,8 @@ import SessionPage from "./pages/SessionPage";
 import History from "./pages/HistoryPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/protectedRoute";
+import StravaCallback from "./components/StravaCallback";
+import StravaRouteGuard from "./components/StravaRouteGuard";
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/dashboard" element={<SessionPage />} />
             <Route path="/history" element={<History />} />
+            <Route path="/strava/callback" element={<StravaRouteGuard><StravaCallback /></StravaRouteGuard>} />
           </Route>
         </Routes>
       </Router>

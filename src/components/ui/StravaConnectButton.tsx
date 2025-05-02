@@ -23,20 +23,22 @@ const StravaConnectButton: React.FC<StravaConnectButtonProps> = ({
     try {
       setIsLoading(true);
       setError(null);
-
+      
       const token = localStorage.getItem("token");
-
       if (!token) {
         setError("No authentication token found. Please login again.");
         return;
       }
 
+      localStorage.setItem('strava_flow_initiated', 'true');
+      
+      const expiresAt = Date.now() + (10 * 60 * 1000);
+      localStorage.setItem('strava_flow_expires', expiresAt.toString());
+      
       await connectToStrava(username, token);
     } catch (error) {
       console.error("Error connecting to Strava:", error);
-
       const message = error instanceof Error ? error.message : String(error);
-
       if (message.includes("403") || message.includes("Authentication")) {
         setError("Authentication error. Your session may have expired.");
       } else if (message.includes("Network")) {

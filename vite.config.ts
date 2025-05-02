@@ -30,6 +30,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/api/strava/exchange-token": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
       "/api": {
         target: "http://localhost:8080",
         changeOrigin: true,
