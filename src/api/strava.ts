@@ -51,7 +51,7 @@ export const getStravaAuthUrl = async (
     );
 
     if (!response.data.url) {
-      throw new Error("No URL returned from Strava auth endpoint");
+      throw new Error("Something went wrong");
     }
 
     if (typeof response.data.url === "string") {
@@ -75,7 +75,7 @@ export const getStravaAuthUrl = async (
 
       const stringUrl = String(response.data.url);
       if (stringUrl === "[object Object]") {
-        throw new Error("Failed to convert URL object to string");
+        throw new Error("Something went wrong");
       }
       return stringUrl;
     }
@@ -85,10 +85,10 @@ export const getStravaAuthUrl = async (
     console.error("Error fetching Strava auth URL:", error);
     if (axios.isAxiosError(error)) {
       throw new Error(
-        error.response?.data?.message || "Failed to get Strava auth URL",
+        error.response?.data?.message || "Something went wrong",
       );
     }
-    throw new Error("Failed to get Strava auth URL");
+    throw new Error("Something went wrong");
   }
 };
 
