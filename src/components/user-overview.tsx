@@ -21,6 +21,7 @@ import {
   useUserEmail,
   useHasGoogleCalendarToken,
 } from "@/hooks/useUserInfo";
+import StravaConnectButton from "./ui/StravaConnectButton";
 
 function UserOverview() {
   return (
@@ -138,14 +139,7 @@ function UserOverview() {
                 Connected
               </Button>
             ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Connect
-              </Button>
+              <StravaConnectButton username={useUserName()} />
             )}
           </div>
         </div>
