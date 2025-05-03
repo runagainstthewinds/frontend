@@ -34,7 +34,6 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import JWTAuthTest from "./auth/jwtAuthTest";
 import { useUnit } from "@/context/UnitContext";
 import { kmToMiles } from "@/lib/utils";
 
@@ -215,8 +214,6 @@ export function UserSidebar() {
                 </div>
               </div>
             </SidebarGroupContent>
-
-            <JWTAuthTest />
 
             <Button
               variant="outline"

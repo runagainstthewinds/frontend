@@ -22,6 +22,7 @@ Run Against The Wind is a fitness-tech app focused on helping runners:
 ---
 
 ## App Preview
+
 ![Screenshot 2025-04-30 135722](https://github.com/user-attachments/assets/f86581ab-9da4-4716-986d-df1ad711cd1a)
 
 **Home Dashboard**  
@@ -37,14 +38,14 @@ Run Against The Wind is a fitness-tech app focused on helping runners:
 
 ## Team Members
 
-| Name                                                       | Role                           |
-|------------------------------------------------------------|--------------------------------|
-| Kevin Liu [@kevinliu399](https://github.com/kevinliu399)   | Infra / Frontend               |
-| Corey Zhao [@coreyzhao](https://github.com/coreyzhao)      | Infra / Frontend               |
-| Orlando Qiu [@orlololol](https://github.com/orlololol)     | Fullstack                      |
-| David Zhou [@Rampex1](https://github.com/Rampex1)          | Fullstack                      |
-| Tong Wu [@tongmaximewu](https://github.com/tongmaximewu)   | Infra                          |
-| Wayne Hao [@CodingGhoost](https://github.com/codingghoost) | Fullstack                      |
+| Name                                                       | Role             |
+| ---------------------------------------------------------- | ---------------- |
+| Kevin Liu [@kevinliu399](https://github.com/kevinliu399)   | Infra / Frontend |
+| Corey Zhao [@coreyzhao](https://github.com/coreyzhao)      | Infra / Frontend |
+| Orlando Qiu [@orlololol](https://github.com/orlololol)     | Fullstack        |
+| David Zhou [@Rampex1](https://github.com/Rampex1)          | Fullstack        |
+| Tong Wu [@tongmaximewu](https://github.com/tongmaximewu)   | Infra            |
+| Wayne Hao [@CodingGhoost](https://github.com/codingghoost) | Fullstack        |
 
 ---
 

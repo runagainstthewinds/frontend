@@ -25,12 +25,20 @@ export default defineConfig({
         changeOrigin: true,
       },
       // proxy requests to backend (change it for prod one day)
+      "/api/strava/auth-url": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/strava/exchange-token": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
       "/api": {
         target: "http://localhost:8080",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        secure: false,
       },
-
       "/auth": {
         target: "http://localhost:8080",
         changeOrigin: true,
