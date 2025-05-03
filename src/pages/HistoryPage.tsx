@@ -224,7 +224,7 @@ function HistoryPage() {
                                 <TableCell>
                                   {paceUnit === "min/km"
                                     ? `${run.pace} min/km`
-                                    : `${paceConverter(run.pace, "mi")} min/mi`}{" "}
+                                    : `${paceConverter(run.pace, "km")} min/mi`}{" "}
                                 </TableCell>
                                 <TableCell className="hidden md:table-cell">
                                   {run.trainingPlan}
@@ -329,7 +329,7 @@ function RunCardItem({ run }: { run: TrainingSession }) {
             "Pace",
             paceUnit === "min/km"
               ? `${roundedPaceTwoDecimals} min/km`
-              : `${paceConverter(roundedPaceTwoDecimals.toString(), "mi")} min/mi`,
+              : `${paceConverter(roundedPaceTwoDecimals, "km")} min/mi`,
           ],
           ["Type", run.trainingType],
         ].map(([label, value]) => (

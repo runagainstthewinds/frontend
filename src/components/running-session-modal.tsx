@@ -286,7 +286,7 @@ const StravaImportTab: React.FC<StravaImportTabProps> = ({
                     <Timer className="h-3.5 w-3.5 mr-1.5 text-slate-500" />
                     {distanceUnit === "km"
                       ? `${run.pace} min/km`
-                      : `${paceConverter(run.pace, "mi")} min/mi`}
+                      : `${paceConverter(run.pace, "km")} min/mi`}
                   </div>
                   <div className="flex items-center text-sm text-slate-700">
                     <Clock className="h-3.5 w-3.5 mr-1.5 text-slate-500" />
@@ -446,7 +446,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
             pace:
               distanceUnit === "km"
                 ? SessionRunFormData.pace
-                : paceConverter(SessionRunFormData.pace, "km"),
+                : paceConverter(SessionRunFormData.pace, "mi"),
             shoeId: selectedShoe,
           }
         : {

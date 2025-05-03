@@ -119,7 +119,7 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
             <p className="text-sm font-medium">
               {distanceUnit === "km"
                 ? `${shoe.currentMileage} / ${shoe.maxMileage} km`
-                : `${kmToMiles(shoe.currentMileage)} / ${kmToMiles(shoe.maxMileage)} mi`}
+                : `${kmToMiles(shoe.currentMileage, 0)} / ${kmToMiles(shoe.maxMileage, 0)} mi`}
             </p>
             <div className="w-full">
               <Progress value={percentUsed} className="h-2" />

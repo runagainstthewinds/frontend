@@ -183,7 +183,7 @@ export function UserSidebar() {
                   <span className="font-semibold text-teal-800">
                     {distanceUnit === "km"
                       ? `${distanceCovered}/${weeklyGoal} km`
-                      : `${kmToMiles(distanceCovered)}/${kmToMiles(weeklyGoal)} mi`}
+                      : `${kmToMiles(distanceCovered, 0)}/${kmToMiles(weeklyGoal, 0)} mi`}
                   </span>
                 </div>
                 <Progress value={progress} className="h-2 bg-slate-100" />
@@ -192,7 +192,7 @@ export function UserSidebar() {
                   <span className="text-teal-600 font-medium">
                     {distanceUnit === "km"
                       ? `${remainingDistance}`
-                      : `${kmToMiles(remainingDistance)}`}{" "}
+                      : `${kmToMiles(remainingDistance, 0)}`}{" "}
                     remaining
                   </span>
                 </div>
