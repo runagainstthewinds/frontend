@@ -25,6 +25,8 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Shoe, StravaRun, SessionRunFormData } from "@/types/models";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, milesToKm, paceConverter } from "@/lib/utils";
 
 const mockShoes: Shoe[] = [
   {
@@ -131,6 +133,7 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
   intensity,
   handleIntensityChange,
 }) => {
+  const { distanceUnit } = useUnit();
   return (
     <TabsContent value="manual" className="p-6 pt-4">
       <div className="space-y-4">
@@ -140,7 +143,7 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
               htmlFor="distance"
               className="text-sm font-medium text-slate-700"
             >
-              Distance (km)
+              {distanceUnit === "km" ? `Distance (km)` : `Distance (mi)`}
             </Label>
             <div className="relative">
               <TrendingUp className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
@@ -159,7 +162,7 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
               htmlFor="pace"
               className="text-sm font-medium text-slate-700"
             >
-              Pace (min/km)
+              {distanceUnit === "km" ? `Pace (min/km)` : `Pace (min/mi)`}
             </Label>
             <div className="relative">
               <Timer className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
@@ -229,6 +232,7 @@ const StravaImportTab: React.FC<StravaImportTabProps> = ({
   handleSelectRun,
   shoes,
 }) => {
+  const { distanceUnit } = useUnit();
   return (
     <TabsContent value="strava" className="p-0">
       <div className="p-6 pb-3 border-b">
@@ -274,11 +278,15 @@ const StravaImportTab: React.FC<StravaImportTabProps> = ({
                 <div className="grid grid-cols-3 gap-2 mt-2">
                   <div className="flex items-center text-sm text-slate-700">
                     <TrendingUp className="h-3.5 w-3.5 mr-1.5 text-slate-500" />
-                    {run.distance} km
+                    {distanceUnit === "km"
+                      ? `${run.distance} km`
+                      : `${kmToMiles(run.distance)} mi`}
                   </div>
                   <div className="flex items-center text-sm text-slate-700">
                     <Timer className="h-3.5 w-3.5 mr-1.5 text-slate-500" />
-                    {run.pace} min/km
+                    {distanceUnit === "km"
+                      ? `${run.pace} min/km`
+                      : `${paceConverter(run.pace, "mi")} min/mi`}
                   </div>
                   <div className="flex items-center text-sm text-slate-700">
                     <Clock className="h-3.5 w-3.5 mr-1.5 text-slate-500" />
@@ -300,6 +308,7 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
   selectedShoe,
   handleSelectShoe,
 }) => {
+  const { distanceUnit } = useUnit();
   return (
     <div className="p-6 pt-4 border-t">
       <div className="space-y-3">
@@ -309,8 +318,9 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
           </Label>
           {selectedShoe && (
             <Badge className="bg-teal-100 text-teal-800 font-medium">
-              {shoes.find((shoe) => shoe.id === selectedShoe)?.currentMileage}{" "}
-              km
+              {distanceUnit === "km"
+                ? `${shoes.find((shoe) => shoe.id === selectedShoe)?.currentMileage} km`
+                : `${kmToMiles(shoes.find((shoe) => shoe.id === selectedShoe)?.currentMileage ?? 0)} mi`}
             </Badge>
           )}
         </div>
@@ -351,7 +361,9 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
                       </p>
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-slate-600">
-                          {shoe.currentMileage} / {shoe.maxMileage} km
+                          {distanceUnit === "km"
+                            ? `${shoe.currentMileage} / ${shoe.maxMileage} km`
+                            : `${kmToMiles(shoe.currentMileage)} / ${kmToMiles(shoe.maxMileage)} mi`}
                         </span>
                       </div>
                       <Progress value={percentUsed} className="h-1.5" />
@@ -376,6 +388,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
   const [internalOpen, setInternalOpen] = useState(false);
   const open = controlledOpen ?? internalOpen;
   const setOpen = controlledSetOpen ?? setInternalOpen;
+  const { distanceUnit } = useUnit();
 
   const [activeTab, setActiveTab] = useState<"manual" | "strava">("manual");
   const [intensity, setIntensity] = useState<number[]>([3]);
@@ -422,7 +435,20 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
   const handleSubmit = () => {
     const dataToSubmit =
       activeTab === "manual"
-        ? { ...SessionRunFormData, shoeId: selectedShoe }
+        ? {
+            ...SessionRunFormData,
+            // ensure distance is in km when submitting
+            distance:
+              distanceUnit === "km"
+                ? SessionRunFormData.distance
+                : milesToKm(Number(SessionRunFormData.distance)),
+            // ensure pace is in min/km when submitting
+            pace:
+              distanceUnit === "km"
+                ? SessionRunFormData.pace
+                : paceConverter(SessionRunFormData.pace, "km"),
+            shoeId: selectedShoe,
+          }
         : {
             ...mockStravaRuns.find((run) => run.id === selectedRun)!,
             shoeId: selectedShoe,

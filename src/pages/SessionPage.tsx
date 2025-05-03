@@ -30,6 +30,8 @@ import {
 
 import WeatherAlert from "@/components/ui/weatherAlert";
 import { AddRunSessionModal } from "@/components/running-session-modal";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, paceConverter } from "@/lib/utils";
 
 export default function RunningSessionPage() {
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
@@ -65,6 +67,7 @@ export default function RunningSessionPage() {
     },
   };
 
+  const { distanceUnit, paceUnit } = useUnit(); // Assuming you have a context or hook for units
   return (
     <SidebarProvider>
       <div className="flex min-h-screen min-w-screen bg-gray-50">
@@ -128,16 +131,16 @@ export default function RunningSessionPage() {
                             title: "Weather",
                             value: "18°C Cloudy",
                           },
-                          { icon: Wind, title: "Wind", value: "5 km/h NE" },
+                          { icon: Wind, title: "Wind", value: "5 km/h NE" }, // change to mph?
                           {
                             icon: TrendingUp,
                             title: "Distance",
-                            value: "12 km",
+                            value: "12 km", // TODO: Convert to miles when we have the actual data
                           },
                           {
                             icon: Timer,
                             title: "Pace",
-                            value: "5:30 min/km",
+                            value: "5:30 min/km", // TODO: same as above
                           },
                           { icon: User, title: "Partner", value: "Solo" },
                         ].map((item, index) => (

@@ -1,5 +1,7 @@
 "use client";
 
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles } from "@/lib/utils";
 import {
   LineChart,
   Line,
@@ -26,6 +28,8 @@ const data = [
 ];
 
 export function MonthlyMileageChart() {
+  const { distanceUnit } = useUnit();
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -34,7 +38,15 @@ export function MonthlyMileageChart() {
       >
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-        <YAxis tick={{ fontSize: 12 }} />
+        <YAxis
+          tick={{ fontSize: 12 }}
+          label={{
+            value: distanceUnit === "km" ? "Distance (km)" : "Distance (mi)",
+            angle: -90,
+            position: "insideLeft",
+            style: { textAnchor: "middle" },
+          }}
+        />
         <Tooltip
           contentStyle={{
             backgroundColor: "white",
@@ -42,7 +54,12 @@ export function MonthlyMileageChart() {
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
             border: "none",
           }}
-          formatter={(value) => [`${value} km`, "Distance"]}
+          formatter={(value) => [
+            distanceUnit === "km"
+              ? `${value} km`
+              : `${kmToMiles(Number(value))} mi`,
+            "Distance",
+          ]}
         />
         <Line
           type="monotone"

@@ -48,6 +48,8 @@ import { useAuth } from "@/context/AuthContext";
 import { getTrainingSessions } from "../api/trainingSession";
 import mapTrainingTypeToRunType from "@/helper/mapTrainingType";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, paceConverter } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -71,6 +73,8 @@ function HistoryPage() {
   });
 
   const uniqueShoes = [...new Set(pastRuns.map((run) => run.shoe))];
+
+  const { distanceUnit, paceUnit } = useUnit();
 
   return (
     <SidebarProvider>
@@ -209,11 +213,19 @@ function HistoryPage() {
                                     },
                                   )}
                                 </TableCell>
-                                <TableCell>{run.distance} km</TableCell>
+                                <TableCell>
+                                  {distanceUnit === "km"
+                                    ? `${run.distance} km`
+                                    : `${kmToMiles(run.distance)} mi`}
+                                </TableCell>
                                 <TableCell className="hidden md:table-cell">
                                   {run.duration}
                                 </TableCell>
-                                <TableCell>{run.pace} min/km</TableCell>
+                                <TableCell>
+                                  {paceUnit === "min/km"
+                                    ? `${run.pace} min/km`
+                                    : `${paceConverter(run.pace, "mi")} min/mi`}{" "}
+                                </TableCell>
                                 <TableCell className="hidden md:table-cell">
                                   {run.trainingPlan}
                                 </TableCell>
@@ -293,6 +305,8 @@ function MonthlyMileageCard() {
 
 function RunCardItem({ run }: { run: TrainingSession }) {
   const roundedPaceTwoDecimals = run.achievedPace.toFixed(2);
+  const { distanceUnit, paceUnit } = useUnit();
+
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
       <div className="sm:w-1/4">
@@ -304,9 +318,19 @@ function RunCardItem({ run }: { run: TrainingSession }) {
 
       <div className="sm:w-1/4 grid grid-cols-2 gap-2">
         {[
-          ["Distance", `${run.achievedDistance} km`],
+          [
+            "Distance",
+            distanceUnit === "km"
+              ? `${run.achievedDistance} km`
+              : `${kmToMiles(run.achievedDistance)} mi`,
+          ],
           ["Duration", `${run.achievedDuration} min`],
-          ["Pace", `${roundedPaceTwoDecimals} min/km`],
+          [
+            "Pace",
+            paceUnit === "min/km"
+              ? `${roundedPaceTwoDecimals} min/km`
+              : `${paceConverter(roundedPaceTwoDecimals.toString(), "mi")} min/mi`,
+          ],
           ["Type", run.trainingType],
         ].map(([label, value]) => (
           <div key={label}>
@@ -402,8 +426,18 @@ function RunningStatsCard() {
     .reduce((sum, run) => sum + run.distance, 0)
     .toFixed(1);
   const totalRuns = pastRuns.length;
-  const avgDistance = (totalDistance / totalRuns).toFixed(1);
+  const avgDistance = Number((totalDistance / totalRuns).toFixed(1));
   const totalTime = 32;
+  const { distanceUnit } = useUnit();
+
+  const displayTotalDistance =
+    distanceUnit === "km"
+      ? `${totalDistance} km`
+      : `${kmToMiles(totalDistance)} mi`;
+  const displayAvgDistance =
+    distanceUnit === "km"
+      ? `${avgDistance} km`
+      : `${kmToMiles(avgDistance)} mi`;
 
   return (
     <Card>
@@ -415,7 +449,7 @@ function RunningStatsCard() {
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Distance</p>
-            <p className="text-2xl font-bold">{totalDistance} km</p>
+            <p className="text-2xl font-bold">{displayTotalDistance}</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Runs</p>
@@ -427,7 +461,7 @@ function RunningStatsCard() {
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Average Distance</p>
-            <p className="text-2xl font-bold">{avgDistance} km</p>
+            <p className="text-2xl font-bold">{displayAvgDistance}</p>
           </div>
         </div>
 

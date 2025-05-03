@@ -4,3 +4,27 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function kmToMiles(km: number) {
+  return (km * 0.621371).toFixed(1);
+}
+
+export function milesToKm(miles: number) {
+  if (miles === 0) return "0.0";
+  return (miles / 0.621371).toFixed(1);
+}
+
+export function paceConverter(_pace: string, _unit: "km" | "mi") {
+  if (_unit === "km") {
+    const [minutes, seconds] = _pace.split(":").map(Number);
+    const totalMinutes = minutes + seconds / 60;
+    const paceInMi = totalMinutes / 1.60934; // Convert to km pace
+    return `${Math.floor(paceInMi)}:${Math.round((paceInMi % 1) * 60)}`;
+  } else if (_unit === "mi") {
+    const [minutes, seconds] = _pace.split(":").map(Number);
+    const totalMinutes = minutes + seconds / 60;
+    const paceInKm = totalMinutes * 1.60934; // Convert to mi pace
+    const secs = Math.round((paceInKm % 1) * 60);
+    return `${Math.floor(paceInKm)}:${secs.toString().padStart(2, "0")}`;
+  }
+}
