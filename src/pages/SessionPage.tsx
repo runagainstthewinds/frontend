@@ -1,16 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  AlertTriangle,
-  Cloud,
-  MapPin,
-  Timer,
-  TrendingUp,
-  User,
-  Wind,
-  RotateCcw,
-} from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Timer, TrendingUp, Clock9 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -30,19 +21,76 @@ import {
 
 import WeatherAlert from "@/components/ui/weatherAlert";
 import { AddRunSessionModal } from "@/components/running-session-modal";
+import { TrainingSession, TrainingPlan } from "@/types/models";
+import { getCurrentTrainingPlan } from "@/api/trainingPlan";
+import { getTrainingSessionsForPlan } from "@/api/trainingSession";
+import { useUserId } from "@/hooks/useUserInfo";
+import { mapResponseToRunType } from "@/helper/mapTrainingType";
 
 export default function RunningSessionPage() {
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("upcoming");
-  const [progress, setProgress] = useState(0);
+  const [trainingPlan, setTrainingPlan] = useState<TrainingPlan | null>(null);
+  const [trainingSessions, setTrainingSessions] = useState<TrainingSession[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+  const userId = useUserId();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setProgress(62.5);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!userId) return;
+    setLoading(true);
 
+    getCurrentTrainingPlan(userId)
+      .then((plan) => {
+        if (!plan || !plan.trainingPlanId) {
+          throw new Error("No valid training plan found");
+        }
+        setTrainingPlan(plan);
+        return getTrainingSessionsForPlan(plan.trainingPlanId.toString());
+      })
+      .then((sessions) => {
+        setTrainingSessions(sessions);
+      })
+      .catch((error) => {
+        console.error("Error fetching training data:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [userId]);
+
+  // Determine the next upcoming session
+  const nextSession = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcoming = trainingSessions
+      .filter((s) => {
+        const sessionDate = new Date(s.date);
+        sessionDate.setHours(0, 0, 0, 0);
+        const result = !s.isComplete && sessionDate >= today;
+        return result;
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    return upcoming[0];
+  }, [trainingSessions]);
+
+  const formatSessionDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return new Date(date).toLocaleString(undefined, {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatDay = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return new Date(date).toLocaleDateString(undefined, { weekday: "long" });
+  };
+
+  // Animations
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -65,6 +113,16 @@ export default function RunningSessionPage() {
     },
   };
 
+  if (loading) {
+    return (
+      <SidebarProvider>
+        <div className="flex min-h-screen min-w-screen items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      </SidebarProvider>
+    );
+  }
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen min-w-screen bg-gray-50">
@@ -72,24 +130,19 @@ export default function RunningSessionPage() {
           <UserSidebar />
         </div>
         <SidebarInset>
-          {/* Main Content */}
           <motion.div
             className="flex-1 p-6 bg-white min-h-screen overflow-y-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <div className="">
+            <div>
               <div className="flex items-center mb-6">
                 <header className="sticky top-0 z-10 flex h-16 w-full items-center justify-between gap-x-4 border-b bg-background px-6">
                   <div className="flex items-center gap-x-4">
                     <SidebarTrigger />
                     <h1 className="text-xl font-semibold">Running Dashboard</h1>
                   </div>
-                  <Button className="flex items-center bg-teal-600 hover:bg-teal-700 transition group">
-                    Latest from Strava
-                    <RotateCcw className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:-rotate-90" />
-                  </Button>
                 </header>
               </div>
 
@@ -98,7 +151,7 @@ export default function RunningSessionPage() {
                 initial="hidden"
                 animate="visible"
               >
-                <motion.div variants={itemVariants}>
+                <motion.div variants={itemVariants} className="mb-4">
                   <WeatherAlert />
                 </motion.div>
 
@@ -108,90 +161,105 @@ export default function RunningSessionPage() {
                       <div className="flex justify-between items-center">
                         <div>
                           <CardTitle className="text-slate-900 text-xl">
-                            Endurance Training
+                            {trainingPlan?.planName || "Training Plan"}
                           </CardTitle>
                           <CardDescription className="text-slate-600 mt-1">
-                            Tomorrow, 7:00 AM • Central Park Loop
+                            {nextSession
+                              ? formatSessionDate(
+                                  new Date(
+                                    nextSession.date,
+                                  ).toLocaleDateString(),
+                                )
+                              : "No upcoming sessions"}
                           </CardDescription>
                         </div>
-                        <Badge className="bg-teal-600 hover:bg-teal-700 py-1.5">
-                          Scheduled
-                        </Badge>
+                        {nextSession && (
+                          <Badge
+                            className={`${
+                              nextSession.isComplete
+                                ? "bg-green-100 text-green-800"
+                                : "bg-teal-600 hover:bg-teal-700 text-white"
+                            } py-1.5`}
+                          >
+                            {nextSession.isComplete ? "Completed" : "Scheduled"}
+                          </Badge>
+                        )}
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-4 pb-4 space-y-4">
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {[
-                          { icon: MapPin, title: "Route", value: "Trail" },
-                          {
-                            icon: Cloud,
-                            title: "Weather",
-                            value: "18°C Cloudy",
-                          },
-                          { icon: Wind, title: "Wind", value: "5 km/h NE" },
-                          {
-                            icon: TrendingUp,
-                            title: "Distance",
-                            value: "12 km",
-                          },
-                          {
-                            icon: Timer,
-                            title: "Pace",
-                            value: "5:30 min/km",
-                          },
-                          { icon: User, title: "Partner", value: "Solo" },
-                        ].map((item, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center space-x-2 p-3 bg-slate-50 rounded-lg border border-slate-100"
-                          >
-                            <div className="p-1.5 bg-white rounded-md shadow-sm">
-                              <item.icon className="h-4 w-4 text-teal-600" />
+
+                    {nextSession && (
+                      <CardContent className="pt-4 pb-4 space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          {[
+                            {
+                              icon: TrendingUp,
+                              title: "Distance",
+                              value: `${nextSession.distance} km`,
+                            },
+                            {
+                              icon: Timer,
+                              title: "Goal Pace",
+                              value: `${nextSession.pace} min/km`,
+                            },
+                            {
+                              icon: Clock9,
+                              title: "Duration",
+                              value: `${nextSession.duration} min`,
+                            },
+                          ].map((item, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center space-x-2 p-3 bg-slate-50 rounded-lg border border-slate-100"
+                            >
+                              <div className="p-1.5 bg-white rounded-md shadow-sm">
+                                <item.icon className="h-4 w-4 text-teal-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-slate-500 font-medium">
+                                  {item.title}
+                                </p>
+                                <p className="font-medium text-slate-900">
+                                  {item.value}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-xs text-slate-500 font-medium">
-                                {item.title}
-                              </p>
-                              <p className="font-medium text-slate-900">
-                                {item.value}
-                              </p>
-                            </div>
+                          ))}
+                        </div>
+
+                        {nextSession.notes && (
+                          <div className="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <h3 className="text-sm font-medium text-slate-900">
+                              Training Notes
+                            </h3>
+                            <p className="text-sm text-slate-600 leading-relaxed">
+                              {nextSession.notes}
+                            </p>
                           </div>
-                        ))}
-                      </div>
+                        )}
 
-                      <div className="space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                        <h3 className="text-sm font-medium text-slate-900">
-                          Training Notes
-                        </h3>
-                        <p className="text-sm text-slate-600 leading-relaxed">
-                          Focus on maintaining consistent pace. Hydrate well and
-                          monitor heart rate zones. Allow for 5-minute warm-up
-                          and cool-down periods.
-                        </p>
-                      </div>
-
-                      <div className="flex gap-3 pt-1">
-                        <AddRunSessionModal
-                          open={isCompleteModalOpen}
-                          onOpenChange={setIsCompleteModalOpen}
-                          trigger={
-                            <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium cursor-pointer">
-                              Complete Session
-                            </Button>
-                          }
-                        />
-                        <Button
-                          variant="outline"
-                          className="text-red-400 border-red-300 hover:bg-red-50 px-4 py-2 cursor-pointer"
-                        >
-                          Cancel Session
-                        </Button>
-                      </div>
-                    </CardContent>
+                        <div className="flex gap-3 pt-1">
+                          <AddRunSessionModal
+                            open={isCompleteModalOpen}
+                            onOpenChange={setIsCompleteModalOpen}
+                            trigger={
+                              <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium cursor-pointer">
+                                Complete Session
+                              </Button>
+                            }
+                          />
+                          <Button
+                            variant="outline"
+                            className="text-red-400 border-red-300 hover:bg-red-50 px-4 py-2 cursor-pointer"
+                          >
+                            Cancel Session
+                          </Button>
+                        </div>
+                      </CardContent>
+                    )}
                   </Card>
                 </motion.div>
 
+                {/* Schedule Card */}
                 <motion.div variants={itemVariants}>
                   <Card className="shadow-lg overflow-hidden">
                     <CardHeader className="border-b py-5">
@@ -199,47 +267,37 @@ export default function RunningSessionPage() {
                         Training Schedule
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="">
-                      {[
-                        {
-                          day: "Monday",
-                          type: "Rest",
-                          detail: "Active recovery",
-                          badge: "bg-purple-100 text-purple-800",
-                        },
-                        {
-                          day: "Tuesday",
-                          type: "Intervals",
-                          detail: "5 km speed work",
-                          badge: "bg-teal-100 text-teal-800",
-                        },
-                        {
-                          day: "Wednesday",
-                          type: "Easy Run",
-                          detail: "6 km recovery",
-                          badge: "bg-green-100 text-green-800",
-                        },
-                        {
-                          day: "Saturday",
-                          type: "Long Run",
-                          detail: "12 km endurance",
-                          badge: "bg-blue-100 text-blue-800",
-                        },
-                      ].map((item, index) => (
+                    <CardContent>
+                      {trainingSessions.length === 0 && (
+                        <p className="text-slate-600">
+                          No training sessions scheduled.
+                        </p>
+                      )}
+
+                      {trainingSessions.map((session) => (
                         <div
-                          key={index}
+                          key={session.trainingSessionId}
                           className="flex justify-between items-center py-3 border-b border-slate-100 last:border-0"
                         >
                           <div>
                             <p className="font-medium text-slate-900">
-                              {item.day}
+                              {formatDay(
+                                new Date(session.date).toLocaleDateString(),
+                              )}
                             </p>
                             <p className="text-sm text-slate-600 mt-0.5">
-                              {item.detail}
+                              {session.distance} km •{" "}
+                              {mapResponseToRunType(session.trainingType)}
                             </p>
                           </div>
-                          <Badge className={`${item.badge} px-3 py-1`}>
-                            {item.type}
+                          <Badge
+                            className={`${
+                              session.isComplete
+                                ? "bg-green-100 text-green-800"
+                                : "bg-teal-100 text-teal-800"
+                            } px-3 py-1`}
+                          >
+                            {session.isComplete ? "Completed" : "Scheduled"}
                           </Badge>
                         </div>
                       ))}

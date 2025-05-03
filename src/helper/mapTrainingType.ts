@@ -17,4 +17,31 @@ const mapTrainingTypeToRunType = (
   }
 };
 
-export default mapTrainingTypeToRunType;
+const mapResponseToRunType = (
+  input: string,
+):
+  | "Interval"
+  | "Recovery"
+  | "Long Run"
+  | "Final Run"
+  | "Unspecified"
+  | "Tempo" => {
+  switch (input) {
+    case "LONG_RUN":
+      return "Long Run";
+    case "RECOVERY_RUN":
+      return "Recovery";
+    case "INTERVAL":
+      return "Interval";
+    case "FINAL_RUN":
+      return "Final Run";
+    case "UNSPECIFIED":
+      return "Unspecified";
+    case "TEMPO":
+      return "Tempo";
+    default:
+      return "Unspecified";
+  }
+};
+
+export { mapTrainingTypeToRunType, mapResponseToRunType };

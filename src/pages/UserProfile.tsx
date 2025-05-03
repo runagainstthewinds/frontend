@@ -5,10 +5,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserSidebar } from "@/components/user-sidebar";
-import { ShoeCollection } from "@/components/shoe-collection";
-import { AchievementBadges } from "@/components/achievement-badges";
-import { UserProfileForm } from "@/components/user-profile-form";
-import UserOverview from "@/components/user-overview";
+import { ShoeCollection } from "@/components/profilepage/shoe-collection";
+import { AchievementBadges } from "@/components/profilepage/achievement-badges";
+import { UserProfileForm } from "@/components/profilepage/user-profile-form";
+import UserOverview from "@/components/profilepage/user-overview";
 
 export default function UserProfile() {
   return (
