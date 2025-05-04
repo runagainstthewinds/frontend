@@ -17,7 +17,7 @@ import {
   useUserEmail,
   useHasGoogleCalendarToken,
 } from "@/hooks/useUserInfo";
-import StravaConnectButton from "./ui/StravaConnectButton";
+import StravaConnectButton from "../ui/StravaConnectButton";
 
 function UserOverview() {
   return (

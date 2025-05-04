@@ -165,11 +165,7 @@ export default function RunningSessionPage() {
                           </CardTitle>
                           <CardDescription className="text-slate-600 mt-1">
                             {nextSession
-                              ? formatSessionDate(
-                                  new Date(
-                                    nextSession.date,
-                                  ).toLocaleDateString(),
-                                )
+                              ? formatSessionDate(nextSession.date.toString())
                               : "No upcoming sessions"}
                           </CardDescription>
                         </div>
@@ -281,9 +277,7 @@ export default function RunningSessionPage() {
                         >
                           <div>
                             <p className="font-medium text-slate-900">
-                              {formatDay(
-                                new Date(session.date).toLocaleDateString(),
-                              )}
+                              {formatDay(session.date.toString())}
                             </p>
                             <p className="text-sm text-slate-600 mt-0.5">
                               {session.distance} km •{" "}
