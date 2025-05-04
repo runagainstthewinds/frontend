@@ -10,9 +10,6 @@ const api = axios.create({
   },
 });
 
-/**
- * Fetch all training sessions for a given user.
- */
 export const getTrainingSessions = async (
   userId: string,
 ): Promise<TrainingSession[]> => {
@@ -35,6 +32,30 @@ export const getTrainingSessions = async (
       );
     }
     throw new Error("Failed to fetch training sessions");
+  }
+};
+
+export const getTrainingSessionsForPlan = async (planId: string) => {
+  try {
+    const response = await api.get<TrainingSession[]>(
+      `/trainingsessions/trainingplans/${planId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          withCredentials: true,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching training sessions for plan:", error);
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message ||
+          "Failed to fetch training sessions for plan",
+      );
+    }
+    throw new Error("Failed to fetch training sessions for plan");
   }
 };
 

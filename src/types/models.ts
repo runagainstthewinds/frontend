@@ -40,10 +40,10 @@ interface TrainingSession {
   date: Date;
   distance: number;
   achievedDistance: number;
-  goalPace: number;
+  pace: number;
   achievedPace: number;
   trainingType: TrainingType;
-  isCompleted: boolean;
+  isComplete: boolean;
   duration: number;
   achievedDuration: number;
   shoeId: number | null;
@@ -67,6 +67,15 @@ interface AchievementBadge {
   earned: boolean;
 }
 
+interface TrainingPlan {
+  trainingPlanId: number;
+  planName: string;
+  startDate: string;
+  endDate: string;
+  goalDistance: number;
+  goalTime: number;
+}
+
 export type {
   Shoe,
   StravaRun,
@@ -74,4 +83,5 @@ export type {
   TrainingSession,
   UserAchievement,
   AchievementBadge,
+  TrainingPlan,
 };

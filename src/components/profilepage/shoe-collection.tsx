@@ -90,7 +90,6 @@ interface Shoe {
 
 function ShoeCard({ shoe }: { shoe: Shoe }) {
   const percentUsed = (shoe.currentMileage / shoe.maxMileage) * 100;
-  const isNearReplacement = percentUsed > 80;
 
   return (
     <Card>
