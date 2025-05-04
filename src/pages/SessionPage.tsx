@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Timer, TrendingUp, Clock9 } from "lucide-react";
+import { Timer, TrendingUp, Clock9, Plus } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -20,15 +20,17 @@ import {
 } from "@/components/ui/sidebar";
 
 import WeatherAlert from "@/components/ui/weatherAlert";
-import { AddRunSessionModal } from "@/components/running-session-modal";
+import { AddRunSessionModal } from "@/components/form/running-session/running-session-modal";
 import { TrainingSession, TrainingPlan } from "@/types/models";
 import { getCurrentTrainingPlan } from "@/api/trainingPlan";
 import { getTrainingSessionsForPlan } from "@/api/trainingSession";
 import { useUserId } from "@/hooks/useUserInfo";
 import { mapResponseToRunType } from "@/helper/mapTrainingType";
+import { TrainingPlanModal } from "@/components/form/running-plan/running-plan-modal";
 
 export default function RunningSessionPage() {
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [trainingPlan, setTrainingPlan] = useState<TrainingPlan | null>(null);
   const [trainingSessions, setTrainingSessions] = useState<TrainingSession[]>(
     [],
@@ -89,7 +91,6 @@ export default function RunningSessionPage() {
     });
   };
 
-  // Animations
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -142,6 +143,10 @@ export default function RunningSessionPage() {
                     <SidebarTrigger />
                     <h1 className="text-xl font-semibold">Running Dashboard</h1>
                   </div>
+                  <TrainingPlanModal
+                    open={isPlanModalOpen}
+                    onOpenChange={setIsPlanModalOpen}
+                  />
                 </header>
               </div>
 
