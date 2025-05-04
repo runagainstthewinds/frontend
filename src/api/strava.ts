@@ -84,9 +84,7 @@ export const getStravaAuthUrl = async (
   } catch (error) {
     console.error("Error fetching Strava auth URL:", error);
     if (axios.isAxiosError(error)) {
-      throw new Error(
-        error.response?.data?.message || "Something went wrong",
-      );
+      throw new Error(error.response?.data?.message || "Something went wrong");
     }
     throw new Error("Something went wrong");
   }
