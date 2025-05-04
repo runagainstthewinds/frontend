@@ -18,7 +18,7 @@ export const getTrainingSessions = async (
 ): Promise<TrainingSession[]> => {
   try {
     const response = await api.get<TrainingSession[]>(
-      `/trainingsessions/${userId}`,
+      `/trainingsessions/users/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,7 +47,7 @@ export const createTrainingSession = async (
 ): Promise<TrainingSession> => {
   try {
     const response = await api.post<TrainingSession>(
-      `/trainingsessions/${userId}`,
+      `/trainingsessions/users/${userId}`,
       session,
     );
     return response.data;
