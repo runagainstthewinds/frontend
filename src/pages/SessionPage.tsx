@@ -49,7 +49,10 @@ export default function RunningSessionPage() {
         return getTrainingSessionsForPlan(plan.trainingPlanId.toString());
       })
       .then((sessions) => {
-        setTrainingSessions(sessions);
+        const sortedSessions = sessions.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+        );
+        setTrainingSessions(sortedSessions);
       })
       .catch((error) => {
         console.error("Error fetching training data:", error);
@@ -58,6 +61,7 @@ export default function RunningSessionPage() {
         setLoading(false);
       });
   }, [userId]);
+  console.log(trainingSessions);
 
   // Determine the next upcoming session
   const nextSession = useMemo(() => {
@@ -66,7 +70,7 @@ export default function RunningSessionPage() {
 
     const upcoming = trainingSessions
       .filter((s) => {
-        const sessionDate = new Date(s.date);
+        const sessionDate = new Date(s.date + "T00:00:00");
         sessionDate.setHours(0, 0, 0, 0);
         const result = !s.isComplete && sessionDate >= today;
         return result;
@@ -77,17 +81,12 @@ export default function RunningSessionPage() {
   }, [trainingSessions]);
 
   const formatSessionDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+    const date = new Date(dateStr + "T00:00:00");
     return new Date(date).toLocaleString(undefined, {
       weekday: "long",
       month: "short",
       day: "numeric",
     });
-  };
-
-  const formatDay = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Date(date).toLocaleDateString(undefined, { weekday: "long" });
   };
 
   // Animations
@@ -277,7 +276,7 @@ export default function RunningSessionPage() {
                         >
                           <div>
                             <p className="font-medium text-slate-900">
-                              {formatDay(session.date.toString())}
+                              {formatSessionDate(session.date.toString())}
                             </p>
                             <p className="text-sm text-slate-600 mt-0.5">
                               {session.distance} km •{" "}
