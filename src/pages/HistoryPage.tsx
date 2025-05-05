@@ -304,7 +304,7 @@ function MonthlyMileageCard() {
 }
 
 function RunCardItem({ run }: { run: TrainingSession }) {
-  const roundedPaceTwoDecimals = run.achievedPace.toFixed(2);
+  const roundedPaceTwoDecimals = run.achievedPace.toFixed(2); // formatted as min.sec instead of min:sec
   const { distanceUnit, paceUnit } = useUnit();
 
   return (
