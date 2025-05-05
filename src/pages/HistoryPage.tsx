@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState } from "react";
 import { Calendar, Filter, Search, ArrowUpDown, Loader } from "lucide-react";
-import { format } from "date-fns";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { UserSidebar } from "@/components/user-sidebar";
-import { MonthlyMileageChart } from "@/components/monthly-mileage-chart";
 import {
   Card,
   CardContent,
@@ -43,15 +41,11 @@ import {
 } from "@/components/ui/table";
 import RunType from "@/components/runtype";
 import pastRuns from "@/helper/data/fakeRun";
-import { TrainingSession } from "@/types/models";
-import { useAuth } from "@/context/AuthContext";
-import { getTrainingSessions } from "../api/trainingSession";
-import mapTrainingTypeToRunType from "@/helper/mapTrainingType";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import RecentRunsCard from "@/components/historypage/recent-runs-card";
+import RunningStatsCard from "@/components/historypage/running-stats-card";
+import MonthlyMileageCard from "@/components/historypage/monthly-mileage-card";
 import { useUnit } from "@/context/UnitContext";
 import { kmToMiles, paceConverter } from "@/lib/utils";
-
-const ITEMS_PER_PAGE = 5;
 
 function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -287,224 +281,4 @@ function HistoryPage() {
   );
 }
 
-function MonthlyMileageCard() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Monthly Mileage</CardTitle>
-        <CardDescription>Track your running consistency</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[300px]">
-          <MonthlyMileageChart />
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function RunCardItem({ run }: { run: TrainingSession }) {
-  const roundedPaceTwoDecimals = parseFloat(run.achievedPace.toFixed(2)); // formatted as min.sec instead of min:sec
-  const { distanceUnit, paceUnit } = useUnit();
-
-  // Convert decimal pace into formatted pace
-  const paceMinutes = Math.floor(roundedPaceTwoDecimals);
-  const paceSeconds = Math.round((roundedPaceTwoDecimals - paceMinutes) * 60);
-  const formattedPace = `${paceMinutes}:${String(paceSeconds).padStart(
-    2,
-    "0",
-  )}`;
-
-  return (
-    <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
-      <div className="sm:w-1/4">
-        <div className="text-lg font-semibold">
-          {format(new Date(run.date), "MMM d, yyyy")}
-        </div>
-        <div className="text-muted-foreground">{run.trainingPlanId ?? "—"}</div>
-      </div>
-
-      <div className="sm:w-1/4 grid grid-cols-2 gap-2">
-        {[
-          [
-            "Distance",
-            distanceUnit === "km"
-              ? `${run.achievedDistance} km`
-              : `${kmToMiles(run.achievedDistance)} mi`,
-          ],
-          ["Duration", `${run.achievedDuration} min`],
-          [
-            "Pace",
-            paceUnit === "min/km"
-              ? `${formattedPace} min/km`
-              : `${paceConverter(formattedPace, "km")} min/mi`,
-          ],
-          ["Type", run.trainingType],
-        ].map(([label, value]) => (
-          <div key={label}>
-            <div className="text-sm text-muted-foreground">{label}</div>
-            <div className="font-Interval">{value}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="sm:w-1/4">
-        <div className="text-sm text-muted-foreground">Shoe</div>
-        <div className="font-Interval">{run.shoeId ?? "—"}</div>
-        <div className="mt-2">
-          <RunType type={mapTrainingTypeToRunType(run.trainingType)} />
-        </div>
-      </div>
-
-      <div className="sm:w-1/4">
-        <div className="text-sm text-muted-foreground">Notes</div>
-        <div className="text-sm">{run.notes ?? "No notes"}</div>
-      </div>
-    </div>
-  );
-}
-
-export function RecentRunsCard() {
-  const { user } = useAuth();
-  const [pastRuns, setPastRuns] = useState<TrainingSession[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    if (!user.userId) return;
-    console.log("Fetching runs for user:", user.userId);
-    setLoading(true);
-    setError(null);
-
-    getTrainingSessions(user.userId)
-      .then((data) => setPastRuns(data))
-      .catch((err) => setError(err.message ?? "Failed to load runs"))
-      .finally(() => setLoading(false));
-  }, [user]);
-
-  const recentRuns = useMemo(() => {
-    return [...pastRuns]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, ITEMS_PER_PAGE);
-  }, [pastRuns]);
-
-  console.log("User Id is ", user?.userId);
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent Runs</CardTitle>
-        <CardDescription>Your latest running activities</CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        {loading && (
-          <div className="flex justify-center py-8">
-            <Loader className="h-6 w-6 animate-spin" />
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive">
-            <AlertTitle>Something went wrong</AlertTitle>
-          </Alert>
-        )}
-
-        {!loading && !error && recentRuns.length === 0 && (
-          <div className="text-center text-muted-foreground py-6">
-            No runs to show yet.
-          </div>
-        )}
-
-        {!loading &&
-          !error &&
-          recentRuns.map((run) => (
-            <RunCardItem key={run.trainingSessionId} run={run} />
-          ))}
-
-        {/* TODO: Add pagination controls here when pastRuns.length > ITEMS_PER_PAGE */}
-      </CardContent>
-    </Card>
-  );
-}
-
-function RunningStatsCard() {
-  const totalDistance: any = pastRuns
-    .reduce((sum, run) => sum + run.distance, 0)
-    .toFixed(1);
-  const totalRuns = pastRuns.length;
-  const avgDistance = Number((totalDistance / totalRuns).toFixed(1));
-  const totalTime = 32;
-  const { distanceUnit } = useUnit();
-
-  const displayTotalDistance =
-    distanceUnit === "km"
-      ? `${totalDistance} km`
-      : `${kmToMiles(totalDistance)} mi`;
-  const displayAvgDistance =
-    distanceUnit === "km"
-      ? `${avgDistance} km`
-      : `${kmToMiles(avgDistance)} mi`;
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Running Statistics</CardTitle>
-        <CardDescription>Your performance at a glance</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Total Distance</p>
-            <p className="text-2xl font-bold">{displayTotalDistance}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Total Runs</p>
-            <p className="text-2xl font-bold">{totalRuns}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Total Running Time</p>
-            <p className="text-2xl font-bold">{totalTime} h</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Average Distance</p>
-            <p className="text-2xl font-bold">{displayAvgDistance}</p>
-          </div>
-        </div>
-
-        <div className="mt-6 pt-6 border-t">
-          <h3 className="font-Interval mb-2">type Distribution</h3>
-          <div className="flex gap-2">
-            {["Recovery", "Interval", "Long Run"].map((type) => {
-              const count = pastRuns.filter((run) => run.type === type).length;
-              const percentage = Math.round((count / totalRuns) * 100);
-
-              return (
-                <div key={type} className="flex-1">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>{type}</span>
-                    <span>{percentage}%</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-slate-100">
-                    <div
-                      className={`h-full rounded-full ${
-                        type === "Recovery"
-                          ? "bg-blue-500"
-                          : type === "Interval"
-                            ? "bg-amber-500"
-                            : "bg-red-500"
-                      }`}
-                      style={{ width: `${percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 export default HistoryPage;

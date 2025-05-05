@@ -29,3 +29,9 @@ export function paceConverter(_pace: string, _unit: "km" | "mi") {
     return `${Math.floor(paceInKm)}:${secs.toString().padStart(2, "0")}`;
   }
 }
+
+export function formatPace(pace: number) {
+  const minutes = Math.floor(pace);
+  const seconds = Math.round((pace - minutes) * 60);
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}

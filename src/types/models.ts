@@ -19,14 +19,6 @@ interface StravaRun {
   intensity: number;
 }
 
-interface SessionRunFormData {
-  distance: string;
-  pace: string;
-  duration: string;
-  intensity: number;
-  shoeId: number | null;
-}
-
 export enum TrainingType {
   INTERVAL = "Interval",
   TEMPO = "Tempo",
@@ -40,10 +32,10 @@ interface TrainingSession {
   date: Date;
   distance: number;
   achievedDistance: number;
-  goalPace: number;
+  pace: number;
   achievedPace: number;
   trainingType: TrainingType;
-  isCompleted: boolean;
+  isComplete: boolean;
   duration: number;
   achievedDuration: number;
   shoeId: number | null;
@@ -67,11 +59,20 @@ interface AchievementBadge {
   earned: boolean;
 }
 
+interface TrainingPlan {
+  trainingPlanId: number;
+  planName: string;
+  startDate: string;
+  endDate: string;
+  goalDistance: number;
+  goalTime: number;
+}
+
 export type {
   Shoe,
   StravaRun,
-  SessionRunFormData,
   TrainingSession,
   UserAchievement,
   AchievementBadge,
+  TrainingPlan,
 };

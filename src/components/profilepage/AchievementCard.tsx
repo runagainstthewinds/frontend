@@ -1,5 +1,5 @@
 import { AchievementBadge } from "@/types/models";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../ui/card";
 
 export function AchievementCard({
   achievement,
