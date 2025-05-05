@@ -445,7 +445,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
             // ensure pace is in min/km when submitting
             pace:
               distanceUnit === "km"
-                ? SessionRunFormData.pace
+                ? SessionRunFormData.pace // This might lead to problems if pace is formatted as a number
                 : paceConverter(SessionRunFormData.pace, "mi"),
             shoeId: selectedShoe,
           }

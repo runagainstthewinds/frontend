@@ -3,12 +3,18 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ShoeSelectionProps } from "@/types/form";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles } from "@/lib/utils";
 
 const ShoeSelection: React.FC<ShoeSelectionProps> = ({
   shoes,
   selectedShoe,
   handleSelectShoe,
 }) => {
+  const { distanceUnit } = useUnit();
+  const currentShoeMileageDistance = shoes.find(
+    (shoe) => shoe.id === selectedShoe,
+  )?.currentMileage;
   return (
     <div className="p-6 pt-4 border-t">
       <div className="space-y-3">
@@ -18,8 +24,9 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
           </Label>
           {selectedShoe && (
             <Badge className="bg-teal-100 text-teal-800 font-medium">
-              {shoes.find((shoe) => shoe.id === selectedShoe)?.currentMileage}{" "}
-              km
+              {distanceUnit === "km"
+                ? `${currentShoeMileageDistance} km`
+                : `${kmToMiles(currentShoeMileageDistance || 0, 0)} mi`}
             </Badge>
           )}
         </div>
@@ -60,7 +67,9 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
                       </p>
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-slate-600">
-                          {shoe.currentMileage} / {shoe.maxMileage} km
+                          {distanceUnit === "km"
+                            ? `${shoe.currentMileage} / ${shoe.maxMileage} km`
+                            : `${kmToMiles(shoe.currentMileage)} / ${kmToMiles(shoe.maxMileage)} mi`}
                         </span>
                       </div>
                       <Progress value={percentUsed} className="h-1.5" />

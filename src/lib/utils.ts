@@ -16,6 +16,8 @@ export function milesToKm(miles: number) {
 }
 
 export function paceConverter(_pace: string, _unit: "km" | "mi") {
+  if (!_pace) return "0:00";
+  if (_pace === "0:00") return "0:00";
   if (_unit === "mi") {
     const [minutes, seconds] = _pace.split(":").map(Number);
     const totalMinutes = minutes + seconds / 60;

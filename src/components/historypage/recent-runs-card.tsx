@@ -14,6 +14,8 @@ import { Loader } from "lucide-react";
 import RunType from "../runtype";
 import { mapTrainingTypeToRunType } from "@/helper/mapTrainingType";
 import { format } from "date-fns";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, paceConverter } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 5; // Number of items to display per page
 
@@ -84,6 +86,7 @@ export default function RecentRunsCard() {
 
 function RunCardItem({ run }: { run: TrainingSession }) {
   const roundedPaceTwoDecimals = run.achievedPace.toFixed(2);
+  const { distanceUnit } = useUnit();
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
       <div className="sm:w-1/4">
@@ -95,9 +98,19 @@ function RunCardItem({ run }: { run: TrainingSession }) {
 
       <div className="sm:w-1/4 grid grid-cols-2 gap-2">
         {[
-          ["Distance", `${run.achievedDistance} km`],
+          [
+            "Distance",
+            distanceUnit === "km"
+              ? `${run.achievedDistance} km`
+              : `${kmToMiles(run.achievedDistance)} mi`,
+          ],
           ["Duration", `${run.achievedDuration} min`],
-          ["Pace", `${roundedPaceTwoDecimals} min/km`],
+          [
+            "Pace",
+            distanceUnit === "km"
+              ? `${roundedPaceTwoDecimals} min/km`
+              : `${paceConverter(roundedPaceTwoDecimals.toString(), "km")} min/mi`,
+          ],
           ["Type", run.trainingType],
         ].map(([label, value]) => (
           <div key={label}>

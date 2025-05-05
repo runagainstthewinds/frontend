@@ -68,7 +68,7 @@ function HistoryPage() {
 
   const uniqueShoes = [...new Set(pastRuns.map((run) => run.shoe))];
 
-  const { distanceUnit, paceUnit } = useUnit();
+  const { distanceUnit } = useUnit();
 
   return (
     <SidebarProvider>
@@ -216,7 +216,7 @@ function HistoryPage() {
                                   {run.duration}
                                 </TableCell>
                                 <TableCell>
-                                  {paceUnit === "min/km"
+                                  {distanceUnit === "km"
                                     ? `${run.pace} min/km`
                                     : `${paceConverter(run.pace, "km")} min/mi`}{" "}
                                 </TableCell>

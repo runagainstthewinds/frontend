@@ -6,6 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles } from "@/lib/utils";
 
 function RunningStatsCard() {
   const totalDistance: any = pastRuns
@@ -14,6 +16,15 @@ function RunningStatsCard() {
   const totalRuns = pastRuns.length;
   const avgDistance = (totalDistance / totalRuns).toFixed(1);
   const totalTime = 32;
+  const { distanceUnit } = useUnit();
+
+  const displayTotalDistance =
+    distanceUnit === "km"
+      ? totalDistance
+      : kmToMiles(parseFloat(totalDistance));
+
+  const displayAvgDistance =
+    distanceUnit === "km" ? avgDistance : kmToMiles(parseFloat(avgDistance));
 
   return (
     <Card>
@@ -25,7 +36,9 @@ function RunningStatsCard() {
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Distance</p>
-            <p className="text-2xl font-bold">{totalDistance} km</p>
+            <p className="text-2xl font-bold">
+              {displayTotalDistance} {distanceUnit}
+            </p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Runs</p>
@@ -37,7 +50,9 @@ function RunningStatsCard() {
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Average Distance</p>
-            <p className="text-2xl font-bold">{avgDistance} km</p>
+            <p className="text-2xl font-bold">
+              {displayAvgDistance} {distanceUnit}
+            </p>
           </div>
         </div>
 
