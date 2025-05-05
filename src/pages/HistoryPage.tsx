@@ -304,8 +304,16 @@ function MonthlyMileageCard() {
 }
 
 function RunCardItem({ run }: { run: TrainingSession }) {
-  const roundedPaceTwoDecimals = run.achievedPace.toFixed(2); // formatted as min.sec instead of min:sec
+  const roundedPaceTwoDecimals = parseFloat(run.achievedPace.toFixed(2)); // formatted as min.sec instead of min:sec
   const { distanceUnit, paceUnit } = useUnit();
+
+  // Convert decimal pace into formatted pace
+  const paceMinutes = Math.floor(roundedPaceTwoDecimals);
+  const paceSeconds = Math.round((roundedPaceTwoDecimals - paceMinutes) * 60);
+  const formattedPace = `${paceMinutes}:${String(paceSeconds).padStart(
+    2,
+    "0",
+  )}`;
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
@@ -328,8 +336,8 @@ function RunCardItem({ run }: { run: TrainingSession }) {
           [
             "Pace",
             paceUnit === "min/km"
-              ? `${roundedPaceTwoDecimals} min/km`
-              : `${paceConverter(roundedPaceTwoDecimals, "km")} min/mi`,
+              ? `${formattedPace} min/km`
+              : `${paceConverter(formattedPace, "km")} min/mi`,
           ],
           ["Type", run.trainingType],
         ].map(([label, value]) => (
