@@ -12,7 +12,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/trainingplan": {
+      "/trainingplans": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },

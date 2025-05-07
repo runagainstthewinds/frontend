@@ -14,7 +14,7 @@ export const getTrainingPlans = async (
   userId: string,
 ): Promise<TrainingPlan[]> => {
   try {
-    const response = await api.get<TrainingPlan[]>(`/trainingplan/${userId}`, {
+    const response = await api.get<TrainingPlan[]>(`/trainingplans/${userId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         withCredentials: true,
@@ -37,7 +37,7 @@ export const getCurrentTrainingPlan = async (
 ): Promise<TrainingPlan> => {
   try {
     const response = await api.get<TrainingPlan>(
-      `/trainingplan/current/${userId}`,
+      `/trainingplans/current/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
