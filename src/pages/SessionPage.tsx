@@ -284,7 +284,7 @@ export default function RunningSessionPage() {
                               {formatSessionDate(session.date.toString())}
                             </p>
                             <p className="text-sm text-slate-600 mt-0.5">
-                              {session.distance.toFixed(2)} km • {session.pace} min/km
+                              {session.distance.toFixed(2)} km • {session.pace.toFixed(2)} min/km
                             </p>
                           </div>
                           <div className="flex items-center gap-2">
