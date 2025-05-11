@@ -61,6 +61,14 @@ interface TrainingPlanModalProps {
   onSubmit?: (data: TrainingPlanFormData) => void;
 }
 
+interface CreateTrainingPlanParams {
+  planName: string;
+  startDate: string;
+  endDate: string;
+  goalDistance: number;
+  difficulty: string;
+}
+
 export type {
   TrainingPlanFormData,
   ManualEntryTabProps,
@@ -69,4 +77,5 @@ export type {
   AddRunSessionModalProps,
   SessionRunFormData,
   TrainingPlanModalProps,
+  CreateTrainingPlanParams,
 };

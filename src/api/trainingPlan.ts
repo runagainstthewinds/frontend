@@ -1,13 +1,6 @@
 import axios from "axios";
 import { TrainingPlan } from "../types/models";
-
-interface CreateTrainingPlanParams {
-  planName: string;
-  startDate: string;
-  endDate: string;
-  goalDistance: number;
-  difficulty: string;
-}
+import { CreateTrainingPlanParams } from "../types/form";
 
 const api = axios.create({
   baseURL: "/",
