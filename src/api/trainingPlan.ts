@@ -1,6 +1,14 @@
 import axios from "axios";
 import { TrainingPlan } from "../types/models";
 
+interface CreateTrainingPlanParams {
+  planName: string;
+  startDate: string;
+  endDate: string;
+  goalDistance: number;
+  difficulty: string;
+}
+
 const api = axios.create({
   baseURL: "/",
   withCredentials: true,
@@ -60,13 +68,7 @@ export const getCurrentTrainingPlan = async (
 
 export const createTrainingPlan = async (
   userId: string,
-  plan: {
-    planName: string;
-    startDate: string;
-    endDate: string;
-    goalDistance: number;
-    difficulty: string;
-  }
+  plan: CreateTrainingPlanParams
 ): Promise<TrainingPlan> => {
   console.log("Creating training plan for user:", userId);
   console.log("Plan data:", plan);
