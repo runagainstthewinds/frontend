@@ -57,3 +57,46 @@ export const getCurrentTrainingPlan = async (
     throw new Error("Failed to fetch current training plan");
   }
 };
+
+export const createTrainingPlan = async (
+  userId: string,
+  plan: {
+    planName: string;
+    startDate: string;
+    endDate: string;
+    goalDistance: number;
+    difficulty: string;
+  }
+): Promise<TrainingPlan> => {
+  console.log("Creating training plan for user:", userId);
+  console.log("Plan data:", plan);
+  
+  try {
+    const response = await api.post<TrainingPlan>(
+      `/trainingplans/${userId}`,
+      plan,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          withCredentials: true,
+        },
+      }
+    );
+    console.log("Training plan created successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating training plan:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("API Error Details:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers
+      });
+      throw new Error(
+        error.response?.data?.message || "Failed to create training plan"
+      );
+    }
+    throw new Error("Failed to create training plan");
+  }
+};

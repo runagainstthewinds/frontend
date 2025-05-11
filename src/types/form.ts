@@ -52,7 +52,7 @@ interface TrainingPlanFormData {
   startDate: string;
   endDate: string;
   goalDistance: string;
-  goalTime: string;
+  difficulty: string;
 }
 
 interface TrainingPlanModalProps {
