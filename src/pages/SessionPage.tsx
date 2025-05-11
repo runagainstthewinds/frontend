@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Timer, TrendingUp, Clock9, Plus } from "lucide-react";
+import { Timer, TrendingUp, Clock9 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -284,19 +284,25 @@ export default function RunningSessionPage() {
                               {formatSessionDate(session.date.toString())}
                             </p>
                             <p className="text-sm text-slate-600 mt-0.5">
-                              {session.distance} km •{" "}
-                              {mapResponseToRunType(session.trainingType)}
+                              {session.distance.toFixed(2)} km • {session.pace.toFixed(2)} min/km
                             </p>
                           </div>
-                          <Badge
-                            className={`${
-                              session.isComplete
-                                ? "bg-green-100 text-green-800"
-                                : "bg-teal-100 text-teal-800"
-                            } px-3 py-1`}
-                          >
-                            {session.isComplete ? "Completed" : "Scheduled"}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              className="bg-slate-100 text-slate-800 px-3 py-1"
+                            >
+                              {mapResponseToRunType(session.trainingType)}
+                            </Badge>
+                            <Badge
+                              className={`${
+                                session.isComplete
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-teal-100 text-teal-800"
+                              } px-3 py-1`}
+                            >
+                              {session.isComplete ? "Completed" : "Scheduled"}
+                            </Badge>
+                          </div>
                         </div>
                       ))}
                     </CardContent>
