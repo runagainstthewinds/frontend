@@ -11,6 +11,8 @@ import {
   Timer,
   TrendingUp,
 } from "lucide-react";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, paceConverter } from "@/lib/utils";
 
 const StravaImportTab: React.FC<StravaImportTabProps> = ({
   runs,
@@ -18,6 +20,7 @@ const StravaImportTab: React.FC<StravaImportTabProps> = ({
   handleSelectRun,
   shoes,
 }) => {
+  const { distanceUnit } = useUnit();
   return (
     <TabsContent value="strava" className="p-0">
       <div className="p-6 pb-3 border-b">
@@ -63,11 +66,15 @@ const StravaImportTab: React.FC<StravaImportTabProps> = ({
                 <div className="grid grid-cols-3 gap-2 mt-2">
                   <div className="flex items-center text-sm text-slate-700">
                     <TrendingUp className="h-3.5 w-3.5 mr-1.5 text-slate-500" />
-                    {run.distance} km
+                    {distanceUnit === "km"
+                      ? `${run.distance} km`
+                      : `${kmToMiles(run.distance, 0)} mi`}
                   </div>
                   <div className="flex items-center text-sm text-slate-700">
                     <Timer className="h-3.5 w-3.5 mr-1.5 text-slate-500" />
-                    {run.pace} min/km
+                    {distanceUnit === "km"
+                      ? `${run.pace} min/km`
+                      : `${paceConverter(run.pace, "km")} min/mi`}
                   </div>
                   <div className="flex items-center text-sm text-slate-700">
                     <Clock className="h-3.5 w-3.5 mr-1.5 text-slate-500" />

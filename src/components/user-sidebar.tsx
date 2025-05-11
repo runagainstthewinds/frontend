@@ -34,10 +34,14 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles } from "@/lib/utils";
 
 export function UserSidebar() {
   const [progress, setProgress] = useState(22);
   const [shoeUsage, setShoeUsage] = useState(75);
+  const { distanceUnit, toggleDistanceUnit, paceUnit, togglePaceUnit } =
+    useUnit();
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -45,6 +49,15 @@ export function UserSidebar() {
     logout();
     navigate("/");
   };
+
+  const handleUnitChange = () => {
+    toggleDistanceUnit();
+    togglePaceUnit();
+  };
+
+  const weeklyGoal = 40;
+  const distanceCovered = 25;
+  const remainingDistance = weeklyGoal - distanceCovered;
 
   return (
     <SidebarProvider>
@@ -167,13 +180,20 @@ export function UserSidebar() {
               <div className="rounded-lg bg-white p-4 shadow-sm border border-slate-200">
                 <div className="flex justify-between text-sm mb-3">
                   <span className="font-medium text-slate-700">Distance</span>
-                  <span className="font-semibold text-teal-800">25/40 km</span>
+                  <span className="font-semibold text-teal-800">
+                    {distanceUnit === "km"
+                      ? `${distanceCovered}/${weeklyGoal} km`
+                      : `${kmToMiles(distanceCovered, 0)}/${kmToMiles(weeklyGoal, 0)} mi`}
+                  </span>
                 </div>
                 <Progress value={progress} className="h-2 bg-slate-100" />
                 <div className="mt-3 text-xs text-slate-500 flex items-center justify-between">
                   <span>{progress}% of weekly goal</span>
                   <span className="text-teal-600 font-medium">
-                    15 km remaining
+                    {distanceUnit === "km"
+                      ? `${remainingDistance}`
+                      : `${kmToMiles(remainingDistance, 0)}`}{" "}
+                    remaining
                   </span>
                 </div>
                 <div className="flex justify-between text-sm my-3">
@@ -194,6 +214,16 @@ export function UserSidebar() {
                 </div>
               </div>
             </SidebarGroupContent>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleUnitChange}
+              className="flex items-center gap-1 text-teal-600 hover:text-teal-700 hover:bg-teal-50 border-teal-200 mt-4"
+            >
+              Switch to {distanceUnit === "km" ? "mi" : "km"} (
+              {paceUnit === "min/km" ? "min/mi" : "min/km"})
+            </Button>
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>

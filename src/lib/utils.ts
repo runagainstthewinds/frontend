@@ -4,3 +4,36 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function kmToMiles(km: number, precision: number = 1) {
+  if (km === 0) return "0.0";
+  return (km * 0.621371).toFixed(precision);
+}
+
+export function milesToKm(miles: number) {
+  if (miles === 0) return "0.0";
+  return (miles / 0.621371).toFixed(1);
+}
+
+export function paceConverter(_pace: string, _unit: "km" | "mi") {
+  if (!_pace) return "0:00";
+  if (_pace === "0:00") return "0:00";
+  if (_unit === "mi") {
+    const [minutes, seconds] = _pace.split(":").map(Number);
+    const totalMinutes = minutes + seconds / 60;
+    const paceInMi = totalMinutes / 1.60934; // Convert to km pace
+    return `${Math.floor(paceInMi)}:${Math.round((paceInMi % 1) * 60)}`;
+  } else if (_unit === "km") {
+    const [minutes, seconds] = _pace.split(":").map(Number);
+    const totalMinutes = minutes + seconds / 60;
+    const paceInKm = totalMinutes * 1.60934; // Convert to mi pace
+    const secs = Math.round((paceInKm % 1) * 60);
+    return `${Math.floor(paceInKm)}:${secs.toString().padStart(2, "0")}`;
+  }
+}
+
+export function formatPace(pace: number) {
+  const minutes = Math.floor(pace);
+  const seconds = Math.round((pace - minutes) * 60);
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}

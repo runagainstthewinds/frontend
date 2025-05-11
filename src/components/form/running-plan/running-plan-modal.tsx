@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { TrainingPlanFormData } from "@/types/form";
 import type { TrainingPlanModalProps } from "@/types/form";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, paceConverter } from "@/lib/utils";
 
 export function TrainingPlanModal({
   open: controlledOpen,
@@ -25,6 +27,7 @@ export function TrainingPlanModal({
   const [internalOpen, setInternalOpen] = useState(false);
   const open = controlledOpen ?? internalOpen;
   const setOpen = controlledSetOpen ?? setInternalOpen;
+  const { distanceUnit } = useUnit();
 
   const [formData, setFormData] = useState<TrainingPlanFormData>({
     planName: "",
@@ -108,7 +111,10 @@ export function TrainingPlanModal({
     return `${paceMinutesWhole}:${paceSeconds.toString().padStart(2, "0")}`;
   };
 
-  const pace = calculatePace();
+  const pace =
+    distanceUnit === "km"
+      ? calculatePace()
+      : paceConverter(calculatePace() || "", "km");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -205,16 +211,22 @@ export function TrainingPlanModal({
                     htmlFor="goalDistance"
                     className="text-sm font-medium text-slate-700"
                   >
-                    Goal Distance (km)
+                    Goal Distance ({distanceUnit})
                   </Label>
                   <div className="relative">
                     <Target className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
                     <Input
                       id="goalDistance"
                       name="goalDistance"
-                      placeholder="e.g. 42.2"
+                      placeholder={
+                        distanceUnit === "km" ? "e.g. 42.2" : "e.g. 26.2"
+                      }
                       className="pl-9"
-                      value={formData.goalDistance}
+                      value={
+                        distanceUnit === "km"
+                          ? formData.goalDistance
+                          : kmToMiles(Number(formData.goalDistance), 1)
+                      }
                       onChange={handleInputChange}
                     />
                   </div>
@@ -245,9 +257,15 @@ export function TrainingPlanModal({
                   <div className="flex items-center">
                     <Award className="h-4 w-4 text-teal-600 mr-2" />
                     <span className="text-sm text-teal-800">
-                      Target Pace: <strong>{pace} min/km</strong> (
-                      {formatTime(formData.goalTime)} for{" "}
-                      {formData.goalDistance} km)
+                      Target Pace:{" "}
+                      <strong>
+                        {pace} min/{distanceUnit}
+                      </strong>{" "}
+                      ({formatTime(formData.goalTime)} for{" "}
+                      {distanceUnit === "km"
+                        ? formData.goalDistance
+                        : kmToMiles(parseFloat(formData.goalDistance))}{" "}
+                      {distanceUnit})
                     </span>
                   </div>
                 </div>
@@ -283,7 +301,9 @@ export function TrainingPlanModal({
               <div className="flex justify-between">
                 <span className="text-sm text-slate-600">Distance:</span>
                 <span className="text-sm font-medium text-slate-800">
-                  {formData.goalDistance} km
+                  {distanceUnit === "km"
+                    ? `${formData.goalDistance} km`
+                    : `${kmToMiles(parseFloat(formData.goalDistance))} mi`}
                 </span>
               </div>
             )}
@@ -299,7 +319,7 @@ export function TrainingPlanModal({
               <div className="flex justify-between">
                 <span className="text-sm text-slate-600">Target Pace:</span>
                 <span className="text-sm font-medium text-slate-800">
-                  {pace} min/km
+                  {pace} min/{distanceUnit}
                 </span>
               </div>
             )}

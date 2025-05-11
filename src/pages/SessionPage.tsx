@@ -27,6 +27,8 @@ import { getTrainingSessionsForPlan } from "@/api/trainingSession";
 import { useUserId } from "@/hooks/useUserInfo";
 import { mapResponseToRunType } from "@/helper/mapTrainingType";
 import { TrainingPlanModal } from "@/components/form/running-plan/running-plan-modal";
+import { useUnit } from "@/context/UnitContext";
+import { formatPace, kmToMiles, paceConverter } from "@/lib/utils";
 
 export default function RunningSessionPage() {
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
@@ -123,6 +125,7 @@ export default function RunningSessionPage() {
     );
   }
 
+  const { distanceUnit } = useUnit();
   return (
     <SidebarProvider>
       <div className="flex min-h-screen min-w-screen bg-gray-50">
@@ -194,12 +197,18 @@ export default function RunningSessionPage() {
                             {
                               icon: TrendingUp,
                               title: "Distance",
-                              value: `${nextSession.distance} km`,
+                              value:
+                                distanceUnit === "km"
+                                  ? `${nextSession.distance} km`
+                                  : `${kmToMiles(nextSession.distance)} mi`,
                             },
                             {
                               icon: Timer,
                               title: "Goal Pace",
-                              value: `${nextSession.pace} min/km`,
+                              value:
+                                distanceUnit === "km"
+                                  ? `${nextSession.pace} min/km`
+                                  : `${paceConverter(formatPace(nextSession.pace), "mi")} min/mi`,
                             },
                             {
                               icon: Clock9,
@@ -284,8 +293,10 @@ export default function RunningSessionPage() {
                               {formatSessionDate(session.date.toString())}
                             </p>
                             <p className="text-sm text-slate-600 mt-0.5">
-                              {session.distance} km •{" "}
-                              {mapResponseToRunType(session.trainingType)}
+                              {distanceUnit === "km"
+                                ? `${session.distance} km`
+                                : `${kmToMiles(session.distance)} mi`}{" "}
+                              • {mapResponseToRunType(session.trainingType)}
                             </p>
                           </div>
                           <Badge

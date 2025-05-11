@@ -44,6 +44,8 @@ import pastRuns from "@/helper/data/fakeRun";
 import RecentRunsCard from "@/components/historypage/recent-runs-card";
 import RunningStatsCard from "@/components/historypage/running-stats-card";
 import MonthlyMileageCard from "@/components/historypage/monthly-mileage-card";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, paceConverter } from "@/lib/utils";
 
 function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,6 +67,8 @@ function HistoryPage() {
   });
 
   const uniqueShoes = [...new Set(pastRuns.map((run) => run.shoe))];
+
+  const { distanceUnit } = useUnit();
 
   return (
     <SidebarProvider>
@@ -203,11 +207,19 @@ function HistoryPage() {
                                     },
                                   )}
                                 </TableCell>
-                                <TableCell>{run.distance} km</TableCell>
+                                <TableCell>
+                                  {distanceUnit === "km"
+                                    ? `${run.distance} km`
+                                    : `${kmToMiles(run.distance)} mi`}
+                                </TableCell>
                                 <TableCell className="hidden md:table-cell">
                                   {run.duration}
                                 </TableCell>
-                                <TableCell>{run.pace} min/km</TableCell>
+                                <TableCell>
+                                  {distanceUnit === "km"
+                                    ? `${run.pace} min/km`
+                                    : `${paceConverter(run.pace, "km")} min/mi`}{" "}
+                                </TableCell>
                                 <TableCell className="hidden md:table-cell">
                                   {run.trainingPlan}
                                 </TableCell>

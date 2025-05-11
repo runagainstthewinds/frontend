@@ -12,6 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles } from "@/lib/utils";
 
 // Sample shoe data
 const shoes = [
@@ -90,6 +92,7 @@ interface Shoe {
 
 function ShoeCard({ shoe }: { shoe: Shoe }) {
   const percentUsed = (shoe.currentMileage / shoe.maxMileage) * 100;
+  const { distanceUnit } = useUnit();
 
   return (
     <Card>
@@ -113,7 +116,9 @@ function ShoeCard({ shoe }: { shoe: Shoe }) {
               Added on {new Date(shoe.purchaseDate).toLocaleDateString()}
             </p>
             <p className="text-sm font-medium">
-              {shoe.currentMileage} / {shoe.maxMileage} km
+              {distanceUnit === "km"
+                ? `${shoe.currentMileage} / ${shoe.maxMileage} km`
+                : `${kmToMiles(shoe.currentMileage, 0)} / ${kmToMiles(shoe.maxMileage, 0)} mi`}
             </p>
             <div className="w-full">
               <Progress value={percentUsed} className="h-2" />

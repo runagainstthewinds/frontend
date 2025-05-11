@@ -5,6 +5,8 @@ import { Slider } from "@/components/ui/slider";
 import { TabsContent } from "@/components/ui/tabs";
 import { ManualEntryTabProps } from "@/types/form";
 import { Clock, Timer, TrendingUp } from "lucide-react";
+import { useUnit } from "@/context/UnitContext";
+import { kmToMiles, paceConverter } from "@/lib/utils";
 
 const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
   SessionRunFormData,
@@ -12,6 +14,7 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
   intensity,
   handleIntensityChange,
 }) => {
+  const { distanceUnit } = useUnit();
   return (
     <TabsContent value="manual" className="p-6 pt-4">
       <div className="space-y-4">
@@ -21,7 +24,7 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
               htmlFor="distance"
               className="text-sm font-medium text-slate-700"
             >
-              Distance (km)
+              Distance ({distanceUnit})
             </Label>
             <div className="relative">
               <TrendingUp className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
@@ -30,7 +33,11 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
                 name="distance"
                 placeholder="0.0"
                 className="pl-9"
-                value={SessionRunFormData.distance}
+                value={
+                  distanceUnit === "km"
+                    ? SessionRunFormData.distance
+                    : kmToMiles(Number(SessionRunFormData.distance), 1)
+                }
                 onChange={handleInputChange}
               />
             </div>
@@ -40,7 +47,7 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
               htmlFor="pace"
               className="text-sm font-medium text-slate-700"
             >
-              Pace (min/km)
+              Pace (min/{distanceUnit})
             </Label>
             <div className="relative">
               <Timer className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
@@ -49,7 +56,11 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
                 name="pace"
                 placeholder="0:00"
                 className="pl-9"
-                value={SessionRunFormData.pace}
+                value={
+                  distanceUnit === "km"
+                    ? SessionRunFormData.pace
+                    : paceConverter(SessionRunFormData.pace, "km")
+                }
                 onChange={handleInputChange}
               />
             </div>
