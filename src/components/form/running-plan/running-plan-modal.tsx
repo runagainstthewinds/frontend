@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
-import { Calendar, Clock, Award, Target } from "lucide-react";
+import { Calendar, Clock, Target } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -14,14 +14,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { TrainingPlanFormData } from "@/types/form";
 import type { TrainingPlanModalProps } from "@/types/form";
+import { createTrainingPlan } from "@/api/trainingPlan";
+import { useUserId } from "@/hooks/useUserInfo";
 
 export function TrainingPlanModal({
   open: controlledOpen,
   onOpenChange: controlledSetOpen,
   onSubmit,
 }: TrainingPlanModalProps) {
+  const userId = useUserId();
   const [internalOpen, setInternalOpen] = useState(false);
   const open = controlledOpen ?? internalOpen;
   const setOpen = controlledSetOpen ?? setInternalOpen;
@@ -31,7 +41,7 @@ export function TrainingPlanModal({
     startDate: "",
     endDate: "",
     goalDistance: "",
-    goalTime: "",
+    difficulty: "",
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,28 +52,43 @@ export function TrainingPlanModal({
     }));
   };
 
-  const handleSubmit = () => {
-    const dataToSubmit = {
-      ...formData,
-      goalDistance: Number.parseFloat(formData.goalDistance),
-      goalTime: Number.parseFloat(formData.goalTime),
-    };
+  const handleDifficultyChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      difficulty: value,
+    }));
+  };
 
-    console.log("Creating training plan:", dataToSubmit);
+  const handleSubmit = async () => {
+    try {
+      const dataToSubmit = {
+        planName: formData.planName,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        goalDistance: Number.parseFloat(formData.goalDistance),
+        difficulty: formData.difficulty.toUpperCase(),
+      };
 
-    if (onSubmit) {
-      onSubmit(formData);
+      if (userId) {
+        await createTrainingPlan(userId, dataToSubmit);
+      }
+
+      if (onSubmit) {
+        onSubmit(formData);
+      }
+
+      setOpen(false);
+      setFormData({
+        planName: "",
+        startDate: "",
+        endDate: "",
+        goalDistance: "",
+        difficulty: "",
+      });
+    } catch (error) {
+      console.error("Error creating training plan:", error);
+      // You might want to show an error message to the user here
     }
-
-    setOpen(false);
-
-    setFormData({
-      planName: "",
-      startDate: "",
-      endDate: "",
-      goalDistance: "",
-      goalTime: "",
-    });
   };
 
   const calculateDuration = () => {
@@ -82,33 +107,6 @@ export function TrainingPlanModal({
   };
 
   const trainingDuration = calculateDuration();
-
-  const formatTime = (minutes: string) => {
-    if (!minutes || isNaN(Number(minutes))) return "";
-
-    const mins = Number.parseInt(minutes, 10);
-    const hours = Math.floor(mins / 60);
-    const remainingMins = mins % 60;
-
-    return `${hours}:${remainingMins.toString().padStart(2, "0")}`;
-  };
-
-  const calculatePace = () => {
-    if (!formData.goalDistance || !formData.goalTime) return null;
-
-    const distance = Number.parseFloat(formData.goalDistance);
-    const timeInMinutes = Number.parseFloat(formData.goalTime);
-
-    if (isNaN(distance) || isNaN(timeInMinutes) || distance === 0) return null;
-
-    const paceMinutes = timeInMinutes / distance;
-    const paceMinutesWhole = Math.floor(paceMinutes);
-    const paceSeconds = Math.round((paceMinutes - paceMinutesWhole) * 60);
-
-    return `${paceMinutesWhole}:${paceSeconds.toString().padStart(2, "0")}`;
-  };
-
-  const pace = calculatePace();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -221,37 +219,26 @@ export function TrainingPlanModal({
                 </div>
                 <div className="space-y-2">
                   <Label
-                    htmlFor="goalTime"
+                    htmlFor="difficulty"
                     className="text-sm font-medium text-slate-700"
                   >
-                    Goal Time (minutes)
+                    Difficulty Level
                   </Label>
-                  <div className="relative">
-                    <Clock className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
-                    <Input
-                      id="goalTime"
-                      name="goalTime"
-                      placeholder="e.g. 240"
-                      className="pl-9"
-                      value={formData.goalTime}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                  <Select
+                    value={formData.difficulty}
+                    onValueChange={handleDifficultyChange}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select difficulty" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="easy">Easy</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="hard">Hard</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
-
-              {pace && (
-                <div className="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-md">
-                  <div className="flex items-center">
-                    <Award className="h-4 w-4 text-teal-600 mr-2" />
-                    <span className="text-sm text-teal-800">
-                      Target Pace: <strong>{pace} min/km</strong> (
-                      {formatTime(formData.goalTime)} for{" "}
-                      {formData.goalDistance} km)
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -287,19 +274,11 @@ export function TrainingPlanModal({
                 </span>
               </div>
             )}
-            {formData.goalTime && (
+            {formData.difficulty && (
               <div className="flex justify-between">
-                <span className="text-sm text-slate-600">Target Time:</span>
+                <span className="text-sm text-slate-600">Difficulty:</span>
                 <span className="text-sm font-medium text-slate-800">
-                  {formatTime(formData.goalTime)}
-                </span>
-              </div>
-            )}
-            {pace && (
-              <div className="flex justify-between">
-                <span className="text-sm text-slate-600">Target Pace:</span>
-                <span className="text-sm font-medium text-slate-800">
-                  {pace} min/km
+                  {formData.difficulty.charAt(0).toUpperCase() + formData.difficulty.slice(1)}
                 </span>
               </div>
             )}
@@ -322,7 +301,7 @@ export function TrainingPlanModal({
               !formData.startDate ||
               !formData.endDate ||
               !formData.goalDistance ||
-              !formData.goalTime
+              !formData.difficulty
             }
           >
             Create Plan

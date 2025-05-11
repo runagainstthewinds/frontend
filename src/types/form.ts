@@ -52,13 +52,21 @@ interface TrainingPlanFormData {
   startDate: string;
   endDate: string;
   goalDistance: string;
-  goalTime: string;
+  difficulty: string;
 }
 
 interface TrainingPlanModalProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   onSubmit?: (data: TrainingPlanFormData) => void;
+}
+
+interface CreateTrainingPlanParams {
+  planName: string;
+  startDate: string;
+  endDate: string;
+  goalDistance: number;
+  difficulty: string;
 }
 
 export type {
@@ -69,4 +77,5 @@ export type {
   AddRunSessionModalProps,
   SessionRunFormData,
   TrainingPlanModalProps,
+  CreateTrainingPlanParams,
 };

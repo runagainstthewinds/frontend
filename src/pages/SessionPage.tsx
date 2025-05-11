@@ -38,32 +38,31 @@ export default function RunningSessionPage() {
   const [loading, setLoading] = useState(true);
   const userId = useUserId();
 
-  useEffect(() => {
+  const fetchTrainingPlanData = async () => {
     if (!userId) return;
     setLoading(true);
 
-    getCurrentTrainingPlan(userId)
-      .then((plan) => {
-        if (!plan || !plan.trainingPlanId) {
-          throw new Error("No valid training plan found");
-        }
-        setTrainingPlan(plan);
-        return getTrainingSessionsForPlan(plan.trainingPlanId.toString());
-      })
-      .then((sessions) => {
-        const sortedSessions = sessions.sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-        );
-        setTrainingSessions(sortedSessions);
-      })
-      .catch((error) => {
-        console.error("Error fetching training data:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const plan = await getCurrentTrainingPlan(userId);
+      if (!plan || !plan.trainingPlanId) {
+        throw new Error("No valid training plan found");
+      }
+      setTrainingPlan(plan);
+      const sessions = await getTrainingSessionsForPlan(plan.trainingPlanId.toString());
+      const sortedSessions = sessions.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      );
+      setTrainingSessions(sortedSessions);
+    } catch (error) {
+      console.error("Error fetching training data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrainingPlanData();
   }, [userId]);
-  console.log(trainingSessions);
 
   // Determine the next upcoming session
   const nextSession = useMemo(() => {
@@ -146,6 +145,7 @@ export default function RunningSessionPage() {
                   <TrainingPlanModal
                     open={isPlanModalOpen}
                     onOpenChange={setIsPlanModalOpen}
+                    onSubmit={() => fetchTrainingPlanData()}
                   />
                 </header>
               </div>
