@@ -15,7 +15,7 @@ import RunType from "../runtype";
 import { mapTrainingTypeToRunType } from "@/helper/mapTrainingType";
 import { format } from "date-fns";
 import { useUnit } from "@/context/UnitContext";
-import { kmToMiles, paceConverter } from "@/lib/utils";
+import { kmToMiles, paceConverter, formatPace } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 5; // Number of items to display per page
 
@@ -40,6 +40,11 @@ export default function RecentRunsCard() {
 
   const recentRuns = useMemo(() => {
     return [...pastRuns]
+      .filter(run => 
+        run.achievedPace !== null && 
+        run.achievedDistance !== null && 
+        run.achievedDuration !== null
+      )
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, ITEMS_PER_PAGE);
   }, [pastRuns]);
@@ -87,6 +92,7 @@ export default function RecentRunsCard() {
 function RunCardItem({ run }: { run: TrainingSession }) {
   const roundedPaceTwoDecimals = run.achievedPace.toFixed(2);
   const { distanceUnit } = useUnit();
+  const formattedPace = formatPace(Number(roundedPaceTwoDecimals));
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
       <div className="sm:w-1/4">
@@ -109,7 +115,7 @@ function RunCardItem({ run }: { run: TrainingSession }) {
             "Pace",
             distanceUnit === "km"
               ? `${roundedPaceTwoDecimals} min/km`
-              : `${paceConverter(roundedPaceTwoDecimals.toString(), "km")} min/mi`,
+              : `${paceConverter(formattedPace, "km")} min/mi`,
           ],
           ["Type", run.trainingType],
         ].map(([label, value]) => (
