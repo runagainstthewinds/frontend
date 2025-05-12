@@ -35,6 +35,7 @@ interface SessionRunFormData {
   duration: string;
   intensity: number;
   shoeId: number | null;
+  notes: string;
 }
 
 interface SessionRunFormData {

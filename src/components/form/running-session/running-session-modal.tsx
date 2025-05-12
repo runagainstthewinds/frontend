@@ -41,14 +41,29 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
       duration: "",
       intensity: 0,
       shoeId: null,
+      notes: "",
     });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setSessionRunFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setSessionRunFormData((prev) => {
+      const newData = { ...prev, [name]: value };
+      
+      // Calculate pace when distance or duration changes
+      if (name === "distance" || name === "duration") {
+        const distance = parseFloat(newData.distance);
+        const duration = parseFloat(newData.duration);
+        
+        if (!isNaN(distance) && !isNaN(duration) && distance > 0) {
+          const paceInMinutes = duration / distance;
+          const minutes = Math.floor(paceInMinutes);
+          const seconds = Math.round((paceInMinutes - minutes) * 60);
+          newData.pace = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }
+      
+      return newData;
+    });
   };
 
   const handleIntensityChange = (value: number[]) => {
@@ -89,6 +104,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
       duration: "",
       intensity: 3,
       shoeId: null,
+      notes: "",
     });
     setSelectedRun(null);
     setSelectedShoe(null);
@@ -104,8 +120,8 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden">
-        <DialogHeader className="p-6 pb-2">
+      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden max-h-[90vh] flex flex-col">
+        <DialogHeader className="p-6 pb-2 shrink-0">
           <DialogTitle className="text-xl font-semibold text-slate-900">
             Add Run Session
           </DialogTitle>
@@ -113,47 +129,49 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
             Manually enter your run details or import from Strava
           </DialogDescription>
         </DialogHeader>
-        <Tabs
-          defaultValue="manual"
-          value={activeTab}
-          onValueChange={(value: string) =>
-            setActiveTab(value as "manual" | "strava")
-          }
-          className="w-full"
-        >
-          <TabsList className="grid w-full h-full grid-cols-2 bg-white p-2 rounded-lg">
-            <TabsTrigger
-              value="manual"
-              className="data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-md py-2.5 font-medium"
-            >
-              Manual Entry
-            </TabsTrigger>
-            <TabsTrigger
-              value="strava"
-              className="data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-md py-2.5 font-medium"
-            >
-              Import from Strava
-            </TabsTrigger>
-          </TabsList>
-          <ManualEntryTab
-            SessionRunFormData={SessionRunFormData}
-            handleInputChange={handleInputChange}
-            intensity={intensity}
-            handleIntensityChange={handleIntensityChange}
-          />
-          <StravaImportTab
-            runs={mockStravaRuns}
-            selectedRun={selectedRun}
-            handleSelectRun={handleSelectRun}
+        <div className="overflow-y-auto flex-1">
+          <Tabs
+            defaultValue="manual"
+            value={activeTab}
+            onValueChange={(value: string) =>
+              setActiveTab(value as "manual" | "strava")
+            }
+            className="w-full"
+          >
+            <TabsList className="grid w-full h-full grid-cols-2 bg-white p-2 rounded-lg sticky top-0 z-10">
+              <TabsTrigger
+                value="manual"
+                className="data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-md py-2.5 font-medium"
+              >
+                Manual Entry
+              </TabsTrigger>
+              <TabsTrigger
+                value="strava"
+                className="data-[state=active]:bg-teal-600 data-[state=active]:text-white rounded-md py-2.5 font-medium"
+              >
+                Import from Strava
+              </TabsTrigger>
+            </TabsList>
+            <ManualEntryTab
+              SessionRunFormData={SessionRunFormData}
+              handleInputChange={handleInputChange}
+              intensity={intensity}
+              handleIntensityChange={handleIntensityChange}
+            />
+            <StravaImportTab
+              runs={mockStravaRuns}
+              selectedRun={selectedRun}
+              handleSelectRun={handleSelectRun}
+              shoes={mockShoes}
+            />
+          </Tabs>
+          <ShoeSelection
             shoes={mockShoes}
+            selectedShoe={selectedShoe}
+            handleSelectShoe={handleSelectShoe}
           />
-        </Tabs>
-        <ShoeSelection
-          shoes={mockShoes}
-          selectedShoe={selectedShoe}
-          handleSelectShoe={handleSelectShoe}
-        />
-        <DialogFooter className="p-6 pt-4 border-t bg-slate-50">
+        </div>
+        <DialogFooter className="p-6 pt-4 border-t bg-slate-50 shrink-0">
           <Button
             variant="outline"
             onClick={() => setOpen(false)}
