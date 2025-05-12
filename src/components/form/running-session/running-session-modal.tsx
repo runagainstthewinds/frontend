@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,14 +11,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ShoeSelection from "./shoe-selection-card";
-import {
-  mockStravaRuns,
-  mockShoes,
-} from "@/helper/data/fakeTrainingSessionDataForm";
+import { mockStravaRuns } from "@/helper/data/fakeTrainingSessionDataForm";
 import ManualEntryTab from "./manual-entry-form";
 import StravaImportTab from "./strava-import-tab";
 import { AddRunSessionModalProps } from "@/types/form";
 import { SessionRunFormData } from "@/types/form";
+import { Shoe } from "@/types/models";
+import { getShoeByUserId } from "@/api/shoe";
+import { useUserId } from "@/hooks/useUserInfo";
 
 export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
   open: controlledOpen,
@@ -28,11 +28,14 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
   const [internalOpen, setInternalOpen] = useState(false);
   const open = controlledOpen ?? internalOpen;
   const setOpen = controlledSetOpen ?? setInternalOpen;
+  const userId = useUserId();
 
   const [activeTab, setActiveTab] = useState<"manual" | "strava">("manual");
   const [intensity, setIntensity] = useState<number[]>([3]);
   const [selectedRun, setSelectedRun] = useState<number | null>(null);
   const [selectedShoe, setSelectedShoe] = useState<number | null>(null);
+  const [shoes, setShoes] = useState<Shoe[]>([]);
+  const [loadingShoes, setLoadingShoes] = useState(false);
 
   const [SessionRunFormData, setSessionRunFormData] =
     useState<SessionRunFormData>({
@@ -43,6 +46,24 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
       shoeId: null,
       notes: "",
     });
+
+  useEffect(() => {
+    const fetchShoes = async () => {
+      if (!userId || !open) return;
+      
+      setLoadingShoes(true);
+      try {
+        const userShoes = await getShoeByUserId(userId);
+        setShoes(userShoes);
+      } catch (error) {
+        console.error("Error fetching shoes:", error);
+      } finally {
+        setLoadingShoes(false);
+      }
+    };
+
+    fetchShoes();
+  }, [userId, open]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -78,7 +99,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
     setSelectedRun(id);
   };
 
-  const handleSelectShoe = (id: number) => {
+  const handleSelectShoe = (id: number | null) => {
     setSelectedShoe(id);
     setSessionRunFormData((prev) => ({
       ...prev,
@@ -162,13 +183,14 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
               runs={mockStravaRuns}
               selectedRun={selectedRun}
               handleSelectRun={handleSelectRun}
-              shoes={mockShoes}
+              shoes={shoes}
             />
           </Tabs>
           <ShoeSelection
-            shoes={mockShoes}
+            shoes={shoes}
             selectedShoe={selectedShoe}
             handleSelectShoe={handleSelectShoe}
+            loading={loadingShoes}
           />
         </div>
         <DialogFooter className="p-6 pt-4 border-t bg-slate-50 shrink-0">

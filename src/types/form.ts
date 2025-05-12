@@ -20,7 +20,8 @@ interface StravaImportTabProps {
 interface ShoeSelectionProps {
   shoes: Shoe[];
   selectedShoe: number | null;
-  handleSelectShoe: (id: number) => void;
+  handleSelectShoe: (shoeId: number | null) => void;
+  loading?: boolean;
 }
 
 interface AddRunSessionModalProps {
