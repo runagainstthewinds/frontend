@@ -29,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, {
@@ -41,7 +40,6 @@ const profileFormSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  bio: z.string().max(160).optional(),
   runningLevel: z.string({
     required_error: "Please select a running level.",
   }),
@@ -54,7 +52,6 @@ const defaultValues: Partial<ProfileFormValues> = {
   firstName: "John",
   lastName: "Doe",
   email: "john.doe@example.com",
-  bio: "Running enthusiast and marathon finisher. I love trail running and exploring new routes.",
   runningLevel: "intermediate",
 };
 
@@ -124,28 +121,6 @@ export function UserProfileForm() {
                     <FormControl>
                       <Input placeholder="john.doe@example.com" {...field} />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="bio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bio</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Tell us a little about yourself"
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      You can write a short bio about yourself. Max 160
-                      characters.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

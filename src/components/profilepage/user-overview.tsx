@@ -1,14 +1,10 @@
-import { Card } from "./ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import { Card } from "../ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Button } from "../ui/button";
 import {
   PencilIcon,
   MailIcon,
   Bike,
-  FlagIcon,
-  Footprints,
-  MapIcon,
   Calendar,
   Check,
   ExternalLink,
@@ -21,6 +17,7 @@ import {
   useUserEmail,
   useHasGoogleCalendarToken,
 } from "@/hooks/useUserInfo";
+import StravaConnectButton from "../ui/StravaConnectButton";
 
 function UserOverview() {
   return (
@@ -44,38 +41,11 @@ function UserOverview() {
           <div className="flex-1 space-y-2 mt-16 md:mt-0 w-full">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <h2 className="text-2xl font-bold">{useUserName()}</h2>
-              <Button size="sm" variant="outline" className="self-start">
-                <PencilIcon className="h-4 w-4 mr-1" />
-                Edit Profile
-              </Button>
             </div>
             <p className="text-muted-foreground flex items-center">
               <MailIcon className="h-4 w-4 mr-1.5 text-muted-foreground/70" />
               {useUserEmail()}
             </p>
-            <div className="flex flex-wrap gap-2 mt-3">
-              <Badge
-                variant="outline"
-                className="bg-teal-50 text-teal-700 hover:bg-teal-100 border-teal-200 px-3 py-1"
-              >
-                <Footprints className="h-3 w-3 mr-1" />
-                Runner
-              </Badge>
-              <Badge
-                variant="outline"
-                className="bg-teal-50 text-teal-700 hover:bg-teal-100 border-teal-200 px-3 py-1"
-              >
-                <FlagIcon className="h-3 w-3 mr-1" />
-                Marathon
-              </Badge>
-              <Badge
-                variant="outline"
-                className="bg-teal-50 text-teal-700 hover:bg-teal-100 border-teal-200 px-3 py-1"
-              >
-                <MapIcon className="h-3 w-3 mr-1" />
-                Trail
-              </Badge>
-            </div>
           </div>
         </div>
 
@@ -138,14 +108,7 @@ function UserOverview() {
                 Connected
               </Button>
             ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Connect
-              </Button>
+              <StravaConnectButton username={useUserName()} />
             )}
           </div>
         </div>

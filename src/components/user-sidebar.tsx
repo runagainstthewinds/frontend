@@ -34,7 +34,6 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import JWTAuthTest from "./auth/jwtAuthTest";
 
 export function UserSidebar() {
   const [progress, setProgress] = useState(22);
@@ -195,8 +194,6 @@ export function UserSidebar() {
                 </div>
               </div>
             </SidebarGroupContent>
-
-            <JWTAuthTest />
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
