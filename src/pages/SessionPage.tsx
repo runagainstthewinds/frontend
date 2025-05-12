@@ -44,15 +44,17 @@ export default function RunningSessionPage() {
 
     try {
       const plan = await getCurrentTrainingPlan(userId);
-      if (!plan || !plan.trainingPlanId) {
-        throw new Error("No valid training plan found");
-      }
       setTrainingPlan(plan);
-      const sessions = await getTrainingSessionsForPlan(plan.trainingPlanId.toString());
-      const sortedSessions = sessions.sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-      );
-      setTrainingSessions(sortedSessions);
+      
+      if (plan?.trainingPlanId) {
+        const sessions = await getTrainingSessionsForPlan(plan.trainingPlanId.toString());
+        const sortedSessions = sessions.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+        );
+        setTrainingSessions(sortedSessions);
+      } else {
+        setTrainingSessions([]);
+      }
     } catch (error) {
       console.error("Error fetching training data:", error);
     } finally {
