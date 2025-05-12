@@ -9,9 +9,6 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
   handleSelectShoe,
   loading,
 }) => {
-  console.log("Shoes data:", shoes);
-  console.log("Selected shoe:", selectedShoe);
-
   const handleShoeClick = (shoeId: number) => {
     // If the clicked shoe is already selected, unselect it
     if (selectedShoe === shoeId) {
@@ -20,6 +17,18 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
       handleSelectShoe(shoeId);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="p-6 pt-4 border-t">
+        <div className="space-y-3">
+          <Label className="text-sm font-medium text-slate-700">
+            Loading shoes...
+          </Label>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 pt-4 border-t">
@@ -37,7 +46,6 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[200px] overflow-y-auto pr-1">
           {shoes.map((shoe) => {
-            console.log("Processing shoe:", shoe);
             const percentUsed = (shoe.totalMileage / 800) * 100; // Using 800km as max mileage
             const isSelected = selectedShoe === shoe.shoeId;
             return (
