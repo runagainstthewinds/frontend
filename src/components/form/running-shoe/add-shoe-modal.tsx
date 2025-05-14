@@ -53,7 +53,7 @@ export function AddShoeModal({
     console.log("Adding new shoe:", dataToSubmit);
 
     if (onSubmit) {
-      onSubmit(formData);
+      onSubmit(dataToSubmit);
     }
 
     setOpen(false);
