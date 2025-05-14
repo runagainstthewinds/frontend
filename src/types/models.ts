@@ -9,6 +9,13 @@ interface Shoe {
   purchaseDate: string;
 }
 
+type ShoeResponse = Omit<Shoe, "maxMileage" | "image" | "purchaseDate" | "id" | "currentMileage" | "name"> & {
+  totalMileage: number;
+  shoeId: number;
+  date: string;
+  model: string;
+}
+
 interface StravaRun {
   id: number;
   title: string;
@@ -70,6 +77,7 @@ interface TrainingPlan {
 
 export type {
   Shoe,
+  ShoeResponse,
   StravaRun,
   TrainingSession,
   UserAchievement,

@@ -51,6 +51,10 @@ export default defineConfig({
         target: "http://localhost:8080",
         changeOrigin: true,
       },
+      "/shoes": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
     },
   },
 });

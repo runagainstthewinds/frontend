@@ -23,6 +23,19 @@ interface ShoeSelectionProps {
   handleSelectShoe: (id: number) => void;
 }
 
+interface AddShoeFormData {
+  model: string;
+  brand: string;
+  color: string;
+  totalMileage: string;
+}
+
+interface AddShoeModalProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onSubmit?: (data: AddShoeFormData) => void;
+}
+
 interface AddRunSessionModalProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -65,6 +78,8 @@ export type {
   TrainingPlanFormData,
   ManualEntryTabProps,
   StravaImportTabProps,
+  AddShoeFormData,
+  AddShoeModalProps,
   ShoeSelectionProps,
   AddRunSessionModalProps,
   SessionRunFormData,
