@@ -69,7 +69,7 @@ function ShoeCard({ shoe }: { shoe: ShoeView }) {
 
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 -mb-5">
         <CardTitle className="text-lg">{shoe.name}</CardTitle>
         <CardDescription>
           {shoe.brand} • {shoe.color}

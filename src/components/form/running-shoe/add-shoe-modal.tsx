@@ -54,11 +54,11 @@ export function AddShoeModal({
 
   const handleSubmit = () => {
     // Validate mileage input
-    const isIntegerOk = /^\d+/.test(formData.totalMileage);
+    const isIntegerOk = /^\d{1,6}(?=\.|$)/.test(formData.totalMileage);
     const isDecimalOk = /^\d+(\.\d{0,2})?$/.test(formData.totalMileage);
     if (!isIntegerOk) {
       setError(
-        "Total Mileage: Must have at least 1 digit before the decimal point.",
+        "Total Mileage: Must have 1-6 digit(s) before the decimal point.",
       );
       return;
     }
