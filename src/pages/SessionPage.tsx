@@ -45,9 +45,11 @@ export default function RunningSessionPage() {
     try {
       const plan = await getCurrentTrainingPlan(userId);
       setTrainingPlan(plan);
-      
+
       if (plan?.trainingPlanId) {
-        const sessions = await getTrainingSessionsForPlan(plan.trainingPlanId.toString());
+        const sessions = await getTrainingSessionsForPlan(
+          plan.trainingPlanId.toString(),
+        );
         const sortedSessions = sessions.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
         );
@@ -286,13 +288,12 @@ export default function RunningSessionPage() {
                               {formatSessionDate(session.date.toString())}
                             </p>
                             <p className="text-sm text-slate-600 mt-0.5">
-                              {session.distance.toFixed(2)} km • {session.pace.toFixed(2)} min/km
+                              {session.distance.toFixed(2)} km •{" "}
+                              {session.pace.toFixed(2)} min/km
                             </p>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Badge
-                              className="bg-slate-100 text-slate-800 px-3 py-1"
-                            >
+                            <Badge className="bg-slate-100 text-slate-800 px-3 py-1">
                               {mapResponseToRunType(session.trainingType)}
                             </Badge>
                             <Badge
