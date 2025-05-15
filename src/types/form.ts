@@ -1,7 +1,7 @@
 // Training Session
 
 import { ChangeEvent, ReactNode } from "react";
-import { StravaRun, Shoe } from "./models";
+import { StravaRun, Shoe, ShoeRequest } from "./models";
 
 interface ManualEntryTabProps {
   SessionRunFormData: SessionRunFormData;
@@ -33,7 +33,7 @@ interface AddShoeFormData {
 interface AddShoeModalProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  onSubmit?: (data: AddShoeFormData) => void;
+  onSubmit?: (data: ShoeRequest) => void;
 }
 
 interface AddRunSessionModalProps {

@@ -1,7 +1,7 @@
 import { Shoe as ShoeView } from "@/types/models";
 import { ShoeResponse } from "@/types/models";
 
-const DEFAULT_IMG = "/shoe-collection-default.png"
+const DEFAULT_IMG = "/shoe-collection-default.png";
 const MAX_MILEAGE = 600;
 
 export const resToView = (shoe: ShoeResponse): ShoeView => {

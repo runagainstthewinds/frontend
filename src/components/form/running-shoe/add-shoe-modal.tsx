@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { AddShoeModalProps, AddShoeFormData } from "@/types/form";
 
-
 export function AddShoeModal({
   open: controlledOpen,
   onOpenChange: controlledSetOpen,
@@ -27,36 +26,60 @@ export function AddShoeModal({
   const open = controlledOpen ?? internalOpen;
   const setOpen = controlledSetOpen ?? setInternalOpen;
 
-  const [formData, setFormData] = useState<AddShoeFormData >(
-    {
-      model: "",
-      brand: "",
-      color: "",
-      totalMileage: "",
-    }
-  );
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<AddShoeFormData>({
+    model: "",
+    brand: "",
+    color: "",
+    totalMileage: "",
+  });
+
+  const parseMileageInput = (value: string) => {
+    return value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let processedValue = value;
+
+    if (name === "totalMileage") {
+      processedValue = parseMileageInput(value);
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: processedValue,
     }));
   };
 
   const handleSubmit = () => {
+    // Validate mileage input
+    const isIntegerOk = /^\d+/.test(formData.totalMileage);
+    const isDecimalOk = /^\d+(\.\d{0,2})?$/.test(formData.totalMileage);
+    if (!isIntegerOk) {
+      setError(
+        "Total Mileage: Must have at least 1 digit before the decimal point.",
+      );
+      return;
+    }
+    if (!isDecimalOk) {
+      setError("Total Mileage: Mileage can only have up to 2 decimal places.");
+      return;
+    }
+
     const dataToSubmit = {
-      ...formData,
+      model: formData.model.trim(),
+      brand: formData.brand.trim(),
+      color: formData.color.trim(),
       totalMileage: Number.parseFloat(formData.totalMileage),
     };
-
-    console.log("Adding new shoe:", dataToSubmit);
 
     if (onSubmit) {
       onSubmit(dataToSubmit);
     }
 
     setOpen(false);
+    setError(null);
 
     setFormData({
       brand: "",
@@ -66,11 +89,10 @@ export function AddShoeModal({
     });
   };
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-      <Button className="bg-teal-600 hover:bg-teal-700 cursor-pointer">
+        <Button className="bg-teal-600 hover:bg-teal-700 cursor-pointer">
           <PlusCircle className="h-4 w-4 mr-2" />
           Add New Shoe
         </Button>
@@ -103,10 +125,11 @@ export function AddShoeModal({
                     className="pl-9"
                     value={formData.brand}
                     onChange={handleInputChange}
+                    maxLength={20}
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label
                   htmlFor="model"
@@ -122,6 +145,7 @@ export function AddShoeModal({
                     className="pl-9"
                     value={formData.model}
                     onChange={handleInputChange}
+                    maxLength={30}
                   />
                 </div>
               </div>
@@ -143,10 +167,11 @@ export function AddShoeModal({
                     className="pl-9"
                     value={formData.color}
                     onChange={handleInputChange}
+                    maxLength={15}
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label
                   htmlFor="totalMileage"
@@ -166,6 +191,14 @@ export function AddShoeModal({
                 </div>
               </div>
             </div>
+
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded -mb-6">
+                <div className="flex flex-col">
+                  <span className="text-sm">{error}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -178,12 +211,13 @@ export function AddShoeModal({
             Cancel
           </Button>
           <Button
-            className="bg-teal-600 hover:bg-teal-700 ml-2 cursor-pointer"
+            className="bg-teal-600 hover:bg-teal-700 cursor-pointer"
+            type="submit"
             onClick={handleSubmit}
             disabled={
-              !formData.brand ||
-              !formData.model ||
-              !formData.color ||
+              !formData.brand.trim() ||
+              !formData.model.trim() ||
+              !formData.color.trim() ||
               !formData.totalMileage
             }
           >
@@ -193,5 +227,4 @@ export function AddShoeModal({
       </DialogContent>
     </Dialog>
   );
-
 }

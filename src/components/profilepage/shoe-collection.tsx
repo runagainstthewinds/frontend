@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Shoe as ShoeView, ShoeResponse } from "@/types/models";
-import { AddShoeFormData } from "@/types/form";
+import { Shoe as ShoeView, ShoeRequest, ShoeResponse } from "@/types/models";
 import { resToView } from "@/helper/mapShoeView";
 
 import {
@@ -17,50 +16,6 @@ import { useUserId } from "@/hooks/useUserInfo";
 import { getShoeCollection } from "@/api/shoeCollection";
 import { addShoeToCollection } from "@/api/shoeCollection";
 
-// Sample shoe data
-// const shoes = [
-//   {
-//     id: 1,
-//     name: "Nike Pegasus 39",
-//     brand: "Nike",
-//     image: "/pegasus.webp?height=80&width=120",
-//     currentMileage: 320,
-//     maxMileage: 500,
-//     color: "Blue/White",
-//     purchaseDate: "2023-05-15",
-//   },
-//   {
-//     id: 2,
-//     name: "Hoka Clifton 8",
-//     brand: "Hoka",
-//     image: "/clifton.webp?height=80&width=120",
-//     currentMileage: 160,
-//     maxMileage: 450,
-//     color: "Black/Orange",
-//     purchaseDate: "2023-08-22",
-//   },
-//   {
-//     id: 3,
-//     name: "Brooks Ghost 14",
-//     brand: "Brooks",
-//     image: "/brooks.avif?height=80&width=120",
-//     currentMileage: 410,
-//     maxMileage: 500,
-//     color: "Gray/Yellow",
-//     purchaseDate: "2023-02-10",
-//   },
-//   {
-//     id: 4,
-//     name: "Saucony Ride 15",
-//     brand: "Saucony",
-//     image: "/saucony.webp?height=80&width=120",
-//     currentMileage: 75,
-//     maxMileage: 450,
-//     color: "Red/White",
-//     purchaseDate: "2023-11-05",
-//   },
-// ];
-
 export function ShoeCollection() {
   const [isAddShoeModalOpen, setIsAddShoeModalOpen] = useState(false);
   const userId = useUserId();
@@ -71,23 +26,23 @@ export function ShoeCollection() {
     getShoeCollection(userId).then((collection) => {
       setShoes(collection.map((shoe: ShoeResponse) => resToView(shoe)));
     });
-  }, [userId])
+  }, [userId]);
 
-  const handleAddShoe = async (data: AddShoeFormData) => {
+  const handleAddShoe = async (data: ShoeRequest) => {
     if (!userId) return;
+
     try {
       await addShoeToCollection(userId, data);
       await fetchCollection();
       setIsAddShoeModalOpen(false);
-    } 
-    catch(err) {
+    } catch (err) {
       console.log("Add failed:", err);
     }
   };
 
   useEffect(() => {
-    fetchCollection()
-  }, [fetchCollection])
+    fetchCollection();
+  }, [fetchCollection]);
 
   return (
     <div className="space-y-6">
@@ -108,17 +63,6 @@ export function ShoeCollection() {
     </div>
   );
 }
-
-// interface Shoe {
-//   id: number;
-//   name: string;
-//   brand: string;
-//   image: string;
-//   currentMileage: number;
-//   maxMileage: number;
-//   color: string;
-//   purchaseDate: string;
-// }
 
 function ShoeCard({ shoe }: { shoe: ShoeView }) {
   const percentUsed = (shoe.currentMileage / shoe.maxMileage) * 100;
@@ -142,7 +86,7 @@ function ShoeCard({ shoe }: { shoe: ShoeView }) {
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">
-              Added on {new Date(shoe.purchaseDate).toLocaleDateString()}
+              Added on {shoe.purchaseDate}
             </p>
             <p className="text-sm font-medium">
               {shoe.currentMileage} / {shoe.maxMileage} km
