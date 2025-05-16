@@ -82,3 +82,33 @@ export const createTrainingSession = async (
     throw new Error("Failed to create training session");
   }
 };
+
+/**
+ * Update an existing training session by its ID.
+ */
+export const updateTrainingSession = async (
+  trainingSessionId: string,
+  session: Partial<TrainingSession>,
+): Promise<TrainingSession> => {
+  try {
+    const response = await api.put<TrainingSession>(
+      `/trainingsessions/${trainingSessionId}`,
+      session,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          withCredentials: true,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating training session:", error);
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || "Failed to update training session",
+      );
+    }
+    throw new Error("Failed to update training session");
+  }
+};
