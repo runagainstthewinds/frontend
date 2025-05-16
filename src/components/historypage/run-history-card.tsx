@@ -36,7 +36,7 @@ import {
 } from "@/types/models";
 
 const getShoeNameById = (shoeId: number | null, shoes: Shoe[]): string => {
-  if (!shoeId) return "No shoe";
+  if (shoeId === null) return "No shoe";
   const shoe = shoes.find((s) => s.id === shoeId);
   return shoe ? shoe.name : "Unknown shoe";
 };
@@ -45,7 +45,7 @@ const getTrainingPlanNameById = (
   planId: number | null,
   plans: TrainingPlan[],
 ): string => {
-  if (!planId) return "No plan";
+  if (planId === null) return "No plan";
   const plan = plans.find((p) => p.trainingPlanId === planId);
   return plan ? plan.planName : "Unknown plan";
 };
