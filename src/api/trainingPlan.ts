@@ -61,11 +61,11 @@ export const getCurrentTrainingPlan = async (
 
 export const createTrainingPlan = async (
   userId: string,
-  plan: CreateTrainingPlanParams,
+  plan: CreateTrainingPlanParams
 ): Promise<TrainingPlan> => {
   console.log("Creating training plan for user:", userId);
   console.log("Plan data:", plan);
-
+  
   try {
     const response = await api.post<TrainingPlan>(
       `/trainingplans/${userId}`,
@@ -75,7 +75,7 @@ export const createTrainingPlan = async (
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           withCredentials: true,
         },
-      },
+      }
     );
     console.log("Training plan created successfully:", response.data);
     return response.data;
@@ -86,10 +86,10 @@ export const createTrainingPlan = async (
         status: error.response?.status,
         statusText: error.response?.statusText,
         data: error.response?.data,
-        headers: error.response?.headers,
+        headers: error.response?.headers
       });
       throw new Error(
-        error.response?.data?.message || "Failed to create training plan",
+        error.response?.data?.message || "Failed to create training plan"
       );
     }
     throw new Error("Failed to create training plan");

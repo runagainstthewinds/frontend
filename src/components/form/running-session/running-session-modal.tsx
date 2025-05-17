@@ -17,7 +17,7 @@ import StravaImportTab from "./strava-import-tab";
 import { AddRunSessionModalProps } from "@/types/form";
 import { SessionRunFormData } from "@/types/form";
 import { Shoe } from "@/types/models";
-import { getShoeByUserId } from "@/api/shoe";
+import { getShoes } from "@/api/shoes";
 import { useUserId } from "@/hooks/useUserInfo";
 import { updateTrainingSession } from "@/api/trainingSession";
 
@@ -56,7 +56,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
       
       setLoadingShoes(true);
       try {
-        const userShoes = await getShoeByUserId(userId);
+        const userShoes = await getShoes(userId);
         setShoes(userShoes);
       } catch (error) {
         console.error("Error fetching shoes:", error);
@@ -69,7 +69,6 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
   }, [userId, open]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("RUN", selectedRun);
     const { name, value } = e.target;
     setSessionRunFormData((prev) => {
       const newData = { ...prev, [name]: value };
