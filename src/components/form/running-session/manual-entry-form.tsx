@@ -4,7 +4,9 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { TabsContent } from "@/components/ui/tabs";
 import { ManualEntryTabProps } from "@/types/form";
-import { Clock, Timer, TrendingUp } from "lucide-react";
+import { Clock, Timer, TrendingUp, Pencil } from "lucide-react";
+import { useMemo, ChangeEvent } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
   SessionRunFormData,
@@ -12,6 +14,25 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
   intensity,
   handleIntensityChange,
 }) => {
+  // Calculate pace based on distance and duration
+  const calculatedPace = useMemo(() => {
+    const distance = parseFloat(SessionRunFormData.distance);
+    const duration = parseFloat(SessionRunFormData.duration);
+    
+    if (isNaN(distance) || isNaN(duration) || distance === 0) {
+      return "0:00";
+    }
+    
+    const paceInMinutes = duration / distance;
+    const minutes = Math.floor(paceInMinutes);
+    const seconds = Math.round((paceInMinutes - minutes) * 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }, [SessionRunFormData.distance, SessionRunFormData.duration]);
+
+  const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    handleInputChange(e as unknown as ChangeEvent<HTMLInputElement>);
+  };
+
   return (
     <TabsContent value="manual" className="p-6 pt-4">
       <div className="space-y-4">
@@ -37,19 +58,19 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
           </div>
           <div className="space-y-2">
             <Label
-              htmlFor="pace"
+              htmlFor="duration"
               className="text-sm font-medium text-slate-700"
             >
-              Pace (min/km)
+              Total Time (min)
             </Label>
             <div className="relative">
-              <Timer className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+              <Clock className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
               <Input
-                id="pace"
-                name="pace"
-                placeholder="0:00"
+                id="duration"
+                name="duration"
+                placeholder="0"
                 className="pl-9"
-                value={SessionRunFormData.pace}
+                value={SessionRunFormData.duration}
                 onChange={handleInputChange}
               />
             </div>
@@ -58,20 +79,19 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
 
         <div className="space-y-2">
           <Label
-            htmlFor="duration"
+            htmlFor="pace"
             className="text-sm font-medium text-slate-700"
           >
-            Total Time
+            Pace (min/km)
           </Label>
           <div className="relative">
-            <Clock className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+            <Timer className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
             <Input
-              id="duration"
-              name="duration"
-              placeholder="00:00:00"
-              className="pl-9"
-              value={SessionRunFormData.duration}
-              onChange={handleInputChange}
+              id="pace"
+              name="pace"
+              value={calculatedPace}
+              className="pl-9 cursor-not-allowed"
+              readOnly
             />
           </div>
         </div>
@@ -97,6 +117,26 @@ const ManualEntryTab: React.FC<ManualEntryTabProps> = ({
             <span>Easy</span>
             <span>Moderate</span>
             <span>Hard</span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="notes"
+            className="text-sm font-medium text-slate-700"
+          >
+            Notes
+          </Label>
+          <div className="relative">
+            <Pencil className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+            <Textarea
+              id="notes"
+              name="notes"
+              placeholder="Add any notes about your run..."
+              className="pl-9 min-h-[100px] resize-none"
+              value={SessionRunFormData.notes}
+              onChange={handleTextareaChange}
+            />
           </div>
         </div>
       </div>

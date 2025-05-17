@@ -20,7 +20,21 @@ interface StravaImportTabProps {
 interface ShoeSelectionProps {
   shoes: Shoe[];
   selectedShoe: number | null;
-  handleSelectShoe: (id: number) => void;
+  handleSelectShoe: (shoeId: number | null) => void;
+  loading?: boolean;
+}
+
+interface AddShoeFormData {
+  model: string;
+  brand: string;
+  color: string;
+  totalMileage: string;
+}
+
+interface AddShoeModalProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onSubmit?: (data: ShoeRequest) => void;
 }
 
 interface AddShoeFormData {
@@ -40,6 +54,8 @@ interface AddRunSessionModalProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   trigger?: ReactNode;
+  sessionId?: number;
+  onSubmit?: () => void;
 }
 
 interface SessionRunFormData {
@@ -48,6 +64,7 @@ interface SessionRunFormData {
   duration: string;
   intensity: number;
   shoeId: number | null;
+  notes: string;
 }
 
 interface SessionRunFormData {

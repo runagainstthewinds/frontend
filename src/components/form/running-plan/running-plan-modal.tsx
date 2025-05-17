@@ -278,8 +278,7 @@ export function TrainingPlanModal({
               <div className="flex justify-between">
                 <span className="text-sm text-slate-600">Difficulty:</span>
                 <span className="text-sm font-medium text-slate-800">
-                  {formData.difficulty.charAt(0).toUpperCase() +
-                    formData.difficulty.slice(1)}
+                  {formData.difficulty.charAt(0).toUpperCase() + formData.difficulty.slice(1)}
                 </span>
               </div>
             )}

@@ -37,8 +37,8 @@ import {
 
 const getShoeNameById = (shoeId: number | null, shoes: Shoe[]): string => {
   if (shoeId === null) return "No shoe";
-  const shoe = shoes.find((s) => s.id === shoeId);
-  return shoe ? shoe.name : "Unknown shoe";
+  const shoe = shoes.find((s) => s.shoeId === shoeId);
+  return shoe ? shoe.model : "Unknown shoe";
 };
 
 const getTrainingPlanNameById = (
@@ -120,7 +120,6 @@ export default function RunHistoryCard() {
       return matchesSearch && matchesType && matchesShoe;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  console.log("Filtered runs:", filteredRuns.map(run => ({ date: run.date, isComplete: run.isComplete })));
 
   const totalPages = Math.ceil(filteredRuns.length / pageSize);
   const paginatedRuns = filteredRuns.slice(
