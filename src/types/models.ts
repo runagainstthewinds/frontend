@@ -1,12 +1,12 @@
 interface Shoe {
-  id: number;
-  name: string;
+  shoeId: number;
+  model: string;
   brand: string;
-  image: string;
-  currentMileage: number;
-  maxMileage: number;
   color: string;
-  purchaseDate: string;
+  totalMileage: number;
+  date: string;
+  userId: string;
+  image?: string;
 }
 
 type ShoeRequest = Omit<
