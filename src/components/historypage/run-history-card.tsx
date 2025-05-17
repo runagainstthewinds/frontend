@@ -228,13 +228,13 @@ export default function RunHistoryCard() {
                           })}
                         </TableCell>
                         <TableCell>
-                          {formatTwoDecimals(run.distance)} km
+                          {formatTwoDecimals(run.achievedDistance)} km
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {formatTwoDecimals(run.duration)} min
+                          {formatTwoDecimals(run.achievedDuration)} min
                         </TableCell>
                         <TableCell>
-                          {formatTwoDecimals(run.pace)} min/km
+                          {formatTwoDecimals(run.achievedPace)} min/km
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           {getTrainingPlanNameById(
