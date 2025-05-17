@@ -85,7 +85,6 @@ export default function RunHistoryCard() {
         setShoes(shoesData);
         setTrainingPlans(plansData);
         setPastRuns(runsData);
-        console.log("Past runs:", runsData.map(run => ({ date: run.date, isComplete: run.isComplete })));
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err instanceof Error ? err.message : "Failed to load data");
