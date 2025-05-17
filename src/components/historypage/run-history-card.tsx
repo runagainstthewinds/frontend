@@ -105,7 +105,8 @@ export default function RunHistoryCard() {
         getTrainingPlanNameById(run.trainingPlanId, trainingPlans)
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        (run.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+        (run.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ??
+          false) ||
         getShoeNameById(run.shoeId, shoes)
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
@@ -250,10 +251,10 @@ export default function RunHistoryCard() {
                               run.trainingType === TrainingType.INTERVAL
                                 ? "Interval"
                                 : run.trainingType === TrainingType.RECOVERY_RUN
-                                ? "Recovery"
-                                : run.trainingType === TrainingType.LONG_RUN
-                                ? "Long Run"
-                                : "Final Run"
+                                  ? "Recovery"
+                                  : run.trainingType === TrainingType.LONG_RUN
+                                    ? "Long Run"
+                                    : "Final Run"
                             }
                           />
                         </TableCell>
@@ -278,7 +279,9 @@ export default function RunHistoryCard() {
                   Page {currentPage} of {totalPages}
                 </span>
                 <button
-                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(p + 1, totalPages))
+                  }
                   disabled={currentPage === totalPages}
                   className="px-3 py-1 rounded border disabled:opacity-50"
                 >
