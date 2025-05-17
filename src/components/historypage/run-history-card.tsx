@@ -85,6 +85,7 @@ export default function RunHistoryCard() {
         setShoes(shoesData);
         setTrainingPlans(plansData);
         setPastRuns(runsData);
+        console.log("Past runs:", runsData.map(run => ({ date: run.date, isComplete: run.isComplete })));
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err instanceof Error ? err.message : "Failed to load data");
@@ -118,7 +119,9 @@ export default function RunHistoryCard() {
         getShoeNameById(run.shoeId, shoes) === selectedShoe;
 
       return matchesSearch && matchesType && matchesShoe;
-    });
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  console.log("Filtered runs:", filteredRuns.map(run => ({ date: run.date, isComplete: run.isComplete })));
 
   const totalPages = Math.ceil(filteredRuns.length / pageSize);
   const paginatedRuns = filteredRuns.slice(
@@ -221,7 +224,7 @@ export default function RunHistoryCard() {
                     paginatedRuns.map((run) => (
                       <TableRow key={run.trainingSessionId}>
                         <TableCell>
-                          {new Date(run.date).toLocaleDateString("en-US", {
+                          {new Date(run.date + "T12:00:00Z").toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                             year: "numeric",
