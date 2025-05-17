@@ -45,9 +45,11 @@ export default function RunningSessionPage() {
     try {
       const plan = await getCurrentTrainingPlan(userId);
       setTrainingPlan(plan);
-      
+
       if (plan?.trainingPlanId) {
-        const sessions = await getTrainingSessionsForPlan(plan.trainingPlanId.toString());
+        const sessions = await getTrainingSessionsForPlan(
+          plan.trainingPlanId.toString(),
+        );
         const sortedSessions = sessions.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
         );
