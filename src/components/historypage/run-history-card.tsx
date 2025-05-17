@@ -50,6 +50,11 @@ const getTrainingPlanNameById = (
   return plan ? plan.planName : "Unknown plan";
 };
 
+// Utility to truncate number to two decimals
+const formatTwoDecimals = (num: number): string => {
+  return (Math.floor(num * 100) / 100).toFixed(2);
+};
+
 export default function RunHistoryCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<TrainingType | "all">("all");
@@ -60,6 +65,10 @@ export default function RunHistoryCard() {
   const [trainingPlans, setTrainingPlans] = useState<TrainingPlan[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 10;
 
   useEffect(() => {
     if (!user) return;
@@ -87,25 +96,34 @@ export default function RunHistoryCard() {
     fetchData();
   }, [user]);
 
-  const filteredRuns = pastRuns.filter((run) => {
-    const matchesSearch =
-      searchTerm === "" ||
-      getTrainingPlanNameById(run.trainingPlanId, trainingPlans)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      (run.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
-      getShoeNameById(run.shoeId, shoes)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+  // Filter completed runs only
+  const filteredRuns = pastRuns
+    .filter((run) => run.isComplete)
+    .filter((run) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        getTrainingPlanNameById(run.trainingPlanId, trainingPlans)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (run.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+        getShoeNameById(run.shoeId, shoes)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
 
-    const matchesType =
-      selectedType === "all" || run.trainingType === selectedType;
-    const matchesShoe =
-      selectedShoe === "all" ||
-      getShoeNameById(run.shoeId, shoes) === selectedShoe;
+      const matchesType =
+        selectedType === "all" || run.trainingType === selectedType;
+      const matchesShoe =
+        selectedShoe === "all" ||
+        getShoeNameById(run.shoeId, shoes) === selectedShoe;
 
-    return matchesSearch && matchesType && matchesShoe;
-  });
+      return matchesSearch && matchesType && matchesShoe;
+    });
+
+  const totalPages = Math.ceil(filteredRuns.length / pageSize);
+  const paginatedRuns = filteredRuns.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
 
   const uniqueShoes = [
     ...new Set(pastRuns.map((run) => getShoeNameById(run.shoeId, shoes))),
@@ -170,76 +188,105 @@ export default function RunHistoryCard() {
             Loading runs...
           </div>
         ) : (
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Distance</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Duration
-                  </TableHead>
-                  <TableHead>Pace</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Training Plan
-                  </TableHead>
-                  <TableHead className="hidden lg:table-cell">Shoe</TableHead>
-                  <TableHead>Run Type</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredRuns.length === 0 ? (
+          <>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell
-                      colSpan={7}
-                      className="text-center py-6 text-muted-foreground"
-                    >
-                      No runs found matching your filters
-                    </TableCell>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Distance</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Duration
+                    </TableHead>
+                    <TableHead>Pace</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Training Plan
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell">Shoe</TableHead>
+                    <TableHead>Run Type</TableHead>
                   </TableRow>
-                ) : (
-                  filteredRuns.map((run) => (
-                    <TableRow key={run.trainingSessionId}>
-                      <TableCell>
-                        {new Date(run.date).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </TableCell>
-                      <TableCell>{run.distance} km</TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {run.duration} min
-                      </TableCell>
-                      <TableCell>{run.pace} min/km</TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {getTrainingPlanNameById(
-                          run.trainingPlanId,
-                          trainingPlans,
-                        )}
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        {getShoeNameById(run.shoeId, shoes)}
-                      </TableCell>
-                      <TableCell>
-                        <RunType
-                          type={
-                            run.trainingType === TrainingType.INTERVAL
-                              ? "Interval"
-                              : run.trainingType === TrainingType.RECOVERY_RUN
-                                ? "Recovery"
-                                : run.trainingType === TrainingType.LONG_RUN
-                                  ? "Long Run"
-                                  : "Final Run"
-                          }
-                        />
+                </TableHeader>
+                <TableBody>
+                  {paginatedRuns.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={7}
+                        className="text-center py-6 text-muted-foreground"
+                      >
+                        No runs found matching your filters
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                  ) : (
+                    paginatedRuns.map((run) => (
+                      <TableRow key={run.trainingSessionId}>
+                        <TableCell>
+                          {new Date(run.date).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          {formatTwoDecimals(run.distance)} km
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {formatTwoDecimals(run.duration)} min
+                        </TableCell>
+                        <TableCell>
+                          {formatTwoDecimals(run.pace)} min/km
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {getTrainingPlanNameById(
+                            run.trainingPlanId,
+                            trainingPlans,
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          {getShoeNameById(run.shoeId, shoes)}
+                        </TableCell>
+                        <TableCell>
+                          <RunType
+                            type={
+                              run.trainingType === TrainingType.INTERVAL
+                                ? "Interval"
+                                : run.trainingType === TrainingType.RECOVERY_RUN
+                                ? "Recovery"
+                                : run.trainingType === TrainingType.LONG_RUN
+                                ? "Long Run"
+                                : "Final Run"
+                            }
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-end items-center space-x-4 mt-4">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 rounded border disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <span>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 rounded border disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         )}
       </CardContent>
     </Card>
