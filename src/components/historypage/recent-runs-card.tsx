@@ -39,9 +39,7 @@ export default function RecentRunsCard() {
   const recentRuns = useMemo(() => {
     return [...pastRuns]
       .filter(run => 
-        run.achievedPace !== null && 
-        run.achievedDistance !== null && 
-        run.achievedDuration !== null
+        run.isComplete
       )
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, ITEMS_PER_PAGE);
