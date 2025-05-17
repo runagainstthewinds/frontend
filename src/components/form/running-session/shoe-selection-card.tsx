@@ -3,6 +3,8 @@ import { Badge } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ShoeSelectionProps } from "@/types/form";
 
+const MAX_SHOE_MILEAGE = 800; // Maximum mileage in kilometers
+
 const ShoeSelection: React.FC<ShoeSelectionProps> = ({
   shoes,
   selectedShoe,
@@ -46,7 +48,7 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[200px] overflow-y-auto pr-1">
           {shoes.map((shoe) => {
-            const percentUsed = (shoe.totalMileage / 800) * 100; // Using 800km as max mileage
+            const percentUsed = (shoe.totalMileage / MAX_SHOE_MILEAGE) * 100;
             const isSelected = selectedShoe === shoe.shoeId;
             return (
               <div 
@@ -68,7 +70,7 @@ const ShoeSelection: React.FC<ShoeSelectionProps> = ({
                     </p>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-slate-600">
-                        {shoe.totalMileage} / 800 km
+                        {shoe.totalMileage} / {MAX_SHOE_MILEAGE} km
                       </span>
                     </div>
                     <Progress value={percentUsed} className="h-1.5" />
