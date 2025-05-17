@@ -75,8 +75,7 @@ export default function RunningSessionPage() {
       .filter((s) => {
         const sessionDate = new Date(s.date + "T00:00:00");
         sessionDate.setHours(0, 0, 0, 0);
-        const result = !s.isComplete && sessionDate >= today;
-        return result;
+        return sessionDate >= today;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -243,6 +242,8 @@ export default function RunningSessionPage() {
                           <AddRunSessionModal
                             open={isCompleteModalOpen}
                             onOpenChange={setIsCompleteModalOpen}
+                            sessionId={nextSession?.trainingSessionId}
+                            onSubmit={fetchTrainingPlanData}
                             trigger={
                               <Button className="bg-teal-600 hover:bg-teal-700 px-4 py-2 font-medium cursor-pointer">
                                 Complete Session

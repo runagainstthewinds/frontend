@@ -28,6 +28,8 @@ interface AddRunSessionModalProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   trigger?: ReactNode;
+  sessionId?: number;
+  onSubmit?: () => void;
 }
 
 interface SessionRunFormData {

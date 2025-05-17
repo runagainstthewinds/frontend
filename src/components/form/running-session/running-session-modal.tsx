@@ -19,11 +19,14 @@ import { SessionRunFormData } from "@/types/form";
 import { Shoe } from "@/types/models";
 import { getShoeByUserId } from "@/api/shoe";
 import { useUserId } from "@/hooks/useUserInfo";
+import { updateTrainingSession } from "@/api/trainingSession";
 
 export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
   open: controlledOpen,
   onOpenChange: controlledSetOpen,
   trigger,
+  sessionId,
+  onSubmit,
 }) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const open = controlledOpen ?? internalOpen;
@@ -32,7 +35,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
 
   const [activeTab, setActiveTab] = useState<"manual" | "strava">("manual");
   const [intensity, setIntensity] = useState<number[]>([3]);
-  const [selectedRun, setSelectedRun] = useState<number | null>(null);
+  const [selectedRun, setSelectedRun] = useState<number | null>(sessionId ?? null);
   const [selectedShoe, setSelectedShoe] = useState<number | null>(null);
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [loadingShoes, setLoadingShoes] = useState(false);
@@ -66,6 +69,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
   }, [userId, open]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("RUN", selectedRun);
     const { name, value } = e.target;
     setSessionRunFormData((prev) => {
       const newData = { ...prev, [name]: value };
@@ -107,7 +111,7 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const dataToSubmit =
       activeTab === "manual"
         ? { ...SessionRunFormData, shoeId: selectedShoe }
@@ -116,20 +120,41 @@ export const AddRunSessionModal: React.FC<AddRunSessionModalProps> = ({
             shoeId: selectedShoe,
           };
 
-    console.log("Submitting run session:", dataToSubmit);
-    setOpen(false);
+    try {
+      const updateData = {
+        isComplete: true,
+        achievedDistance: parseFloat(String(dataToSubmit.distance)),
+        achievedDuration: parseFloat(String(dataToSubmit.duration)),
+        effort: dataToSubmit.intensity,
+        notes: 'notes' in dataToSubmit ? dataToSubmit.notes : "",
+        shoeId: dataToSubmit.shoeId
+      };
 
-    setSessionRunFormData({
-      distance: "",
-      pace: "",
-      duration: "",
-      intensity: 3,
-      shoeId: null,
-      notes: "",
-    });
-    setSelectedRun(null);
-    setSelectedShoe(null);
-    setActiveTab("manual");
+      console.log(selectedRun);
+      console.log(updateData);
+      if (selectedRun !== null) {
+        await updateTrainingSession(String(selectedRun), updateData);
+        console.log("Run session updated successfully");
+        if (onSubmit) {
+          onSubmit();
+        }
+      }
+
+      setOpen(false);
+      setSessionRunFormData({
+        distance: "",
+        pace: "",
+        duration: "",
+        intensity: 3,
+        shoeId: null,
+        notes: "",
+      });
+      setSelectedRun(null);
+      setSelectedShoe(null);
+      setActiveTab("manual");
+    } catch (error) {
+      console.error("Error updating run session:", error);
+    }
   };
 
   return (
