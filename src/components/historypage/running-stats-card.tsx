@@ -162,11 +162,11 @@ function RunningStatsCard() {
                     <div
                       className={`h-full rounded-full ${
                         type === "Recovery"
-                          ? "bg-blue-500"
+                          ? "bg-green-500"
                           : type === "Interval"
-                            ? "bg-amber-500"
+                            ? "bg-blue-500"
                             : type === "Tempo"
-                              ? "bg-green-500"
+                              ? "bg-orange-500"
                               : "bg-red-500"
                       }`}
                       style={{ width: `${percentage}%` }}
