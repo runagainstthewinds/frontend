@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getUserDetails } from "@/api/userDetails";
 import { getTrainingSessions } from "@/api/trainingSession";
 import { TrainingType } from "@/types/models";
+import { useUserId } from "@/hooks/useUserInfo";
 import {
   Card,
   CardContent,
@@ -27,6 +28,7 @@ const convertToTrainingType = (type: string): TrainingType => {
 };
 
 function RunningStatsCard() {
+  const userId = useUserId();
   const [stats, setStats] = useState({
     totalDistance: 0,
     totalRuns: 0,
@@ -44,8 +46,10 @@ function RunningStatsCard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // TODO: Replace with actual userId from your auth context/state
-        const userId = "bf299756-4de6-4bc4-99d9-bd68daeb76ad";
+        if (!userId) {
+          console.error("No user ID available");
+          return;
+        }
         
         // Fetch user details
         const userDetails = await getUserDetails(userId);
@@ -69,11 +73,6 @@ function RunningStatsCard() {
 
         // Calculate type distribution
         const completedSessions = trainingSessions.filter(session => session.isComplete);
-        const totalCompleted = completedSessions.length;
-
-        console.log('Completed Sessions:', completedSessions);
-        console.log('Total Completed Sessions:', totalCompleted);
-        console.log('Unique Training Types:', [...new Set(completedSessions.map(s => s.trainingType))]);
 
         const distribution = {
           Recovery: completedSessions.filter(session => convertToTrainingType(session.trainingType) === TrainingType.RECOVERY_RUN).length,
@@ -81,27 +80,6 @@ function RunningStatsCard() {
           Tempo: completedSessions.filter(session => convertToTrainingType(session.trainingType) === TrainingType.TEMPO).length,
           "Long Run": completedSessions.filter(session => convertToTrainingType(session.trainingType) === TrainingType.LONG_RUN).length,
         };
-
-        // Log each session's type for debugging
-        completedSessions.forEach(session => {
-          console.log(`Session ${session.trainingSessionId}:`, {
-            originalType: session.trainingType,
-            convertedType: convertToTrainingType(session.trainingType),
-            isTempo: convertToTrainingType(session.trainingType) === TrainingType.TEMPO,
-            isLongRun: convertToTrainingType(session.trainingType) === TrainingType.LONG_RUN,
-            isInterval: convertToTrainingType(session.trainingType) === TrainingType.INTERVAL,
-            isRecovery: convertToTrainingType(session.trainingType) === TrainingType.RECOVERY_RUN
-          });
-        });
-
-        console.log('TrainingType enum values:', Object.values(TrainingType));
-        console.log('Distribution:', distribution);
-        console.log('Distribution Percentages:', {
-          Recovery: `${Math.round((distribution.Recovery / totalCompleted) * 100)}%`,
-          Interval: `${Math.round((distribution.Interval / totalCompleted) * 100)}%`,
-          Tempo: `${Math.round((distribution.Tempo / totalCompleted) * 100)}%`,
-          'Long Run': `${Math.round((distribution['Long Run'] / totalCompleted) * 100)}%`
-        });
 
         setStats({
           totalDistance: userDetails.totalDistance,
@@ -117,7 +95,7 @@ function RunningStatsCard() {
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <Card>
@@ -137,7 +115,7 @@ function RunningStatsCard() {
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Running Time</p>
-            <p className="text-2xl font-bold">{(stats.totalTime / 60).toFixed(1)} h</p>
+            <p className="text-2xl font-bold">{(stats.totalTime / 60).toFixed(1)} h</p> {/* Converted from minutes to hours */}
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Weekly Distance</p>

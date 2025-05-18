@@ -16,9 +16,9 @@ const api = axios.create({
 export const getUserDetails = async (userId: string): Promise<UserDetails> => {
   try {
     const response = await api.get<UserDetails>(`/userdetails/${userId}`, {
+      withCredentials: true,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        withCredentials: true,
       },
     });
     return response.data;
@@ -45,9 +45,9 @@ export const updateUserDetails = async (
       `/userdetails/${userId}`,
       userDetails,
       {
+        withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          withCredentials: true,
         },
       }
     );
