@@ -12,6 +12,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      "/shoes": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
       "/trainingplans": {
         target: "http://localhost:8080",
         changeOrigin: true,
@@ -48,6 +52,10 @@ export default defineConfig({
         changeOrigin: true,
       },
       "/example": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/shoes": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },

@@ -39,9 +39,7 @@ export default function RecentRunsCard() {
   const recentRuns = useMemo(() => {
     return [...pastRuns]
       .filter(run => 
-        run.achievedPace !== null && 
-        run.achievedDistance !== null && 
-        run.achievedDuration !== null
+        run.isComplete
       )
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, ITEMS_PER_PAGE);
@@ -89,11 +87,13 @@ export default function RecentRunsCard() {
 
 function RunCardItem({ run }: { run: TrainingSession }) {
   const roundedPaceTwoDecimals = run.achievedPace.toFixed(2);
+  const formattedDate = format(new Date(run.date + "T12:00:00Z"), "MMM d, yyyy");
+  
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg">
       <div className="sm:w-1/4">
         <div className="text-lg font-semibold">
-          {format(new Date(run.date), "MMM d, yyyy")}
+          {formattedDate}
         </div>
         <div className="text-muted-foreground">{run.trainingPlanId ?? "—"}</div>
       </div>
