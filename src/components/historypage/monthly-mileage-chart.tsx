@@ -19,80 +19,55 @@ interface MonthlyData {
   distance: number;
 }
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 export function MonthlyMileageChart() {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const userId = useUserId();
 
   useEffect(() => {
-    console.log("Component mounted - starting data fetch");
-    
     const fetchAndProcessData = async () => {
       try {
-        console.log("Current userId:", userId);
-        
-        if (!userId) {
-          console.log("No userId found");
-          return;
-        }
+        if (!userId) return;
 
-        console.log("Fetching training sessions...");
         const sessions = await getTrainingSessions(userId);
-        console.log("All training sessions:", sessions);
-
-        if (!sessions || sessions.length === 0) {
-          console.log("No training sessions found");
-          return;
-        }
+        if (!sessions || sessions.length === 0) return;
 
         // Calculate date one year ago
         const oneYearAgo = new Date();
         oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        console.log("Filtering sessions from:", oneYearAgo.toISOString());
 
         // Filter completed sessions and sessions within the last year
         const filteredSessions = sessions.filter((session: TrainingSession) => {
           const sessionDate = new Date(session.date);
-          const isComplete = session.isComplete;
-          const isWithinYear = sessionDate >= oneYearAgo;
-          return isComplete && isWithinYear;
+          return session.isComplete && sessionDate >= oneYearAgo;
         });
-        console.log("Filtered training sessions (completed and within last year):", filteredSessions);
 
         // Process sessions to get monthly totals
         const monthlyTotals = new Map<string, number>();
         
         filteredSessions.forEach((session: TrainingSession) => {
-          // Handle both string and Date objects
           const dateStr = typeof session.date === 'string' 
             ? session.date 
             : session.date.toISOString();
             
-          // Parse the date string directly to get year, month, day
-          const [year, month, day] = dateStr.split('T')[0].split('-').map(Number);
-          console.log("Processing session date parts:", { year, month, day });
-          
-          // Month is 1-12 in the date string, but we need 0-11 for the array
+          const [year, month] = dateStr.split('T')[0].split('-').map(Number);
           const monthIndex = month - 1;
-          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          const monthKey = months[monthIndex];
-          
-          console.log(`Month mapping: ${dateStr} -> monthIndex: ${monthIndex} -> monthKey: ${monthKey}`);
+          const monthKey = MONTHS[monthIndex];
           
           const currentTotal = monthlyTotals.get(monthKey) || 0;
           monthlyTotals.set(monthKey, currentTotal + (session.distance || 0));
         });
 
         // Convert to array and sort by month
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const processedData = months.map(month => ({
+        const processedData = MONTHS.map(month => ({
           month,
           distance: monthlyTotals.get(month) || 0
         }));
 
-        console.log("Monthly totals:", processedData);
         setMonthlyData(processedData);
       } catch (error) {
-
+        console.error("An error occurred while fetching and processing data:", error);
       }
     };
 
