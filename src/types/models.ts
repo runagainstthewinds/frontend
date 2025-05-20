@@ -86,6 +86,12 @@ interface TrainingPlan {
   goalTime: number;
 }
 
+interface UserDetails {
+  totalDistance: number;
+  totalDuration: number;
+  runCount: number;
+}
+
 export type {
   Shoe,
   ShoeRequest,
@@ -95,4 +101,5 @@ export type {
   UserAchievement,
   AchievementBadge,
   TrainingPlan,
+  UserDetails,
 };
