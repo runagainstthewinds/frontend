@@ -1,7 +1,5 @@
-import { useState } from "react";
 import {
   Calendar,
-  TrendingUp,
   History,
   ClipboardList,
   UserRound,
@@ -13,13 +11,11 @@ import {
   useUserName,
   useUserInitials,
   useHasStravaToken,
-  useUserEmail,
   useHasGoogleCalendarToken,
 } from "@/hooks/useUserInfo";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import {
   Sidebar,
   SidebarContent,
@@ -36,8 +32,6 @@ import {
 import { Button } from "@/components/ui/button";
 
 export function UserSidebar() {
-  const [progress, setProgress] = useState(22);
-  const [shoeUsage, setShoeUsage] = useState(75);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
