@@ -161,40 +161,6 @@ export function UserSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarSeparator />
-          <SidebarGroup>
-            <SidebarGroupLabel>Weekly Progress</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <div className="rounded-lg bg-white p-4 shadow-sm border border-slate-200">
-                <div className="flex justify-between text-sm mb-3">
-                  <span className="font-medium text-slate-700">Distance</span>
-                  <span className="font-semibold text-teal-800">25/40 km</span>
-                </div>
-                <Progress value={progress} className="h-2 bg-slate-100" />
-                <div className="mt-3 text-xs text-slate-500 flex items-center justify-between">
-                  <span>{progress}% of weekly goal</span>
-                  <span className="text-teal-600 font-medium">
-                    15 km remaining
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm my-3">
-                  <span className="font-medium text-slate-700">Shoe Usage</span>
-                  <span className="font-semibold text-teal-800">
-                    <span>{shoeUsage}% used</span>
-                  </span>
-                </div>
-                <Progress value={shoeUsage} className="h-2 bg-slate-100" />
-                <div className="mt-3 text-xs text-slate-500 flex items-center justify-between">
-                  <span>
-                    Using
-                    <span className="font-medium text-teal-600 underline">
-                      {" "}
-                      Nike Air Zoom Pegasus 38
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </SidebarGroupContent>
-          </SidebarGroup>
         </SidebarContent>
       </Sidebar>
     </SidebarProvider>
