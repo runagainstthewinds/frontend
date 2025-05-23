@@ -1,12 +1,8 @@
 interface Shoe {
-  shoeId: number;
   model: string;
   brand: string;
   color: string;
   totalMileage: number;
-  date: string;
-  userId: string;
-  image?: string;
 }
 
 type ShoeRequest = Omit<

@@ -15,6 +15,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { AddShoeModalProps, AddShoeFormData } from "@/types/form";
 
 export function AddShoeModal({
@@ -49,6 +56,13 @@ export function AddShoeModal({
     setFormData((prev) => ({
       ...prev,
       [name]: processedValue,
+    }));
+  };
+
+  const handleColorChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      color: value.charAt(0).toUpperCase() + value.slice(1),
     }));
   };
 
@@ -161,14 +175,24 @@ export function AddShoeModal({
                 </Label>
                 <div className="relative">
                   <Palette className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
-                  <Input
-                    id="color"
-                    name="color"
-                    className="pl-9"
-                    value={formData.color}
-                    onChange={handleInputChange}
-                    maxLength={15}
-                  />
+                  <Select value={formData.color} onValueChange={handleColorChange}>
+                    <SelectTrigger className="pl-9 w-full">
+                      <SelectValue>{formData.color || "Select a color"}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="black">Black</SelectItem>
+                      <SelectItem value="white">White</SelectItem>
+                      <SelectItem value="grey">Grey</SelectItem>
+                      <SelectItem value="red">Red</SelectItem>
+                      <SelectItem value="orange">Orange</SelectItem>
+                      <SelectItem value="yellow">Yellow</SelectItem>
+                      <SelectItem value="green">Green</SelectItem>
+                      <SelectItem value="blue">Blue</SelectItem>
+                      <SelectItem value="purple">Purple</SelectItem>
+                      <SelectItem value="pink">Pink</SelectItem>
+                      <SelectItem value="brown">Brown</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
