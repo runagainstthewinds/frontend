@@ -164,5 +164,5 @@ export function UserSidebar() {
         </SidebarContent>
       </Sidebar>
     </SidebarProvider>
-  ); 
+  );
 }
