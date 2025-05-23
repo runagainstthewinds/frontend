@@ -35,7 +35,7 @@ function LandingPage() {
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="md:w-1/2">
                   <img
-                    src="/shoes.png?height=400&width=500"
+                    src="/running-shoes.png?height=400&width=500"
                     alt="Shoe tracking dashboard"
                     className="rounded-lg shadow-lg w-full"
                   />
