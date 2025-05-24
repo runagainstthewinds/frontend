@@ -65,25 +65,11 @@ function UserOverview() {
                 </p>
               </div>
             </div>
-            {useHasGoogleCalendarToken() ? (
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
-              >
-                <Check className="h-4 w-4 mr-2" />
-                Connected
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Connect
-              </Button>
-            )}
+            <div>
+              <span className="inline-block px-3 py-1 text-xs font-normal text-blue-700 bg-blue-100 rounded-sm border border-blue-200 shadow-sm">
+                Coming Soon
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center justify-between p-4 rounded-lg border hover:border-orange-300 hover:bg-orange-50/30 transition-colors">
