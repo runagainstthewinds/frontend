@@ -100,9 +100,8 @@ export function UserSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-          <SidebarSeparator />
           <SidebarGroup>
-            <SidebarGroupLabel>Connected Accounts</SidebarGroupLabel>
+            {/* <SidebarGroupLabel>Connected Accounts</SidebarGroupLabel>
             <SidebarGroupContent>
               <div className="space-y-3">
                 <div className="flex items-center justify-between rounded-lg bg-background p-3 shadow-sm border">
@@ -152,9 +151,8 @@ export function UserSidebar() {
                   )}
                 </div>
               </div>
-            </SidebarGroupContent>
+            </SidebarGroupContent> */}
           </SidebarGroup>
-          <SidebarSeparator />
         </SidebarContent>
       </Sidebar>
     </SidebarProvider>

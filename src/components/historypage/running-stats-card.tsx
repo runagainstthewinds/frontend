@@ -107,19 +107,27 @@ function RunningStatsCard() {
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Distance</p>
-            <p className="text-2xl font-bold">{stats.totalDistance.toFixed(1)} km</p>
+            <p className="text-2xl font-bold">
+              {(stats.totalDistance ?? 0).toFixed(1)} km
+            </p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Runs</p>
-            <p className="text-2xl font-bold">{stats.totalRuns}</p>
+            <p className="text-2xl font-bold">
+              {stats.totalRuns ?? 0}
+            </p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Running Time</p>
-            <p className="text-2xl font-bold">{(stats.totalTime / 60).toFixed(1)} h</p> {/* Converted from minutes to hours */}
+            <p className="text-2xl font-bold">
+              {((stats.totalTime ?? 0) / 60).toFixed(1)} h
+            </p> {/* Converted from minutes to hours */}
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Weekly Distance</p>
-            <p className="text-2xl font-bold">{stats.weeklyDistance.toFixed(1)} km</p>
+            <p className="text-2xl font-bold">
+              {(stats.weeklyDistance ?? 0).toFixed(1)} km
+            </p>
           </div>
         </div>
 
