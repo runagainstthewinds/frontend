@@ -15,73 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { AddShoeModalProps, AddShoeFormData } from "@/types/form";
-
-const SHOE_BRANDS = [
-  "Adidas",
-  "Altra",
-  "ASICS",
-  "Brooks",
-  "HOKA",
-  "Inov-8",
-  "Mizuno",
-  "New Balance",
-  "Nike",
-  "On",
-  "Puma",
-  "Reebok",
-  "Salomon",
-  "Saucony",
-  "Skechers",
-  "Under Armour",
-  "Other"
-];
-
-const getBrandLogo = (brand: string): string => {
-  switch (brand) {
-    case "Adidas":
-      return "/Adidas.png";
-    case "Altra":
-      return "/Altra.png";
-    case "ASICS":
-      return "/Asics.png";
-    case "Brooks":
-      return "/brooks-logo-png_seeklogo-471573.png";
-    case "HOKA":
-      return "/Hoka.png";
-    case "Inov-8":
-      return "/Inov.png";
-    case "Mizuno":
-      return "/Mizuno.png";
-    case "New Balance":
-      return "/New_balance.png";
-    case "Nike":
-      return "/Nike.png";
-    case "On":
-      return "/On.png";
-    case "Puma":
-      return "/Puma.jpg";
-    case "Reebok":
-      return "/Reebok.png";
-    case "Salomon":
-      return "/Salomon.png";
-    case "Saucony":
-      return "/Saucony.png";
-    case "Skechers":
-      return "/Sketchers.png";
-    case "Under Armour":
-      return "/Under_armour.jpg";
-    default:
-      return "/shoe-collection-default.png";
-  }
-};
 
 export function AddShoeModal({
   open: controlledOpen,
@@ -118,13 +52,6 @@ export function AddShoeModal({
     }));
   };
 
-  const handleBrandChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      brand: value,
-    }));
-  };
-
   const handleSubmit = () => {
     // Validate mileage input
     const isIntegerOk = /^\d{1,6}(?=\.|$)/.test(formData.totalMileage);
@@ -145,10 +72,6 @@ export function AddShoeModal({
       brand: formData.brand.trim(),
       color: formData.color.trim(),
       totalMileage: Number.parseFloat(formData.totalMileage),
-      shoeId: 0, // This will be set by the backend
-      date: new Date().toISOString(),
-      userId: "", // This will be set by the backend
-      image: getBrandLogo(formData.brand),
     };
 
     if (onSubmit) {
@@ -196,21 +119,14 @@ export function AddShoeModal({
                 </Label>
                 <div className="relative">
                   <Copyright className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
-                  <Select
+                  <Input
+                    id="brand"
+                    name="brand"
+                    className="pl-9"
                     value={formData.brand}
-                    onValueChange={handleBrandChange}
-                  >
-                    <SelectTrigger className="pl-9 w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SHOE_BRANDS.map((brand) => (
-                        <SelectItem key={brand} value={brand}>
-                          {brand}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    onChange={handleInputChange}
+                    maxLength={20}
+                  />
                 </div>
               </div>
 
