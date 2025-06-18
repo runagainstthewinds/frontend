@@ -5,13 +5,11 @@ import { Loader } from "lucide-react";
 import { AchievementCard } from "./AchievementCard";
 import { useUserId } from "@/hooks/useUserInfo";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { UserAchievement } from "@/types/models";
+import { UserAchievement, AchievementBadge } from "@/types/models";
 
 export function AchievementBadges() {
   const userId = useUserId();
-  const [userAchievements, setUserAchievements] = useState<UserAchievement[]>(
-    [],
-  );
+  const [userAchievements, setUserAchievements] = useState<UserAchievement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +32,7 @@ export function AchievementBadges() {
       );
       return {
         ...a,
+        date: earnedRecord?.dateAchieved || null,
         earned: Boolean(earnedRecord),
       };
     });
@@ -70,7 +69,10 @@ export function AchievementBadges() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {earnedAchievements.map((a) => (
-                <AchievementCard key={a.id} achievement={a} />
+                <AchievementCard
+                  key={a.id}
+                  achievement={a}
+                />
               ))}
             </div>
           )}
@@ -90,7 +92,10 @@ export function AchievementBadges() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {lockedAchievements.map((a) => (
-                <AchievementCard key={a.id} achievement={a} />
+                <AchievementCard
+                  key={a.id}
+                  achievement={a}
+                />
               ))}
             </div>
           )}

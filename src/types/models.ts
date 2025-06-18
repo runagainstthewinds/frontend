@@ -61,10 +61,12 @@ interface TrainingSession {
   trainingPlanId: number | null;
 }
 
-interface UserAchievement {
+export interface UserAchievement {
   achievementId: number;
+  achievementName: string;
   description: string;
-  name: string;
+  dateAchieved: string;
+  userId: string;
 }
 
 interface AchievementBadge {

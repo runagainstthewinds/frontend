@@ -12,6 +12,7 @@ export interface Achievement {
     id: AchievementType;
     title: string;
     description: string;
+    dateAchieved?: string; // ISO date string (yyyy-MM-dd)
 }
 
 export const ACHIEVEMENTS: Record<AchievementType, Achievement> = {

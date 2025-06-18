@@ -12,13 +12,22 @@ import {
   Trophy,
 } from "lucide-react";
 
-const AllAchievements = [
+interface AchievementData {
+  id: number;
+  name: string;
+  description: string;
+  icon: any;
+  dateAchieved?: string;
+  color: string;
+  earned: boolean;
+}
+
+const AllAchievements: AchievementData[] = [
   {
     id: 1,
     name: "First Run",
     description: "Completed your first run",
     icon: Flag,
-    date: null,
     color: "bg-teal-100 text-teal-700",
     earned: false,
   },
@@ -27,7 +36,6 @@ const AllAchievements = [
     name: "Early Bird",
     description: "Completed a run before 6 AM",
     icon: Sunrise,
-    date: null,
     color: "bg-orange-100 text-orange-700",
     earned: false,
   },
@@ -36,7 +44,6 @@ const AllAchievements = [
     name: "Night Owl",
     description: "Completed a run after 9 PM",
     icon: Moon,
-    date: null,
     color: "bg-indigo-100 text-indigo-700",
     earned: false,
   },
@@ -45,7 +52,6 @@ const AllAchievements = [
     name: "5K Runner",
     description: "Completed a 5K run",
     icon: Trophy,
-    date: null,
     color: "bg-green-100 text-green-700",
     earned: false,
   },
@@ -54,7 +60,6 @@ const AllAchievements = [
     name: "10K Runner",
     description: "Completed a 10K run",
     icon: Trophy,
-    date: null,
     color: "bg-blue-100 text-blue-700",
     earned: false,
   },
@@ -63,7 +68,6 @@ const AllAchievements = [
     name: "Half Marathon",
     description: "Completed a half marathon",
     icon: Trophy,
-    date: null,
     color: "bg-purple-100 text-purple-700",
     earned: false,
   },
@@ -72,7 +76,6 @@ const AllAchievements = [
     name: "Marathon",
     description: "Completed a full marathon",
     icon: Award,
-    date: null,
     color: "bg-red-100 text-red-700",
     earned: false,
   },

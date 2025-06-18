@@ -8,6 +8,12 @@ export function AchievementCard({
 }) {
   const { name, description, icon: Icon, date, color, earned } = achievement;
 
+  const formatDate = (dateString: string) => {
+    // Parse the date string manually to avoid timezone issues
+    const [year, month, day] = dateString.split('-');
+    return new Date(dateString + 'T12:00:00').toLocaleDateString();
+  };
+
   return (
     <Card className={earned ? "" : "opacity-60"}>
       <CardContent className="pt-6">
@@ -21,7 +27,7 @@ export function AchievementCard({
           </div>
           {earned && date && (
             <p className="text-xs text-muted-foreground">
-              Earned on {new Date(date).toLocaleDateString()}
+              Earned on {formatDate(date)}
             </p>
           )}
           {!earned && (
