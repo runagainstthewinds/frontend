@@ -8,15 +8,26 @@ import {
   Mountain,
   Sunrise,
   Zap,
+  Moon,
+  Trophy,
 } from "lucide-react";
 
-const AllAchievements = [
+interface AchievementData {
+  id: number;
+  name: string;
+  description: string;
+  icon: any;
+  dateAchieved?: string;
+  color: string;
+  earned: boolean;
+}
+
+const AllAchievements: AchievementData[] = [
   {
     id: 1,
     name: "First Run",
     description: "Completed your first run",
     icon: Flag,
-    date: "2023-01-15",
     color: "bg-teal-100 text-teal-700",
     earned: false,
   },
@@ -25,71 +36,47 @@ const AllAchievements = [
     name: "Early Bird",
     description: "Completed a run before 6 AM",
     icon: Sunrise,
-    date: "2023-02-22",
     color: "bg-orange-100 text-orange-700",
     earned: false,
   },
   {
     id: 3,
-    name: "Rain Runner",
-    description: "Completed a run in the rain",
-    icon: Cloud,
-    date: "2023-03-10",
-    color: "bg-blue-100 text-blue-700",
-    earned: false,
-  },
-  {
-    id: 4,
-    name: "Marathon Finisher",
-    description: "Completed a full marathon",
-    icon: Award,
-    date: null,
-    color: "bg-purple-100 text-purple-700",
-    earned: false,
-  },
-  {
-    id: 5,
-    name: "Streak Master",
-    description: "Run for 7 consecutive days",
-    icon: Fire,
-    date: "2023-05-28",
-    color: "bg-red-100 text-red-700",
-    earned: false,
-  },
-  {
-    id: 6,
-    name: "Trail Explorer",
-    description: "Completed a trail run",
-    icon: Mountain,
-    date: "2023-06-15",
-    color: "bg-green-100 text-green-700",
-    earned: false,
-  },
-  {
-    id: 7,
-    name: "Speed Demon",
-    description: "Ran 5K under 20 minutes",
-    icon: Zap,
-    date: null,
-    color: "bg-yellow-100 text-yellow-700",
-    earned: false,
-  },
-  {
-    id: 8,
-    name: "Globe Trotter",
-    description: "Run in 5 different cities",
-    icon: MapPin,
-    date: null,
+    name: "Night Owl",
+    description: "Completed a run after 9 PM",
+    icon: Moon,
     color: "bg-indigo-100 text-indigo-700",
     earned: false,
   },
   {
-    id: 9,
-    name: "Consistency King",
-    description: "Run 20 times in a month",
-    icon: Calendar,
-    date: null,
-    color: "bg-cyan-100 text-cyan-700",
+    id: 4,
+    name: "5K Runner",
+    description: "Completed a 5K run",
+    icon: Trophy,
+    color: "bg-green-100 text-green-700",
+    earned: false,
+  },
+  {
+    id: 5,
+    name: "10K Runner",
+    description: "Completed a 10K run",
+    icon: Trophy,
+    color: "bg-blue-100 text-blue-700",
+    earned: false,
+  },
+  {
+    id: 6,
+    name: "Half Marathon",
+    description: "Completed a half marathon",
+    icon: Trophy,
+    color: "bg-purple-100 text-purple-700",
+    earned: false,
+  },
+  {
+    id: 7,
+    name: "Marathon",
+    description: "Completed a full marathon",
+    icon: Award,
+    color: "bg-red-100 text-red-700",
     earned: false,
   },
 ];
