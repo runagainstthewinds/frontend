@@ -10,7 +10,7 @@ export function AchievementCard({
 
   const formatDate = (dateString: string) => {
     // Parse the date string manually to avoid timezone issues
-    const [year, month, day] = dateString.split('-');
+    dateString.split('-');
     return new Date(dateString + 'T12:00:00').toLocaleDateString();
   };
 
